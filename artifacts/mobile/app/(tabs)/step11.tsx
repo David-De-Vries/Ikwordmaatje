@@ -41,8 +41,7 @@ export default function Step11Screen() {
     : insets.top;
 
   const handleSave = () => {
-    reset();
-    router.replace("/signup");
+    router.replace("/dashboard");
   };
 
   return (

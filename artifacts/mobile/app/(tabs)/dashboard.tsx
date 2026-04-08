@@ -1,0 +1,1233 @@
+/**
+ * Dashboard — Careibu FTUX Dashboard
+ *
+ * Sections:
+ *   1. Matching status (mock status indicators)
+ *   2. Diary (placeholder with empty state)
+ *   3. Information modules (horizontal scroll)
+ *
+ * Wizard: 5-step onboarding tour
+ *   step 0 → Welcome overlay
+ *   step 1 → Highlight matching section
+ *   step 2 → Highlight diary section
+ *   step 3 → Highlight info modules
+ *   step 4 → Done overlay
+ *   step -1 → Dismissed
+ */
+import { Feather } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import {
+  LayoutChangeEvent,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import Animated, {
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withSequence,
+  withSpring,
+  withTiming,
+} from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+import { Button, Card, Typography } from "@/components/ui";
+import { DS } from "@/constants/design-system";
+import { useOnboarding } from "@/context/OnboardingContext";
+import { useColors } from "@/hooks/useColors";
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Wizard step data
+// ─────────────────────────────────────────────────────────────────────────────
+
+const WIZARD_STEPS = [
+  {
+    step: 1,
+    icon: "users" as const,
+    iconColor: DS.palette.warning.main,
+    iconBg: "#FFF0D9",
+    title: "Je koppelstatus",
+    body: "Hier zie je waar we staan in het vinden van jouw match. We laten je weten zodra er een introductie is gepland.",
+  },
+  {
+    step: 2,
+    icon: "book-open" as const,
+    iconColor: DS.palette.primary.main,
+    iconBg: "#FAE0EC",
+    title: "Jouw dagboek",
+    body: "Schrijf na elk bezoek een korte notitie. Zo hou je bij hoe het gaat en kun je terugkijken op jullie mooie momenten.",
+  },
+  {
+    step: 3,
+    icon: "layers" as const,
+    iconColor: DS.palette.info.main,
+    iconBg: DS.palette.info.bg,
+    title: "Informatie & tips",
+    body: "Hier vind je handige artikelen en tips, speciaal geselecteerd voor jouw project bij Careibu.",
+  },
+];
+
+// ─────────────────────────────────────────────────────────────────────────────
+// WizardSection — dims/lifts each section during wizard
+// ─────────────────────────────────────────────────────────────────────────────
+
+function WizardSection({
+  sectionIndex,
+  wizardStep,
+  onLayout,
+  children,
+}: {
+  sectionIndex: number;
+  wizardStep: number;
+  onLayout?: (e: LayoutChangeEvent) => void;
+  children: React.ReactNode;
+}) {
+  const isWizardActive = wizardStep >= 1 && wizardStep <= 3;
+  const isHighlighted = wizardStep === sectionIndex;
+
+  const opacity = useSharedValue(1);
+  const scale = useSharedValue(1);
+  const borderOpacity = useSharedValue(0);
+
+  useEffect(() => {
+    if (isWizardActive) {
+      if (isHighlighted) {
+        opacity.value = withTiming(1, { duration: 300 });
+        scale.value = withSpring(1.015, { damping: 14, stiffness: 120 });
+        borderOpacity.value = withRepeat(
+          withSequence(
+            withTiming(1, { duration: 750 }),
+            withTiming(0.35, { duration: 750 })
+          ),
+          -1,
+          true
+        );
+      } else {
+        opacity.value = withTiming(0.32, { duration: 300 });
+        scale.value = withSpring(0.99, { damping: 14 });
+        borderOpacity.value = withTiming(0, { duration: 250 });
+      }
+    } else {
+      opacity.value = withTiming(1, { duration: 350 });
+      scale.value = withSpring(1, { damping: 14 });
+      borderOpacity.value = withTiming(0, { duration: 250 });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [wizardStep]);
+
+  const containerStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{ scale: scale.value }],
+  }));
+
+  const borderStyle = useAnimatedStyle(() => ({
+    opacity: borderOpacity.value,
+  }));
+
+  return (
+    <Animated.View style={containerStyle} onLayout={onLayout}>
+      {children}
+      <Animated.View
+        style={[
+          StyleSheet.absoluteFillObject,
+          styles.highlightBorder,
+          borderStyle,
+          { pointerEvents: "none" },
+        ]}
+      />
+    </Animated.View>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Section 1 — Matching Status
+// ─────────────────────────────────────────────────────────────────────────────
+
+const MATCHING_STEPS = [
+  { key: "profile", label: "Profiel aangemaakt", status: "done" },
+  { key: "matching", label: "Match zoeken", status: "active" },
+  { key: "intro", label: "Introductiegesprek", status: "upcoming" },
+  { key: "visit", label: "Eerste bezoek", status: "upcoming" },
+];
+
+function MatchingStatusCard() {
+  const pulseDot = useSharedValue(1);
+
+  useEffect(() => {
+    pulseDot.value = withRepeat(
+      withSequence(
+        withTiming(0.25, { duration: 850 }),
+        withTiming(1, { duration: 850 })
+      ),
+      -1,
+      true
+    );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const pulseStyle = useAnimatedStyle(() => ({
+    opacity: pulseDot.value,
+  }));
+
+  return (
+    <Card elevation={2} padding="lg" style={{ gap: DS.spacing.lg }}>
+      <View style={styles.cardHeader}>
+        <View style={[styles.iconBadge, { backgroundColor: "#FFF0D9" }]}>
+          <Feather name="users" size={20} color={DS.palette.warning.main} />
+        </View>
+        <View style={{ flex: 1 }}>
+          <Typography variant="h5">Je koppeling</Typography>
+          <Typography variant="caption" color="textSecondary">
+            We zijn op zoek naar jouw match
+          </Typography>
+        </View>
+        <View style={[styles.pill, { backgroundColor: "#FFF0D9" }]}>
+          <Animated.View
+            style={[
+              styles.pillDot,
+              { backgroundColor: DS.palette.warning.main },
+              pulseStyle,
+            ]}
+          />
+          <Typography
+            variant="caption"
+            style={{ color: DS.palette.warning.dark }}
+          >
+            Bezig
+          </Typography>
+        </View>
+      </View>
+
+      <View style={{ gap: 0 }}>
+        {MATCHING_STEPS.map((step, i) => {
+          const isDone = step.status === "done";
+          const isActive = step.status === "active";
+          return (
+            <View key={step.key} style={styles.stepRow}>
+              <View style={styles.stepTrack}>
+                <View
+                  style={[
+                    styles.stepNode,
+                    isDone && {
+                      backgroundColor: DS.palette.success.main,
+                      borderColor: DS.palette.success.main,
+                    },
+                    isActive && {
+                      borderColor: DS.palette.warning.main,
+                      borderWidth: 2,
+                    },
+                  ]}
+                >
+                  {isDone && (
+                    <Feather name="check" size={10} color="#FFFFFF" />
+                  )}
+                  {isActive && (
+                    <Animated.View
+                      style={[
+                        styles.activeDot,
+                        { backgroundColor: DS.palette.warning.main },
+                        pulseStyle,
+                      ]}
+                    />
+                  )}
+                </View>
+                {i < MATCHING_STEPS.length - 1 && (
+                  <View
+                    style={[
+                      styles.stepConnector,
+                      {
+                        backgroundColor: isDone
+                          ? DS.palette.success.light
+                          : DS.palette.border,
+                      },
+                    ]}
+                  />
+                )}
+              </View>
+              <Typography
+                variant={isActive ? "subtitle2" : "body2"}
+                style={{
+                  color: isDone
+                    ? DS.palette.success.main
+                    : isActive
+                    ? DS.palette.text.primary
+                    : DS.palette.text.disabled,
+                  paddingBottom: i < MATCHING_STEPS.length - 1 ? DS.spacing.lg : 0,
+                  flex: 1,
+                }}
+              >
+                {step.label}
+              </Typography>
+            </View>
+          );
+        })}
+      </View>
+
+      <View style={[styles.infoBanner, { backgroundColor: "#FFF8EE" }]}>
+        <Feather name="clock" size={13} color={DS.palette.warning.dark} />
+        <Typography
+          variant="caption"
+          style={{ color: DS.palette.warning.dark, flex: 1 }}
+        >
+          Gemiddeld duurt het 3–5 werkdagen om een goede match te vinden.
+        </Typography>
+      </View>
+    </Card>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Section 2 — Diary
+// ─────────────────────────────────────────────────────────────────────────────
+
+function DiaryCard() {
+  const floatAnim = useSharedValue(0);
+
+  useEffect(() => {
+    floatAnim.value = withRepeat(
+      withSequence(
+        withTiming(-5, { duration: 1200 }),
+        withTiming(0, { duration: 1200 })
+      ),
+      -1,
+      true
+    );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const floatStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: floatAnim.value }],
+  }));
+
+  return (
+    <Card elevation={2} padding="lg" style={{ gap: DS.spacing.lg }}>
+      <View style={styles.cardHeader}>
+        <View style={[styles.iconBadge, { backgroundColor: "#FAE0EC" }]}>
+          <Feather name="book-open" size={20} color={DS.palette.primary.main} />
+        </View>
+        <View>
+          <Typography variant="h5">Jouw dagboek</Typography>
+          <Typography variant="caption" color="textSecondary">
+            0 notities
+          </Typography>
+        </View>
+      </View>
+
+      <View style={styles.emptyState}>
+        <Animated.View
+          style={[
+            styles.emptyIconCircle,
+            { backgroundColor: "#FAE0EC" },
+            floatStyle,
+          ]}
+        >
+          <Feather name="feather" size={30} color={DS.palette.primary.light} />
+        </Animated.View>
+        <Typography variant="subtitle1" align="center">
+          Nog geen notities
+        </Typography>
+        <Typography
+          variant="body2"
+          color="textSecondary"
+          align="center"
+          style={{ maxWidth: 260 }}
+        >
+          Na je eerste bezoek kun je hier bijhouden hoe het ging. Notities zijn
+          alleen voor jouzelf.
+        </Typography>
+        <Button variant="outlined" color="primary" size="md" disabled>
+          Notitie schrijven
+        </Button>
+      </View>
+    </Card>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Section 3 — Information Modules
+// ─────────────────────────────────────────────────────────────────────────────
+
+const INFO_MODULES = [
+  {
+    id: "gesprek",
+    icon: "message-circle" as const,
+    color: DS.palette.secondary.dark,
+    bg: DS.palette.background.selected,
+    title: "Tips voor je eerste gesprek",
+    snippet: "Maak je eerste ontmoeting onvergetelijk.",
+    readTime: "3 min",
+  },
+  {
+    id: "moeilijk",
+    icon: "heart" as const,
+    color: DS.palette.primary.main,
+    bg: "#FAE0EC",
+    title: "Omgaan met moeilijke momenten",
+    snippet: "Soms gaat het minder goed. Dit helpt.",
+    readTime: "5 min",
+  },
+  {
+    id: "plannen",
+    icon: "calendar" as const,
+    color: DS.palette.info.main,
+    bg: DS.palette.info.bg,
+    title: "Je bezoek plannen",
+    snippet: "Handige tips voor soepele afspraken.",
+    readTime: "2 min",
+  },
+];
+
+function InfoModulesCard() {
+  return (
+    <Card elevation={2} padding="lg" style={{ gap: DS.spacing.lg }}>
+      <View style={styles.cardHeader}>
+        <View style={[styles.iconBadge, { backgroundColor: DS.palette.info.bg }]}>
+          <Feather name="layers" size={20} color={DS.palette.info.main} />
+        </View>
+        <View style={{ flex: 1 }}>
+          <Typography variant="h5">Informatie & tips</Typography>
+          <Typography variant="caption" color="textSecondary">
+            Voor jouw Maatje-project
+          </Typography>
+        </View>
+        <TouchableOpacity hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+          <Typography
+            variant="caption"
+            style={{ color: DS.palette.primary.main }}
+          >
+            Alle artikelen
+          </Typography>
+        </TouchableOpacity>
+      </View>
+
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={{ marginHorizontal: -DS.spacing.lg }}
+        contentContainerStyle={{
+          paddingHorizontal: DS.spacing.lg,
+          gap: DS.spacing.md,
+        }}
+      >
+        {INFO_MODULES.map((mod) => (
+          <TouchableOpacity
+            key={mod.id}
+            activeOpacity={0.82}
+            style={[styles.moduleCard, { backgroundColor: mod.bg }]}
+          >
+            <View style={[styles.moduleIconBox, { backgroundColor: "#FFFFFFBB" }]}>
+              <Feather name={mod.icon} size={18} color={mod.color} />
+            </View>
+            <Typography
+              variant="subtitle2"
+              style={{ color: mod.color, flexShrink: 1 }}
+            >
+              {mod.title}
+            </Typography>
+            <Typography variant="caption" color="textSecondary">
+              {mod.snippet}
+            </Typography>
+            <View style={styles.readTimeRow}>
+              <Feather name="clock" size={10} color={DS.palette.text.hint} />
+              <Typography
+                variant="caption"
+                style={{ color: DS.palette.text.hint }}
+              >
+                {mod.readTime}
+              </Typography>
+            </View>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    </Card>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Wizard Bottom Sheet — steps 1, 2, 3
+// ─────────────────────────────────────────────────────────────────────────────
+
+function WizardBottomSheet({
+  wizardStep,
+  onNext,
+  onSkip,
+  insetBottom,
+}: {
+  wizardStep: number;
+  onNext: () => void;
+  onSkip: () => void;
+  insetBottom: number;
+}) {
+  const visible = wizardStep >= 1 && wizardStep <= 3;
+  const stepData = WIZARD_STEPS[Math.max(0, wizardStep - 1)];
+
+  const slideY = useSharedValue(300);
+  const iconBounce = useSharedValue(0);
+
+  useEffect(() => {
+    if (visible) {
+      slideY.value = withSpring(0, { damping: 22, stiffness: 180 });
+      iconBounce.value = 0;
+      iconBounce.value = withRepeat(
+        withSequence(
+          withTiming(1, { duration: 900 }),
+          withTiming(0, { duration: 900 })
+        ),
+        -1,
+        true
+      );
+    } else {
+      slideY.value = withTiming(300, { duration: 220 });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible, wizardStep]);
+
+  const sheetStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: slideY.value }],
+  }));
+
+  const iconStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: interpolate(iconBounce.value, [0, 1], [1, 1.14]) }],
+  }));
+
+  return (
+    <Animated.View
+      style={[
+        styles.bottomSheet,
+        sheetStyle,
+        { paddingBottom: Math.max(insetBottom, DS.spacing.lg) + DS.spacing.lg },
+      ]}
+    >
+      <View style={styles.sheetHandle} />
+
+      <View style={{ gap: DS.spacing.xl }}>
+        <View style={{ flexDirection: "row", gap: DS.spacing.md, alignItems: "flex-start" }}>
+          <Animated.View
+            style={[
+              styles.wizardIconBadge,
+              { backgroundColor: stepData.iconBg },
+              iconStyle,
+            ]}
+          >
+            <Feather name={stepData.icon} size={26} color={stepData.iconColor} />
+          </Animated.View>
+          <View style={{ flex: 1, gap: DS.spacing.xs }}>
+            <Typography variant="h4">{stepData.title}</Typography>
+            <Typography variant="body2" color="textSecondary">
+              {stepData.body}
+            </Typography>
+          </View>
+        </View>
+
+        <View style={styles.dotsRow}>
+          {[1, 2, 3].map((i) => (
+            <Animated.View
+              key={i}
+              style={[
+                styles.dot,
+                i === wizardStep
+                  ? {
+                      backgroundColor: DS.palette.primary.main,
+                      width: 22,
+                      borderRadius: 4,
+                    }
+                  : {
+                      backgroundColor: DS.palette.border,
+                    },
+              ]}
+            />
+          ))}
+        </View>
+
+        <View style={{ gap: DS.spacing.sm }}>
+          <Button
+            variant="contained"
+            color="primary"
+            size="lg"
+            fullWidth
+            onPress={onNext}
+          >
+            {wizardStep < 3 ? "Volgende →" : "Klaar!"}
+          </Button>
+          <Button
+            variant="text"
+            color="default"
+            size="md"
+            fullWidth
+            onPress={onSkip}
+          >
+            Rondleiding overslaan
+          </Button>
+        </View>
+      </View>
+    </Animated.View>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Wizard Welcome Overlay — step 0
+// ─────────────────────────────────────────────────────────────────────────────
+
+function WizardWelcomeOverlay({
+  visible,
+  onStart,
+  onSkip,
+  firstName,
+}: {
+  visible: boolean;
+  onStart: () => void;
+  onSkip: () => void;
+  firstName: string;
+}) {
+  const opacity = useSharedValue(0);
+  const cardSlide = useSharedValue(60);
+  const heroPulse = useSharedValue(1);
+
+  useEffect(() => {
+    if (visible) {
+      opacity.value = withTiming(1, { duration: 320 });
+      cardSlide.value = withSpring(0, { damping: 20, stiffness: 160 });
+      heroPulse.value = withRepeat(
+        withSequence(
+          withSpring(1.1, { damping: 6, stiffness: 80 }),
+          withSpring(1, { damping: 6, stiffness: 80 })
+        ),
+        -1,
+        true
+      );
+    } else {
+      opacity.value = withTiming(0, { duration: 200 });
+      cardSlide.value = withTiming(60, { duration: 200 });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible]);
+
+  const overlayStyle = useAnimatedStyle(() => ({ opacity: opacity.value }));
+  const cardStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: cardSlide.value }],
+  }));
+  const heroStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: heroPulse.value }],
+  }));
+
+  return (
+    <Animated.View
+      style={[
+        StyleSheet.absoluteFillObject,
+        styles.overlayBg,
+        overlayStyle,
+        { pointerEvents: visible ? "auto" : "none" },
+      ]}
+    >
+      <Animated.View style={[styles.overlayCard, cardStyle]}>
+        <View style={styles.welcomeHero}>
+          <Animated.View style={[styles.heroBubble, heroStyle]}>
+            <Feather name="home" size={38} color={DS.palette.primary.main} />
+          </Animated.View>
+          <View style={styles.heroDecoRow}>
+            {["#FAE0EC", "#A01550", "#D4396E", "#FAE0EC", "#A01550"].map(
+              (c, i) => (
+                <View
+                  key={i}
+                  style={[styles.heroDot, { backgroundColor: c, opacity: 0.25 + i * 0.1 }]}
+                />
+              )
+            )}
+          </View>
+        </View>
+
+        <View style={{ gap: DS.spacing.md, paddingHorizontal: DS.spacing.xl }}>
+          <Typography variant="h2" align="center">
+            Welkom{firstName ? `, ${firstName}` : ""}! 👋
+          </Typography>
+          <Typography variant="body1" color="textSecondary" align="center">
+            Dit is je persoonlijke dashboard bij Careibu. We laten je snel zien
+            wat er allemaal te vinden is.
+          </Typography>
+        </View>
+
+        <View style={styles.featurePillRow}>
+          {["Koppelstatus", "Dagboek", "Informatie"].map((label) => (
+            <View
+              key={label}
+              style={[styles.featurePill, { backgroundColor: "#FAE0EC" }]}
+            >
+              <Typography
+                variant="caption"
+                style={{ color: DS.palette.primary.main }}
+              >
+                {label}
+              </Typography>
+            </View>
+          ))}
+        </View>
+
+        <View
+          style={{
+            gap: DS.spacing.sm,
+            paddingHorizontal: DS.spacing.xl,
+            paddingBottom: DS.spacing.xxxl,
+          }}
+        >
+          <Button
+            variant="contained"
+            color="primary"
+            size="lg"
+            fullWidth
+            onPress={onStart}
+          >
+            Start rondleiding
+          </Button>
+          <Button
+            variant="text"
+            color="default"
+            size="md"
+            fullWidth
+            onPress={onSkip}
+          >
+            Overslaan
+          </Button>
+        </View>
+      </Animated.View>
+    </Animated.View>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Wizard Done Overlay — step 4
+// ─────────────────────────────────────────────────────────────────────────────
+
+function Particle({ index }: { index: number }) {
+  const angle = (index / 6) * Math.PI * 2;
+  const dist = 60 + (index % 3) * 20;
+  const anim = useSharedValue(0);
+  const colors = ["#A01550", "#D4396E", "#FAE0EC", "#7BB5AD", "#FFC107", "#A01550"];
+
+  useEffect(() => {
+    anim.value = withRepeat(
+      withSequence(
+        withTiming(0, { duration: 0 }),
+        withTiming(1, { duration: 900 + index * 120 }),
+        withTiming(0, { duration: 400 })
+      ),
+      -1,
+      false
+    );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const style = useAnimatedStyle(() => ({
+    opacity: interpolate(anim.value, [0, 0.4, 1], [0, 1, 0]),
+    transform: [
+      { translateX: Math.cos(angle) * dist * anim.value },
+      { translateY: Math.sin(angle) * dist * anim.value },
+      { scale: interpolate(anim.value, [0, 0.5, 1], [0.5, 1, 0.3]) },
+    ],
+  }));
+
+  return (
+    <Animated.View
+      style={[
+        {
+          position: "absolute",
+          width: 8,
+          height: 8,
+          borderRadius: 4,
+          backgroundColor: colors[index % colors.length],
+        },
+        style,
+      ]}
+    />
+  );
+}
+
+function WizardDoneOverlay({
+  visible,
+  onFinish,
+}: {
+  visible: boolean;
+  onFinish: () => void;
+}) {
+  const opacity = useSharedValue(0);
+  const cardSlide = useSharedValue(60);
+  const checkScale = useSharedValue(0);
+
+  useEffect(() => {
+    if (visible) {
+      opacity.value = withTiming(1, { duration: 320 });
+      cardSlide.value = withSpring(0, { damping: 20, stiffness: 160 });
+      checkScale.value = withSpring(1, { damping: 10, stiffness: 120 });
+    } else {
+      opacity.value = withTiming(0, { duration: 200 });
+      cardSlide.value = withTiming(60, { duration: 200 });
+      checkScale.value = withTiming(0, { duration: 150 });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible]);
+
+  const overlayStyle = useAnimatedStyle(() => ({ opacity: opacity.value }));
+  const cardStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: cardSlide.value }],
+  }));
+  const checkStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: checkScale.value }],
+  }));
+
+  return (
+    <Animated.View
+      style={[
+        StyleSheet.absoluteFillObject,
+        styles.overlayBg,
+        overlayStyle,
+        { pointerEvents: visible ? "auto" : "none" },
+      ]}
+    >
+      <Animated.View style={[styles.overlayCard, cardStyle]}>
+        <View style={styles.doneHero}>
+          <View style={styles.particleContainer}>
+            {[0, 1, 2, 3, 4, 5].map((i) => (
+              <Particle key={i} index={i} />
+            ))}
+          </View>
+          <Animated.View
+            style={[
+              styles.doneCheckCircle,
+              { backgroundColor: DS.palette.success.main },
+              checkStyle,
+            ]}
+          >
+            <Feather name="check" size={36} color="#FFFFFF" />
+          </Animated.View>
+        </View>
+
+        <View style={{ gap: DS.spacing.md, paddingHorizontal: DS.spacing.xl }}>
+          <Typography variant="h2" align="center">
+            Je bent er klaar voor! 🎉
+          </Typography>
+          <Typography variant="body1" color="textSecondary" align="center">
+            Je weet nu waar alles te vinden is. Veel plezier bij Careibu!
+          </Typography>
+        </View>
+
+        <View
+          style={{
+            paddingHorizontal: DS.spacing.xl,
+            paddingBottom: DS.spacing.xxxl,
+          }}
+        >
+          <Button
+            variant="contained"
+            color="primary"
+            size="lg"
+            fullWidth
+            onPress={onFinish}
+          >
+            Aan de slag
+          </Button>
+        </View>
+      </Animated.View>
+    </Animated.View>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Dashboard Screen
+// ─────────────────────────────────────────────────────────────────────────────
+
+export default function DashboardScreen() {
+  const insets = useSafeAreaInsets();
+  const colors = useColors();
+  const { data } = useOnboarding();
+
+  const scrollRef = useRef<ScrollView>(null);
+  const sectionOffsets = useRef<Record<number, number>>({});
+  const [wizardStep, setWizardStep] = useState(0);
+
+  const topPad =
+    Platform.OS === "web" ? Math.max(insets.top, 67) : insets.top;
+
+  const captureLayout = useCallback(
+    (idx: number) => (e: LayoutChangeEvent) => {
+      sectionOffsets.current[idx] = e.nativeEvent.layout.y;
+    },
+    []
+  );
+
+  const scrollToSection = useCallback((idx: number) => {
+    const y = sectionOffsets.current[idx];
+    if (y !== undefined) {
+      scrollRef.current?.scrollTo({ y: Math.max(0, y - 24), animated: true });
+    }
+  }, []);
+
+  const handleNext = useCallback(() => {
+    if (wizardStep === 0) {
+      setWizardStep(1);
+      setTimeout(() => scrollToSection(1), 350);
+    } else if (wizardStep >= 1 && wizardStep < 3) {
+      const next = wizardStep + 1;
+      setWizardStep(next);
+      setTimeout(() => scrollToSection(next), 350);
+    } else if (wizardStep === 3) {
+      setWizardStep(4);
+      setTimeout(() => scrollRef.current?.scrollTo({ y: 0, animated: true }), 100);
+    }
+  }, [wizardStep, scrollToSection]);
+
+  const handleSkip = useCallback(() => {
+    setWizardStep(-1);
+    scrollRef.current?.scrollTo({ y: 0, animated: true });
+  }, []);
+
+  const handleFinish = useCallback(() => {
+    setWizardStep(-1);
+  }, []);
+
+  const backdropOpacity = useSharedValue(0);
+  useEffect(() => {
+    backdropOpacity.value = withTiming(
+      wizardStep >= 1 && wizardStep <= 3 ? 0.48 : 0,
+      { duration: 300 }
+    );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [wizardStep]);
+
+  const backdropStyle = useAnimatedStyle(() => ({
+    opacity: backdropOpacity.value,
+  }));
+
+  return (
+    <View style={{ flex: 1, backgroundColor: colors.background }}>
+      <View style={{ height: topPad }} />
+
+      <View style={styles.header}>
+        <View>
+          <Typography
+            variant="overline"
+            style={{ color: "rgba(255,255,255,0.72)" }}
+          >
+            Goedemorgen
+          </Typography>
+          <Typography variant="h4" style={{ color: "#FFFFFF" }}>
+            {data.firstName || "Vrijwilliger"}
+          </Typography>
+        </View>
+        <View style={styles.avatarCircle}>
+          <Typography variant="h4" style={{ color: DS.palette.primary.main }}>
+            {(data.firstName?.[0] ?? "V").toUpperCase()}
+          </Typography>
+        </View>
+      </View>
+
+      <ScrollView
+        ref={scrollRef}
+        style={{ flex: 1 }}
+        contentContainerStyle={[
+          styles.scrollContent,
+          { paddingBottom: insets.bottom + DS.spacing.xxxxl },
+        ]}
+        showsVerticalScrollIndicator={false}
+      >
+        <WizardSection
+          sectionIndex={1}
+          wizardStep={wizardStep}
+          onLayout={captureLayout(1)}
+        >
+          <MatchingStatusCard />
+        </WizardSection>
+
+        <WizardSection
+          sectionIndex={2}
+          wizardStep={wizardStep}
+          onLayout={captureLayout(2)}
+        >
+          <DiaryCard />
+        </WizardSection>
+
+        <WizardSection
+          sectionIndex={3}
+          wizardStep={wizardStep}
+          onLayout={captureLayout(3)}
+        >
+          <InfoModulesCard />
+        </WizardSection>
+      </ScrollView>
+
+      {/* Dimming backdrop for steps 1–3 */}
+      <Animated.View
+        style={[
+          StyleSheet.absoluteFillObject,
+          { backgroundColor: "#000000" },
+          backdropStyle,
+          { pointerEvents: "none" },
+        ]}
+      />
+
+      {/* Bottom-sheet wizard (steps 1–3) */}
+      <WizardBottomSheet
+        wizardStep={wizardStep}
+        onNext={handleNext}
+        onSkip={handleSkip}
+        insetBottom={insets.bottom}
+      />
+
+      {/* Welcome overlay (step 0) */}
+      <WizardWelcomeOverlay
+        visible={wizardStep === 0}
+        onStart={handleNext}
+        onSkip={handleSkip}
+        firstName={data.firstName}
+      />
+
+      {/* Done overlay (step 4) */}
+      <WizardDoneOverlay visible={wizardStep === 4} onFinish={handleFinish} />
+    </View>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Styles
+// ─────────────────────────────────────────────────────────────────────────────
+
+const styles = StyleSheet.create({
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: DS.spacing.lg,
+    paddingVertical: DS.spacing.md,
+    marginBottom: DS.spacing.xs,
+  },
+  avatarCircle: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: "#FFFFFF",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  scrollContent: {
+    padding: DS.spacing.lg,
+    gap: DS.spacing.xl,
+  },
+  // Card header
+  cardHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: DS.spacing.md,
+  },
+  iconBadge: {
+    width: 40,
+    height: 40,
+    borderRadius: DS.shape.radius.md,
+    alignItems: "center",
+    justifyContent: "center",
+    flexShrink: 0,
+  },
+  pill: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: DS.spacing.xs,
+    paddingHorizontal: DS.spacing.sm,
+    paddingVertical: DS.spacing.xs,
+    borderRadius: DS.shape.radius.full,
+  },
+  pillDot: {
+    width: 7,
+    height: 7,
+    borderRadius: 4,
+  },
+  // Matching step track
+  stepRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: DS.spacing.md,
+  },
+  stepTrack: {
+    alignItems: "center",
+    width: 22,
+  },
+  stepNode: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    borderWidth: 1.5,
+    borderColor: DS.palette.border,
+    backgroundColor: "#FFFFFF",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  activeDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },
+  stepConnector: {
+    width: 1.5,
+    height: 24,
+    marginTop: 2,
+  },
+  infoBanner: {
+    flexDirection: "row",
+    gap: DS.spacing.sm,
+    alignItems: "center",
+    padding: DS.spacing.md,
+    borderRadius: DS.shape.radius.md,
+  },
+  // Diary empty state
+  emptyState: {
+    alignItems: "center",
+    gap: DS.spacing.md,
+    paddingVertical: DS.spacing.sm,
+  },
+  emptyIconCircle: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  // Info modules
+  moduleCard: {
+    width: 172,
+    padding: DS.spacing.md,
+    borderRadius: DS.shape.radius.lg,
+    gap: DS.spacing.sm,
+  },
+  moduleIconBox: {
+    width: 36,
+    height: 36,
+    borderRadius: DS.shape.radius.sm,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  readTimeRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: DS.spacing.xs,
+  },
+  // Wizard section highlight border
+  highlightBorder: {
+    borderWidth: 2,
+    borderColor: DS.palette.primary.main,
+    borderRadius: DS.shape.radius.lg + 2,
+  },
+  // Wizard bottom sheet
+  bottomSheet: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: "#FFFFFF",
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    paddingTop: DS.spacing.lg,
+    paddingHorizontal: DS.spacing.xl,
+    shadowColor: "#000000",
+    shadowOffset: { width: 0, height: -6 },
+    shadowOpacity: 0.14,
+    shadowRadius: 18,
+    elevation: 14,
+  },
+  sheetHandle: {
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: DS.palette.border,
+    alignSelf: "center",
+    marginBottom: DS.spacing.lg,
+  },
+  wizardIconBadge: {
+    width: 56,
+    height: 56,
+    borderRadius: DS.shape.radius.lg,
+    alignItems: "center",
+    justifyContent: "center",
+    flexShrink: 0,
+  },
+  dotsRow: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: DS.spacing.sm,
+  },
+  dot: {
+    height: 8,
+    width: 8,
+    borderRadius: 4,
+  },
+  // Overlays
+  overlayBg: {
+    backgroundColor: "rgba(0,0,0,0.68)",
+    justifyContent: "flex-end",
+    zIndex: DS.zIndex.modal,
+  },
+  overlayCard: {
+    backgroundColor: "#FFFFFF",
+    borderTopLeftRadius: 28,
+    borderTopRightRadius: 28,
+    gap: DS.spacing.xl,
+    overflow: "hidden",
+  },
+  // Welcome hero
+  welcomeHero: {
+    alignItems: "center",
+    paddingTop: DS.spacing.xxxl,
+    gap: DS.spacing.md,
+  },
+  heroBubble: {
+    width: 84,
+    height: 84,
+    borderRadius: 42,
+    backgroundColor: "#FAE0EC",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  heroDecoRow: {
+    flexDirection: "row",
+    gap: DS.spacing.sm,
+  },
+  heroDot: {
+    width: 9,
+    height: 9,
+    borderRadius: 5,
+  },
+  featurePillRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: DS.spacing.sm,
+    justifyContent: "center",
+    paddingHorizontal: DS.spacing.xl,
+  },
+  featurePill: {
+    paddingHorizontal: DS.spacing.md,
+    paddingVertical: DS.spacing.xs,
+    borderRadius: DS.shape.radius.full,
+  },
+  // Done hero
+  doneHero: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingTop: DS.spacing.xxxl,
+    height: 120,
+  },
+  particleContainer: {
+    position: "absolute",
+    width: 0,
+    height: 0,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  doneCheckCircle: {
+    width: 84,
+    height: 84,
+    borderRadius: 42,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});

@@ -23,6 +23,7 @@ export default function OnboardingLayout() {
       <Stack.Screen name="step9" />
       <Stack.Screen name="step10" />
       <Stack.Screen name="step11" />
+      <Stack.Screen name="dashboard" />
     </Stack>
   );
 }
