@@ -516,6 +516,8 @@ function WizardBottomSheet({
     transform: [{ scale: interpolate(iconBounce.value, [0, 1], [1, 1.14]) }],
   }));
 
+  if (!stepData) return null;
+
   return (
     <Animated.View
       style={[
