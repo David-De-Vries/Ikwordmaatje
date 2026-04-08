@@ -484,7 +484,8 @@ function WizardBottomSheet({
   insetBottom: number;
 }) {
   const visible = wizardStep >= 1 && wizardStep <= 3;
-  const stepData = WIZARD_STEPS[Math.max(0, wizardStep - 1)];
+  const safeIndex = Math.min(Math.max(0, wizardStep - 1), WIZARD_STEPS.length - 1);
+  const stepData = WIZARD_STEPS[safeIndex];
 
   const slideY = useSharedValue(300);
   const iconBounce = useSharedValue(0);
