@@ -27,6 +27,7 @@ import {
 } from "react-native";
 import Animated, {
   interpolate,
+  interpolateColor,
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
@@ -94,28 +95,33 @@ function WizardSection({
   const scale = useSharedValue(1);
   const borderOpacity = useSharedValue(0);
 
+  const glowOpacity = useSharedValue(0);
+
   useEffect(() => {
     if (isWizardActive) {
       if (isHighlighted) {
         opacity.value = withTiming(1, { duration: 300 });
-        scale.value = withSpring(1.015, { damping: 14, stiffness: 120 });
+        scale.value = withSpring(1.02, { damping: 12, stiffness: 120 });
         borderOpacity.value = withRepeat(
           withSequence(
-            withTiming(1, { duration: 750 }),
-            withTiming(0.35, { duration: 750 })
+            withTiming(1, { duration: 650 }),
+            withTiming(0.3, { duration: 650 })
           ),
           -1,
           true
         );
+        glowOpacity.value = withTiming(1, { duration: 350 });
       } else {
-        opacity.value = withTiming(0.32, { duration: 300 });
-        scale.value = withSpring(0.99, { damping: 14 });
+        opacity.value = withTiming(0.12, { duration: 300 });
+        scale.value = withSpring(0.97, { damping: 14 });
         borderOpacity.value = withTiming(0, { duration: 250 });
+        glowOpacity.value = withTiming(0, { duration: 250 });
       }
     } else {
       opacity.value = withTiming(1, { duration: 350 });
       scale.value = withSpring(1, { damping: 14 });
       borderOpacity.value = withTiming(0, { duration: 250 });
+      glowOpacity.value = withTiming(0, { duration: 250 });
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wizardStep]);
@@ -129,9 +135,23 @@ function WizardSection({
     opacity: borderOpacity.value,
   }));
 
+  const glowStyle = useAnimatedStyle(() => ({
+    opacity: glowOpacity.value,
+  }));
+
   return (
     <Animated.View style={containerStyle} onLayout={onLayout}>
+      {/* Glow halo behind the card */}
+      <Animated.View
+        style={[
+          StyleSheet.absoluteFillObject,
+          styles.highlightGlow,
+          glowStyle,
+          { pointerEvents: "none" },
+        ]}
+      />
       {children}
+      {/* Pulsing border ring */}
       <Animated.View
         style={[
           StyleSheet.absoluteFillObject,
@@ -861,7 +881,11 @@ export default function DashboardScreen() {
   const scrollToSection = useCallback((idx: number) => {
     const y = sectionOffsets.current[idx];
     if (y !== undefined) {
-      scrollRef.current?.scrollTo({ y: Math.max(0, y - 24), animated: true });
+      // For section 3, scroll further (larger y value) so the section appears
+      // near the TOP of the viewport, well clear of the wizard bottom sheet.
+      // Higher scrollPos → content shifts up → section appears higher on screen.
+      const scrollY = idx === 3 ? Math.max(0, y - 8) : Math.max(0, y - 24);
+      scrollRef.current?.scrollTo({ y: scrollY, animated: true });
     }
   }, []);
 
@@ -888,21 +912,25 @@ export default function DashboardScreen() {
     setWizardStep(-1);
   }, []);
 
-  const backdropOpacity = useSharedValue(0);
+  const bgDim = useSharedValue(0);
   useEffect(() => {
-    backdropOpacity.value = withTiming(
-      wizardStep >= 1 && wizardStep <= 3 ? 0.48 : 0,
-      { duration: 300 }
+    bgDim.value = withTiming(
+      wizardStep >= 1 && wizardStep <= 3 ? 1 : 0,
+      { duration: 350 }
     );
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wizardStep]);
 
-  const backdropStyle = useAnimatedStyle(() => ({
-    opacity: backdropOpacity.value,
+  const rootBgStyle = useAnimatedStyle(() => ({
+    backgroundColor: interpolateColor(
+      bgDim.value,
+      [0, 1],
+      [colors.background, "#1E3432"]
+    ),
   }));
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
+    <Animated.View style={[{ flex: 1 }, rootBgStyle]}>
       <View style={{ height: topPad }} />
 
       <View style={styles.header}>
@@ -958,16 +986,6 @@ export default function DashboardScreen() {
         </WizardSection>
       </ScrollView>
 
-      {/* Dimming backdrop for steps 1–3 */}
-      <Animated.View
-        style={[
-          StyleSheet.absoluteFillObject,
-          { backgroundColor: "#000000" },
-          backdropStyle,
-          { pointerEvents: "none" },
-        ]}
-      />
-
       {/* Bottom-sheet wizard (steps 1–3) */}
       <WizardBottomSheet
         wizardStep={wizardStep}
@@ -986,7 +1004,7 @@ export default function DashboardScreen() {
 
       {/* Done overlay (step 4) */}
       <WizardDoneOverlay visible={wizardStep === 4} onFinish={handleFinish} />
-    </View>
+    </Animated.View>
   );
 }
 
@@ -1113,9 +1131,20 @@ const styles = StyleSheet.create({
   },
   // Wizard section highlight border
   highlightBorder: {
-    borderWidth: 2,
+    borderWidth: 2.5,
     borderColor: DS.palette.primary.main,
     borderRadius: DS.shape.radius.lg + 2,
+  },
+  // Glow halo behind highlighted section
+  highlightGlow: {
+    borderRadius: DS.shape.radius.lg + 8,
+    margin: -8,
+    shadowColor: DS.palette.primary.main,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.55,
+    shadowRadius: 24,
+    elevation: 24,
+    backgroundColor: "transparent",
   },
   // Wizard bottom sheet
   bottomSheet: {
