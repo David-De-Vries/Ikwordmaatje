@@ -1,0 +1,8 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "X0XqsW0eGRN2xQbtR1q0m"
+uri = "file://artifacts/mobile/assets/images/icon.png"
+type = "image"
+title = "careibu app icon"

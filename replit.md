@@ -16,6 +16,41 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 - **API codegen**: Orval (from OpenAPI spec)
 - **Build**: esbuild (CJS bundle)
 
+## Artifacts
+
+### Careibu Mobile (`artifacts/mobile/`)
+- **Framework**: Expo (React Native) with Expo Router file-based routing
+- **Purpose**: 11-step volunteer onboarding flow for Careibu (Dutch senior-volunteer platform)
+- **Design**: MUI-inspired design system; teal background `#8CBFBB`, crimson primary `#A01550`, white cards
+- **Language**: Dutch (UI labels, button text, copy)
+- **Persistence**: AsyncStorage via `context/OnboardingContext.tsx`
+
+#### Design System
+- `constants/design-system.ts` — Full DS with Figma conversion comments (palette, typography, spacing, shape, shadows, z-index)
+- `constants/colors.ts` — Brand color tokens
+- `components/ui/` — MUI-inspired component library (Button, TextField, Typography, Card, Banner, IconBadge, Chip)
+- `components/ProgressHeader.tsx` — Segmented step bar header
+- `components/SelectCard.tsx` — Single/multi-select cards
+- `components/SliderInput.tsx` — Touch-based range slider
+
+#### Screen Flow
+1. `/signup` — Account creation
+2. `/step1` — About You (personal info)
+3. `/step2` — Project Selection (8 project types)
+4. `/step3` — Context (read-only explainer)
+5. `/step4` — Preferences (activities, dementia experience, comfort slider)
+6. `/step5` — Availability & Location
+7. `/step7` — Expectations (read-only)
+8. `/step8` — Profile Summary (editable sections)
+9. `/loading` — Animated saving state (auto-navigates to step9)
+10. `/step9` — Matches (3 senior profiles)
+11. `/step10` — Schedule & Contact Prefs
+12. `/step11` — Completion / Welcome
+
+#### Navigation
+- `app/(tabs)/_layout.tsx` — Stack navigator (no tabs), `headerShown: false`, `gestureEnabled: false`
+- `app/_layout.tsx` — Root layout wrapping everything in `OnboardingProvider`
+
 ## Key Commands
 
 - `pnpm run typecheck` — full typecheck across all packages
