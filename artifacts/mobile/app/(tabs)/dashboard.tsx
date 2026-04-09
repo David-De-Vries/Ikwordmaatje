@@ -1101,11 +1101,10 @@ export default function DashboardScreen() {
 
         {/* Nav items */}
         {[
-          { icon: "home" as const,          label: "Dashboard" },
-          { icon: "heart" as const,         label: "Matches" },
-          { icon: "calendar" as const,      label: "Agenda" },
-          { icon: "message-circle" as const,label: "Berichten" },
-          { icon: "settings" as const,      label: "Instellingen" },
+          { icon: "home" as const,      label: "Dashboard" },
+          { icon: "heart" as const,     label: "Matches" },
+          { icon: "book-open" as const, label: "Logboeken" },
+          { icon: "settings" as const,  label: "Instellingen" },
         ].map(({ icon, label }) => (
           <TouchableOpacity
             key={label}
