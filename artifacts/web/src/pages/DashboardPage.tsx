@@ -149,11 +149,11 @@ export default function DashboardPage() {
         </aside>
 
         {/* Main content */}
-        <main className="flex-1 min-w-0 px-6 py-6 max-w-4xl" style={{ backgroundColor: "#F7F8FA" }}>
+        <main className="flex-1 min-w-0 px-6 py-6 max-w-4xl bg-white">
           {activeTab === "dashboard" && (
             <div className="space-y-4">
               {/* Welcome */}
-              <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+              <div className="bg-white rounded-2xl p-5 border border-gray-200 shadow-sm">
                 <div className="flex items-start justify-between">
                   <div>
                     <h1 className="text-lg font-bold text-gray-800">Goedemorgen, {name}!</h1>
@@ -187,7 +187,7 @@ export default function DashboardPage() {
                 {/* Left column */}
                 <div className="lg:col-span-3 space-y-4">
                   {/* Match card */}
-                  <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+                  <div className="bg-white rounded-2xl p-5 border border-gray-200 shadow-sm">
                     <div className="flex items-center justify-between mb-3">
                       <h2 className="text-sm font-semibold text-gray-800">Jouw match</h2>
                       <button className="text-xs text-[#A01550] font-medium hover:underline">Alle matches</button>
@@ -214,7 +214,7 @@ export default function DashboardPage() {
                   </div>
 
                   {/* Activity */}
-                  <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+                  <div className="bg-white rounded-2xl p-5 border border-gray-200 shadow-sm">
                     <h2 className="text-sm font-semibold text-gray-800 mb-3">Recente activiteit</h2>
                     <div className="space-y-3">
                       {ACTIVITIES.map((a, i) => (
@@ -235,7 +235,7 @@ export default function DashboardPage() {
                 {/* Right column */}
                 <div className="lg:col-span-2 space-y-4">
                   {/* Next appointment */}
-                  <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+                  <div className="bg-white rounded-2xl p-5 border border-gray-200 shadow-sm">
                     <h2 className="text-sm font-semibold text-gray-800 mb-3">Volgende afspraak</h2>
                     <div className="rounded-xl p-4 text-center mb-3" style={{ backgroundColor: "#D4EBE9" }}>
                       <div className="text-2xl font-bold" style={{ color: "#3A7A74" }}>14</div>
@@ -249,7 +249,7 @@ export default function DashboardPage() {
                   </div>
 
                   {/* Progress */}
-                  <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+                  <div className="bg-white rounded-2xl p-5 border border-gray-200 shadow-sm">
                     <h2 className="text-sm font-semibold text-gray-800 mb-3">Jouw voortgang</h2>
                     <div className="space-y-3">
                       {[
@@ -275,7 +275,7 @@ export default function DashboardPage() {
           )}
 
           {(activeTab === "matches" || activeTab === "agenda" || activeTab === "berichten") && (
-            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 text-center">
+            <div className="bg-white rounded-2xl p-8 border border-gray-200 shadow-sm text-center">
               <div className="w-12 h-12 rounded-2xl mx-auto mb-3 flex items-center justify-center" style={{ backgroundColor: "#FAE0EC" }}>
                 {activeTab === "matches" && <Users size={22} color="#A01550" />}
                 {activeTab === "agenda" && <Calendar size={22} color="#A01550" />}
@@ -289,7 +289,7 @@ export default function DashboardPage() {
           {activeTab === "instellingen" && (
             <div className="space-y-4">
               {/* Profile info */}
-              <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+              <div className="bg-white rounded-2xl p-5 border border-gray-200 shadow-sm">
                 <h2 className="text-sm font-semibold text-gray-800 mb-4">Profiel</h2>
                 <div className="flex items-center gap-4 mb-4 p-4 rounded-xl" style={{ backgroundColor: "#F7F8FA" }}>
                   <div className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold" style={{ backgroundColor: "#FAE0EC", color: "#A01550" }}>
@@ -317,7 +317,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Notifications */}
-              <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+              <div className="bg-white rounded-2xl p-5 border border-gray-200 shadow-sm">
                 <div className="flex items-center gap-2 mb-1">
                   <Bell size={15} color="#A01550" />
                   <h2 className="text-sm font-semibold text-gray-800">Meldingen</h2>
@@ -362,7 +362,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Privacy & beveiliging */}
-              <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+              <div className="bg-white rounded-2xl p-5 border border-gray-200 shadow-sm">
                 <div className="flex items-center gap-2 mb-1">
                   <Shield size={15} color="#2E7D32" />
                   <h2 className="text-sm font-semibold text-gray-800">Privacy & beveiliging</h2>
@@ -389,7 +389,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Taal & regio */}
-              <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+              <div className="bg-white rounded-2xl p-5 border border-gray-200 shadow-sm">
                 <div className="flex items-center gap-2 mb-1">
                   <Globe size={15} color="#5A9E97" />
                   <h2 className="text-sm font-semibold text-gray-800">Taal & regio</h2>

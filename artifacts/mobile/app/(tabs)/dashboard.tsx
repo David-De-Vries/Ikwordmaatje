@@ -377,7 +377,7 @@ const INFO_MODULES = [
     id: "gesprek",
     icon: "message-circle" as const,
     color: DS.palette.secondary.dark,
-    bg: DS.palette.background.selected,
+    bg: "#E8F4F3",
     title: "Tips voor je eerste gesprek",
     snippet: "Maak je eerste ontmoeting onvergetelijk.",
     readTime: "3 min",
@@ -928,7 +928,7 @@ export default function DashboardScreen() {
     backgroundColor: interpolateColor(
       bgDim.value,
       [0, 1],
-      [colors.background, "#1E3432"]
+      ["#FFFFFF", "#1E3432"]
     ),
   }));
 
@@ -940,15 +940,15 @@ export default function DashboardScreen() {
         <View>
           <Typography
             variant="overline"
-            style={{ color: "rgba(255,255,255,0.72)" }}
+            style={{ color: DS.palette.text.secondary }}
           >
             Goedemorgen
           </Typography>
-          <Typography variant="h4" style={{ color: "#FFFFFF" }}>
+          <Typography variant="h4" style={{ color: DS.palette.text.primary }}>
             {data.firstName || "Vrijwilliger"}
           </Typography>
         </View>
-        <View style={styles.avatarCircle}>
+        <View style={[styles.avatarCircle, { backgroundColor: "#FAE0EC" }]}>
           <Typography variant="h4" style={{ color: DS.palette.primary.main }}>
             {(data.firstName?.[0] ?? "V").toUpperCase()}
           </Typography>
