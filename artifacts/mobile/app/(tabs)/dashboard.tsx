@@ -203,7 +203,7 @@ function MatchingStatusCard() {
         <View style={{ flex: 1 }}>
           <Typography variant="h5">Je koppeling</Typography>
           <Typography variant="caption" color="textSecondary">
-            We zijn op zoek naar jouw match
+            Hier zijn we mee bezig
           </Typography>
         </View>
         <View style={[styles.pill, { backgroundColor: "#FFF0D9" }]}>
