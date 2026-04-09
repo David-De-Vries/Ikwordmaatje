@@ -915,6 +915,50 @@ export default function DashboardScreen() {
     setWizardStep(-1);
   }, []);
 
+  // ── Hamburger / drawer ────────────────────────────────────────────────────
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuProgress = useSharedValue(0);
+  const drawerX = useSharedValue(-280);
+
+  const toggleMenu = useCallback(() => {
+    const opening = !menuOpen;
+    setMenuOpen(opening);
+    menuProgress.value = withTiming(opening ? 1 : 0, { duration: 220 });
+    drawerX.value = withSpring(opening ? 0 : -280, {
+      damping: 22,
+      stiffness: 220,
+    });
+  }, [menuOpen, menuProgress, drawerX]);
+
+  const closeMenu = useCallback(() => {
+    setMenuOpen(false);
+    menuProgress.value = withTiming(0, { duration: 220 });
+    drawerX.value = withSpring(-280, { damping: 22, stiffness: 220 });
+  }, [menuProgress, drawerX]);
+
+  const topBarStyle = useAnimatedStyle(() => ({
+    transform: [
+      { translateY: interpolate(menuProgress.value, [0, 1], [0, 6]) },
+      { rotate: `${interpolate(menuProgress.value, [0, 1], [0, 45])}deg` },
+    ],
+  }));
+  const midBarStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(menuProgress.value, [0, 0.4, 1], [1, 0, 0]),
+  }));
+  const botBarStyle = useAnimatedStyle(() => ({
+    transform: [
+      { translateY: interpolate(menuProgress.value, [0, 1], [0, -6]) },
+      { rotate: `${interpolate(menuProgress.value, [0, 1], [0, -45])}deg` },
+    ],
+  }));
+  const drawerStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: drawerX.value }],
+  }));
+  const overlayOpacity = useAnimatedStyle(() => ({
+    opacity: interpolate(menuProgress.value, [0, 1], [0, 0.45]),
+  }));
+
+  // ── Background dim ────────────────────────────────────────────────────────
   const bgDim = useSharedValue(0);
   useEffect(() => {
     bgDim.value = withTiming(
@@ -936,7 +980,19 @@ export default function DashboardScreen() {
     <Animated.View style={[{ flex: 1 }, rootBgStyle]}>
       <View style={{ backgroundColor: "#8CBFBB", paddingTop: topPad }}>
         <View style={styles.header}>
-          <View>
+          {/* Hamburger */}
+          <TouchableOpacity
+            onPress={toggleMenu}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            style={styles.hamburgerBtn}
+          >
+            <Animated.View style={[styles.hamburgerBar, topBarStyle]} />
+            <Animated.View style={[styles.hamburgerBar, midBarStyle]} />
+            <Animated.View style={[styles.hamburgerBar, botBarStyle]} />
+          </TouchableOpacity>
+
+          {/* Greeting */}
+          <View style={{ flex: 1, marginLeft: DS.spacing.md }}>
             <Typography
               variant="overline"
               style={{ color: "rgba(255,255,255,0.75)" }}
@@ -947,6 +1003,8 @@ export default function DashboardScreen() {
               {data.firstName || "Vrijwilliger"}
             </Typography>
           </View>
+
+          {/* Avatar */}
           <View style={[styles.avatarCircle, { backgroundColor: "rgba(255,255,255,0.25)" }]}>
             <Typography variant="h4" style={{ color: "#FFFFFF" }}>
               {(data.firstName?.[0] ?? "V").toUpperCase()}
@@ -1007,6 +1065,65 @@ export default function DashboardScreen() {
 
       {/* Done overlay (step 4) */}
       <WizardDoneOverlay visible={wizardStep === 4} onFinish={handleFinish} />
+
+      {/* ── Drawer overlay ─────────────────────────────────────────────── */}
+      {menuOpen && (
+        <TouchableOpacity
+          style={StyleSheet.absoluteFill}
+          activeOpacity={1}
+          onPress={closeMenu}
+        >
+          <Animated.View
+            style={[
+              StyleSheet.absoluteFill,
+              { backgroundColor: "#000" },
+              overlayOpacity,
+            ]}
+          />
+        </TouchableOpacity>
+      )}
+
+      {/* ── Slide-in drawer ────────────────────────────────────────────── */}
+      <Animated.View style={[styles.drawer, drawerStyle]}>
+        {/* Drawer header */}
+        <View style={styles.drawerHeader}>
+          <View style={styles.drawerAvatar}>
+            <Typography variant="h4" style={{ color: "#FFFFFF" }}>
+              {(data.firstName?.[0] ?? "V").toUpperCase()}
+            </Typography>
+          </View>
+          <View>
+            <Typography variant="h5" style={{ color: "#FFFFFF" }}>
+              {data.firstName || "Vrijwilliger"}
+            </Typography>
+            <Typography variant="caption" style={{ color: "rgba(255,255,255,0.7)" }}>
+              Vrijwilliger
+            </Typography>
+          </View>
+        </View>
+
+        {/* Nav items */}
+        {[
+          { icon: "home" as const,          label: "Dashboard" },
+          { icon: "heart" as const,         label: "Matches" },
+          { icon: "calendar" as const,      label: "Agenda" },
+          { icon: "message-circle" as const,label: "Berichten" },
+          { icon: "settings" as const,      label: "Instellingen" },
+        ].map(({ icon, label }) => (
+          <TouchableOpacity
+            key={label}
+            style={styles.drawerItem}
+            onPress={closeMenu}
+          >
+            <View style={styles.drawerIconWrap}>
+              <Feather name={icon} size={18} color="#8CBFBB" />
+            </View>
+            <Typography variant="body1" style={{ color: DS.palette.text.primary }}>
+              {label}
+            </Typography>
+          </TouchableOpacity>
+        ))}
+      </Animated.View>
     </Animated.View>
   );
 }
@@ -1023,6 +1140,66 @@ const styles = StyleSheet.create({
     paddingHorizontal: DS.spacing.lg,
     paddingVertical: DS.spacing.md,
     marginBottom: DS.spacing.xs,
+  },
+  // Hamburger
+  hamburgerBtn: {
+    width: 32,
+    height: 32,
+    justifyContent: "center",
+    gap: 5,
+  },
+  hamburgerBar: {
+    height: 2.5,
+    width: 22,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 2,
+  },
+  // Drawer
+  drawer: {
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    left: 0,
+    width: 280,
+    backgroundColor: "#FFFFFF",
+    zIndex: 200,
+    shadowColor: "#000",
+    shadowOffset: { width: 4, height: 0 },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 16,
+  },
+  drawerHeader: {
+    backgroundColor: "#8CBFBB",
+    paddingHorizontal: DS.spacing.xl,
+    paddingTop: 64,
+    paddingBottom: DS.spacing.xl,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: DS.spacing.md,
+  },
+  drawerAvatar: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: "rgba(255,255,255,0.25)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  drawerItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: DS.spacing.md,
+    paddingHorizontal: DS.spacing.xl,
+    paddingVertical: DS.spacing.md,
+  },
+  drawerIconWrap: {
+    width: 36,
+    height: 36,
+    borderRadius: DS.shape.radius.md,
+    backgroundColor: "#EAF5F3",
+    alignItems: "center",
+    justifyContent: "center",
   },
   avatarCircle: {
     width: 44,
