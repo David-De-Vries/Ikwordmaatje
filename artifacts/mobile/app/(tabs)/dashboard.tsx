@@ -32,7 +32,6 @@ import Animated, {
   useSharedValue,
   withRepeat,
   withSequence,
-  withSpring,
   withTiming,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -923,17 +922,14 @@ export default function DashboardScreen() {
   const toggleMenu = useCallback(() => {
     const opening = !menuOpen;
     setMenuOpen(opening);
-    menuProgress.value = withTiming(opening ? 1 : 0, { duration: 220 });
-    drawerX.value = withSpring(opening ? 0 : -280, {
-      damping: 22,
-      stiffness: 220,
-    });
+    menuProgress.value = withTiming(opening ? 1 : 0, { duration: 180 });
+    drawerX.value = withTiming(opening ? 0 : -280, { duration: 200 });
   }, [menuOpen, menuProgress, drawerX]);
 
   const closeMenu = useCallback(() => {
     setMenuOpen(false);
-    menuProgress.value = withTiming(0, { duration: 220 });
-    drawerX.value = withSpring(-280, { damping: 22, stiffness: 220 });
+    menuProgress.value = withTiming(0, { duration: 180 });
+    drawerX.value = withTiming(-280, { duration: 200 });
   }, [menuProgress, drawerX]);
 
   const topBarStyle = useAnimatedStyle(() => ({
