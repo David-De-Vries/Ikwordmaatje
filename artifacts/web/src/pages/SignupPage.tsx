@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useOnboarding } from "../context/OnboardingContext";
 
-interface Props { onNext: () => void; }
+interface Props { onNext: () => void; onSkipToDashboard?: () => void; }
 
-export default function SignupPage({ onNext }: Props) {
+export default function SignupPage({ onNext, onSkipToDashboard }: Props) {
   const { update } = useOnboarding();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -99,6 +99,18 @@ export default function SignupPage({ onNext }: Props) {
           en{" "}
           <span className="text-[#A01550] cursor-pointer hover:underline">Privacybeleid</span>.
         </p>
+
+        {onSkipToDashboard && (
+          <div className="mt-5 pt-4 border-t border-gray-100 text-center">
+            <p className="text-xs text-gray-400 mb-1">Demo</p>
+            <button
+              onClick={onSkipToDashboard}
+              className="text-xs text-gray-500 hover:text-[#A01550] underline underline-offset-2 transition"
+            >
+              Direct naar het dashboard →
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

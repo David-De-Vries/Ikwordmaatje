@@ -36,7 +36,7 @@ function AppContent() {
 
   switch (screen) {
     case "signup":
-      return <SignupPage onNext={go("step1")} />;
+      return <SignupPage onNext={go("step1")} onSkipToDashboard={go("dashboard")} />;
     case "step1":
       return (
         <Step1PersonalInfo
