@@ -502,9 +502,9 @@ export default function StageInfoScreen() {
             </View>
           </View>
 
-          <View style={[styles.infoBox, { backgroundColor: "#FFFFFF", borderColor: "#F5C6D6" }]}>
+          <View style={[styles.infoBox, { backgroundColor: "#FFFFFF", borderColor: colors.secondary }]}>
             <Typography variant="caption" style={{ color: colors.secondary }}>
-              ✨ Jouw stagegegevens worden doorgestuurd naar ons stagebegeleiders-team. Je hoort snel van ons!
+              Jouw stagegegevens worden doorgestuurd naar ons stagebegeleiders-team. Je hoort snel van ons!
             </Typography>
           </View>
 
