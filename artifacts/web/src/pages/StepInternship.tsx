@@ -57,6 +57,8 @@ export default function StepInternship({ onNext, onBack }: Props) {
     setShowSuggestions(false);
   };
 
+  const isComplete = Boolean(course && (school || schoolQuery) && startMonth && startYear && endMonth && endYear && hours !== "");
+
   const handleNext = () => {
     update({
       internshipCourse: course,
@@ -71,14 +73,9 @@ export default function StepInternship({ onNext, onBack }: Props) {
   return (
     <StepLayout step={2} totalSteps={11} label="Jouw stage">
       <div className="p-8">
-        <div className="flex items-center gap-3 mb-5">
-          <div className="w-10 h-10 rounded-full bg-[#FFF0F5] border-2 border-[#A01550] flex items-center justify-center text-lg flex-shrink-0">
-            🎓
-          </div>
-          <div>
-            <h2 className="text-xl font-semibold text-gray-800">Jouw stage bij Careibu</h2>
-            <p className="text-sm text-gray-500">Vertel ons iets over je stageplek.</p>
-          </div>
+        <div className="mb-5">
+          <h2 className="text-xl font-semibold text-gray-800">Jouw stage bij Careibu</h2>
+          <p className="text-sm text-gray-500">Vertel ons iets over je stageplek.</p>
         </div>
 
         <div className="space-y-4 mb-6">
@@ -212,9 +209,18 @@ export default function StepInternship({ onNext, onBack }: Props) {
           </div>
         </div>
 
-        <div className="p-3 rounded-xl bg-[#FFF5F8] border border-[#F5C6D6] mb-6">
+        <div
+          className="rounded-xl border mb-6 overflow-hidden transition-all duration-500 ease-out"
+          style={{
+            maxHeight: isComplete ? "80px" : "0px",
+            opacity: isComplete ? 1 : 0,
+            transform: isComplete ? "translateY(0)" : "translateY(10px)",
+            borderColor: isComplete ? "#A01550" : "transparent",
+            padding: isComplete ? "12px" : "0px",
+          }}
+        >
           <p className="text-xs text-[#A01550]">
-            ✨ Jouw stagegegevens worden doorgestuurd naar ons stagebegeleiders-team. Je hoort snel van ons!
+            Jouw stagegegevens worden doorgestuurd naar ons stagebegeleiders-team. Je hoort snel van ons!
           </p>
         </div>
 

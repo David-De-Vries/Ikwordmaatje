@@ -1,7 +1,8 @@
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
+  Animated,
   Keyboard,
   Modal,
   StyleSheet,
@@ -311,6 +312,18 @@ export default function StageInfoScreen() {
     data.internshipHoursPerWeek ? String(data.internshipHoursPerWeek) : ""
   );
 
+  const infoAnim = useRef(new Animated.Value(0)).current;
+  const isComplete = Boolean(course && schoolQuery && startDate && endDate && hours);
+
+  useEffect(() => {
+    Animated.spring(infoAnim, {
+      toValue: isComplete ? 1 : 0,
+      useNativeDriver: true,
+      tension: 60,
+      friction: 10,
+    }).start();
+  }, [isComplete]);
+
   const suggestions = SCHOOLS.filter(
     (s) => schoolQuery.length > 0 && s.toLowerCase().includes(schoolQuery.toLowerCase())
   ).slice(0, 5);
@@ -339,17 +352,10 @@ export default function StageInfoScreen() {
       >
         <Card elevation={2} padding="lg" style={styles.card}>
           <View style={styles.header}>
-            <View style={styles.iconRow}>
-              <View style={[styles.icon, { backgroundColor: "#FFF0F5", borderColor: colors.secondary }]}>
-                <Typography style={{ fontSize: 20 }}>🎓</Typography>
-              </View>
-              <View style={{ flex: 1 }}>
-                <Typography variant="h3">Jouw stage bij Careibu</Typography>
-                <Typography variant="body2" color="textSecondary">
-                  Vertel ons iets over je stageplek.
-                </Typography>
-              </View>
-            </View>
+            <Typography variant="h3">Jouw stage bij Careibu</Typography>
+            <Typography variant="body2" color="textSecondary">
+              Vertel ons iets over je stageplek.
+            </Typography>
           </View>
 
           <View style={styles.fields}>
@@ -502,11 +508,28 @@ export default function StageInfoScreen() {
             </View>
           </View>
 
-          <View style={[styles.infoBox, { backgroundColor: "#FFFFFF", borderColor: colors.secondary }]}>
+          <Animated.View
+            style={[
+              styles.infoBox,
+              { backgroundColor: "#FFFFFF", borderColor: colors.secondary },
+              {
+                opacity: infoAnim,
+                transform: [
+                  {
+                    translateY: infoAnim.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [14, 0],
+                    }),
+                  },
+                ],
+              },
+            ]}
+            pointerEvents={isComplete ? "auto" : "none"}
+          >
             <Typography variant="caption" style={{ color: colors.secondary }}>
               Jouw stagegegevens worden doorgestuurd naar ons stagebegeleiders-team. Je hoort snel van ons!
             </Typography>
-          </View>
+          </Animated.View>
 
           <View style={styles.navRow}>
             <Button
