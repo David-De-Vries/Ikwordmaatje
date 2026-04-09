@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -6,6 +7,7 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -124,26 +126,29 @@ export default function SignupScreen() {
           </View>
 
           <View style={styles.socialButtons}>
-            <Button
-              variant="outlined"
-              color="default"
-              size="md"
-              fullWidth
+            {/* Google */}
+            <TouchableOpacity
+              style={styles.googleBtn}
               onPress={() => router.push("/step1")}
-              style={styles.socialBtn}
+              activeOpacity={0.82}
             >
-              Ga verder met Google
-            </Button>
-            <Button
-              variant="outlined"
-              color="default"
-              size="md"
-              fullWidth
+              <Ionicons name="logo-google" size={20} color="#4285F4" />
+              <Typography variant="body2" style={styles.googleBtnText}>
+                Ga verder met Google
+              </Typography>
+            </TouchableOpacity>
+
+            {/* Apple */}
+            <TouchableOpacity
+              style={styles.appleBtn}
               onPress={() => router.push("/step1")}
-              style={styles.socialBtn}
+              activeOpacity={0.82}
             >
-              Ga verder met Apple
-            </Button>
+              <Ionicons name="logo-apple" size={21} color="#FFFFFF" />
+              <Typography variant="body2" style={styles.appleBtnText}>
+                Ga verder met Apple
+              </Typography>
+            </TouchableOpacity>
           </View>
 
           <View style={styles.loginRow}>
@@ -210,8 +215,33 @@ const styles = StyleSheet.create({
   socialButtons: {
     gap: DS.spacing.sm,
   },
-  socialBtn: {
+  googleBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     gap: DS.spacing.sm,
+    height: 48,
+    borderRadius: DS.shape.radius.md,
+    backgroundColor: "#FFFFFF",
+    borderWidth: 1,
+    borderColor: "#DADCE0",
+  },
+  googleBtnText: {
+    color: "#3C4043",
+    fontWeight: "500",
+  },
+  appleBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: DS.spacing.sm,
+    height: 48,
+    borderRadius: DS.shape.radius.md,
+    backgroundColor: "#000000",
+  },
+  appleBtnText: {
+    color: "#FFFFFF",
+    fontWeight: "500",
   },
   loginRow: {
     flexDirection: "row",
