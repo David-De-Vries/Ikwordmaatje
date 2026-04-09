@@ -86,8 +86,8 @@ export default function Step10Screen() {
             </View>
 
             <View style={styles.contactRow}>
-              <View style={[styles.contactIcon, { backgroundColor: DS.palette.iconBadge.navy.bg }]}>
-                <Feather name="mail" size={18} color={DS.palette.iconBadge.navy.icon} />
+              <View style={[styles.contactIcon, { backgroundColor: DS.iconBadge.navy.bg }]}>
+                <Feather name="mail" size={18} color={DS.iconBadge.navy.icon} />
               </View>
               <View style={{ flex: 1 }}>
                 <Typography variant="caption" color="textSecondary">
@@ -98,9 +98,9 @@ export default function Step10Screen() {
                 </Typography>
               </View>
               {email && (
-                <View style={[styles.badge, { backgroundColor: DS.palette.iconBadge.navy.bg }]}>
-                  <Feather name="check" size={12} color={DS.palette.iconBadge.navy.icon} />
-                  <Typography variant="caption" style={{ color: DS.palette.iconBadge.navy.icon }}>
+                <View style={[styles.badge, { backgroundColor: DS.iconBadge.navy.bg }]}>
+                  <Feather name="check" size={12} color={DS.iconBadge.navy.icon} />
+                  <Typography variant="caption" style={{ color: DS.iconBadge.navy.icon }}>
                     Bevestigd
                   </Typography>
                 </View>

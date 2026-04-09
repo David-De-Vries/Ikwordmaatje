@@ -29,7 +29,6 @@ import Animated, {
   interpolate,
   interpolateColor,
   useAnimatedStyle,
-  useDerivedValue,
   useSharedValue,
   withRepeat,
   withSequence,
@@ -934,26 +933,11 @@ export default function DashboardScreen() {
     drawerX.value = withTiming(-280, { duration: 200 });
   }, [menuProgress, drawerX]);
 
-  const topRotate = useDerivedValue(() =>
-    String(interpolate(menuProgress.value, [0, 1], [0, 45])) + "deg"
-  );
-  const botRotate = useDerivedValue(() =>
-    String(interpolate(menuProgress.value, [0, 1], [0, -45])) + "deg"
-  );
-  const topBarStyle = useAnimatedStyle(() => ({
-    transform: [
-      { translateY: interpolate(menuProgress.value, [0, 1], [0, 6]) },
-      { rotate: topRotate.value },
-    ],
-  }));
-  const midBarStyle = useAnimatedStyle(() => ({
+  const barsOpacity = useAnimatedStyle(() => ({
     opacity: interpolate(menuProgress.value, [0, 0.4, 1], [1, 0, 0]),
   }));
-  const botBarStyle = useAnimatedStyle(() => ({
-    transform: [
-      { translateY: interpolate(menuProgress.value, [0, 1], [0, -6]) },
-      { rotate: botRotate.value },
-    ],
+  const xOpacity = useAnimatedStyle(() => ({
+    opacity: interpolate(menuProgress.value, [0.4, 1], [0, 1]),
   }));
   const drawerStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: drawerX.value }],
@@ -984,15 +968,20 @@ export default function DashboardScreen() {
     <Animated.View style={[{ flex: 1 }, rootBgStyle]}>
       <View style={{ backgroundColor: "#8CBFBB", paddingTop: topPad }}>
         <View style={styles.header}>
-          {/* Hamburger */}
+          {/* Hamburger / X toggle */}
           <TouchableOpacity
             onPress={toggleMenu}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             style={styles.hamburgerBtn}
           >
-            <Animated.View style={[styles.hamburgerBar, topBarStyle]} />
-            <Animated.View style={[styles.hamburgerBar, midBarStyle]} />
-            <Animated.View style={[styles.hamburgerBar, botBarStyle]} />
+            <Animated.View style={[StyleSheet.absoluteFill, styles.hamburgerBars, barsOpacity]}>
+              <View style={styles.hamburgerBar} />
+              <View style={styles.hamburgerBar} />
+              <View style={styles.hamburgerBar} />
+            </Animated.View>
+            <Animated.View style={[StyleSheet.absoluteFill, styles.xIcon, xOpacity]}>
+              <Feather name="x" size={20} color="#FFFFFF" />
+            </Animated.View>
           </TouchableOpacity>
 
           {/* Greeting */}
@@ -1148,14 +1137,21 @@ const styles = StyleSheet.create({
   hamburgerBtn: {
     width: 32,
     height: 32,
+  },
+  hamburgerBars: {
     justifyContent: "center",
     gap: 5,
+    paddingVertical: 5,
   },
   hamburgerBar: {
     height: 2.5,
     width: 22,
     backgroundColor: "#FFFFFF",
     borderRadius: 2,
+  },
+  xIcon: {
+    alignItems: "center",
+    justifyContent: "center",
   },
   // Drawer
   drawer: {
