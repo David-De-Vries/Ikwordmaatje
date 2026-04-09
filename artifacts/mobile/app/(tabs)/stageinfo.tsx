@@ -355,7 +355,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: DS.spacing.md,
     paddingVertical: DS.spacing.sm + 2,
     fontSize: 14,
-    fontFamily: DS.typography.body2.fontFamily,
+    fontFamily: "Inter_400Regular",
   },
   suggestions: {
     borderWidth: 1,
@@ -405,7 +405,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: DS.spacing.md,
     paddingVertical: DS.spacing.sm + 2,
     fontSize: 14,
-    fontFamily: DS.typography.body2.fontFamily,
+    fontFamily: "Inter_400Regular",
     width: 80,
     textAlign: "center",
   },

@@ -21,6 +21,7 @@ interface OnboardingData {
   dementiaExperience: string;
   comfortScore: number;
   availabilityDays: Array<{ day: string; start: string; end: string }>;
+  availabilityUnknown: boolean;
   address: string;
   travelKm: number;
 }
@@ -50,7 +51,8 @@ const defaults: OnboardingData = {
   activities: [],
   dementiaExperience: "",
   comfortScore: 5,
-  availabilityDays: [],
+  availabilityDays: [{ day: "", start: "", end: "" }],
+  availabilityUnknown: false,
   address: "",
   travelKm: 10,
 };
