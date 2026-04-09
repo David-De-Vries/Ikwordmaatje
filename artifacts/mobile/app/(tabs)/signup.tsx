@@ -56,7 +56,7 @@ export default function SignupScreen() {
       >
         <View style={styles.brandArea}>
           <Image
-            source={require("../../assets/images/icon.png")}
+            source={require("../../assets/images/logo.png")}
             style={styles.logo}
             resizeMode="contain"
           />
@@ -186,9 +186,8 @@ const styles = StyleSheet.create({
     gap: DS.spacing.sm,
   },
   logo: {
-    width: 72,
-    height: 72,
-    borderRadius: DS.shape.radius.lg,
+    width: 90,
+    height: 90,
   },
   card: {
     gap: DS.spacing.lg,
