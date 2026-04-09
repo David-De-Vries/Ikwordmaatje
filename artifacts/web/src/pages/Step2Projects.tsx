@@ -4,72 +4,11 @@ import { useOnboarding } from "../context/OnboardingContext";
 
 interface Props { onNext: () => void; onBack: () => void; }
 
-const PROJECTS = [
-  {
-    id: "boodschappen",
-    name: "Boodschappen Vrienden",
-    emoji: "🛒",
-    desc: "Samen boodschappen doen met een senior uit jouw buurt.",
-    color: "#FFF3E0",
-    accent: "#F57C00",
-  },
-  {
-    id: "wandelen",
-    name: "Wandelmaatje",
-    emoji: "🚶",
-    desc: "Regelmatig wandelen en frisse lucht snuiven samen.",
-    color: "#E8F5E9",
-    accent: "#388E3C",
-  },
-  {
-    id: "koken",
-    name: "Samen Koken",
-    emoji: "🍲",
-    desc: "Ontdek gerechten en kook gezellig samen een maaltijd.",
-    color: "#FCE4EC",
-    accent: "#C2185B",
-  },
-  {
-    id: "muziek",
-    name: "Muziek Herinnert",
-    emoji: "🎵",
-    desc: "Muziek beluisteren en herinneringen ophalen.",
-    color: "#E3F2FD",
-    accent: "#1565C0",
-  },
-  {
-    id: "digitaal",
-    name: "Digitale Maatje",
-    emoji: "💻",
-    desc: "Hulp bij smartphone, tablet en internet.",
-    color: "#F3E5F5",
-    accent: "#7B1FA2",
-  },
-  {
-    id: "sport",
-    name: "Beweeg Buddy",
-    emoji: "🏃",
-    desc: "Sporten en bewegen met een enthousiaste buddy.",
-    color: "#E0F2F1",
-    accent: "#00796B",
-  },
-  {
-    id: "kunst",
-    name: "Creatief Atelier",
-    emoji: "🎨",
-    desc: "Samen schilderen, tekenen of knutselen.",
-    color: "#FFF8E1",
-    accent: "#F9A825",
-  },
-  {
-    id: "lezen",
-    name: "Leesclub",
-    emoji: "📚",
-    desc: "Boeken bespreken en voorlezen aan elkaar.",
-    color: "#EDE7F6",
-    accent: "#512DA8",
-  },
-];
+const PROJECTS = Array.from({ length: 8 }, (_, i) => ({
+  id: `project-${i + 1}`,
+  name: `Project ${i + 1}`,
+  desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+}));
 
 export default function Step2Projects({ onNext, onBack }: Props) {
   const { data, update } = useOnboarding();
@@ -95,11 +34,10 @@ export default function Step2Projects({ onNext, onBack }: Props) {
               onClick={() => setSelected(p.id)}
               className="flex flex-col items-start p-4 rounded-xl border-2 text-left transition-all"
               style={{
-                backgroundColor: selected === p.id ? p.color : "#FAFAFA",
-                borderColor: selected === p.id ? p.accent : "#E5E7EB",
+                backgroundColor: selected === p.id ? "#FFF0F5" : "#FAFAFA",
+                borderColor: selected === p.id ? "#A01550" : "#E5E7EB",
               }}
             >
-              <div className="text-2xl mb-2">{p.emoji}</div>
               <div className="text-xs font-semibold text-gray-800 mb-1 leading-tight">{p.name}</div>
               <div className="text-xs text-gray-500 leading-relaxed">{p.desc}</div>
             </button>

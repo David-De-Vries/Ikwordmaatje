@@ -9,16 +9,12 @@ import { DS } from "@/constants/design-system";
 import { useOnboarding } from "@/context/OnboardingContext";
 import { useColors } from "@/hooks/useColors";
 
-const PROJECTS = [
-  { id: "maatje", name: "Maatje", color: "#7BB5AD", description: "Gezelschap & vriendschap" },
-  { id: "huisvriend", name: "Huisvriend", color: "#E0A060", description: "Thuis hulp & aanwezigheid" },
-  { id: "taalmaatje", name: "Taalmaatje", color: "#5B8DC9", description: "Taal leren & oefenen" },
-  { id: "studie", name: "Studie", color: "#7B5BC9", description: "Huiswerk & leren" },
-  { id: "computer", name: "Digitaal", color: "#3A8A85", description: "Digitale vaardigheden" },
-  { id: "tuinieren", name: "Tuinieren", color: "#4CAF50", description: "Buiten & natuur" },
-  { id: "sport", name: "Sport", color: "#A01550", description: "Bewegen & activiteiten" },
-  { id: "vrij", name: "Vrij project", color: "#757575", description: "Jouw eigen idee" },
-];
+const PROJECTS = Array.from({ length: 8 }, (_, i) => ({
+  id: `project-${i + 1}`,
+  name: `Project ${i + 1}`,
+  color: "#8CBFBB",
+  description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+}));
 
 export default function Step2Screen() {
   const router = useRouter();
