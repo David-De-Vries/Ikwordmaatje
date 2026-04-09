@@ -928,7 +928,7 @@ export default function DashboardScreen() {
     backgroundColor: interpolateColor(
       bgDim.value,
       [0, 1],
-      ["#FFFFFF", "#1E3432"]
+      ["#F2F3F5", "#1E3432"]
     ),
   }));
 
