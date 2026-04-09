@@ -5,15 +5,7 @@ import { useOnboarding } from "../context/OnboardingContext";
 interface Props { onNext: () => void; onBack: () => void; }
 
 const PRONOUNS = ["Hij/hem", "Zij/haar", "Hen/hun", "Geen voorkeur"];
-const EDUCATIONS = [
-  "Geen opleidding",
-  "VMBO / MAVO",
-  "HAVO / VWO",
-  "MBO",
-  "HBO",
-  "WO / Universiteit",
-  "Postdoctoraal",
-];
+const EDUCATION_LEVELS = ["MBO", "HBO", "WO", "Geen"];
 const LANGUAGES = ["Nederlands", "Engels", "Duits", "Frans", "Turks", "Arabisch", "Anders"];
 
 export default function Step1PersonalInfo({ onNext, onBack }: Props) {
@@ -25,6 +17,7 @@ export default function Step1PersonalInfo({ onNext, onBack }: Props) {
   const [phone, setPhone] = useState(data.phone);
   const [language, setLanguage] = useState(data.language);
   const [education, setEducation] = useState(data.education);
+  const [stageplek, setStageplek] = useState(false);
 
   const handleNext = () => {
     update({ firstName, lastName, dob, pronouns, phone, language, education });
@@ -100,28 +93,56 @@ export default function Step1PersonalInfo({ onNext, onBack }: Props) {
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mb-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Taal</label>
-            <select
-              value={language}
-              onChange={e => setLanguage(e.target.value)}
-              className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#A01550]/30 focus:border-[#A01550] bg-white"
-            >
-              {LANGUAGES.map(l => <option key={l}>{l}</option>)}
-            </select>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-1">Taal</label>
+          <select
+            value={language}
+            onChange={e => setLanguage(e.target.value)}
+            className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#A01550]/30 focus:border-[#A01550] bg-white"
+          >
+            {LANGUAGES.map(l => <option key={l}>{l}</option>)}
+          </select>
+        </div>
+
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 mb-2">Opleidingsniveau</label>
+          <div className="flex gap-2">
+            {EDUCATION_LEVELS.map(level => (
+              <button
+                key={level}
+                onClick={() => {
+                  setEducation(level);
+                  if (level === "Geen") setStageplek(false);
+                }}
+                className={`flex-1 py-2.5 rounded-lg border text-sm font-medium transition ${
+                  education === level
+                    ? "bg-[#A01550] text-white border-[#A01550]"
+                    : "bg-white text-gray-600 border-gray-200 hover:border-[#A01550]"
+                }`}
+              >
+                {level}
+              </button>
+            ))}
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Opleiding</label>
-            <select
-              value={education}
-              onChange={e => setEducation(e.target.value)}
-              className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#A01550]/30 focus:border-[#A01550] bg-white"
-            >
-              <option value="">Selecteer...</option>
-              {EDUCATIONS.map(e => <option key={e}>{e}</option>)}
-            </select>
-          </div>
+          {education && education !== "Geen" && (
+            <label className="flex items-center gap-2.5 mt-3 cursor-pointer group">
+              <div
+                onClick={() => setStageplek(s => !s)}
+                className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 transition ${
+                  stageplek
+                    ? "bg-[#A01550] border-[#A01550]"
+                    : "border-gray-300 group-hover:border-[#A01550]"
+                }`}
+              >
+                {stageplek && (
+                  <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                )}
+              </div>
+              <span className="text-sm text-gray-700">Ik wil me aanmelden voor een stageplek.</span>
+            </label>
+          )}
         </div>
 
         <div className="flex gap-3">
