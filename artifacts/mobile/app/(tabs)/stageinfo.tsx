@@ -494,7 +494,7 @@ export default function StageInfoScreen() {
                       styles.chip,
                       {
                         borderColor: hours === String(h) ? colors.secondary : DS.palette.border,
-                        backgroundColor: hours === String(h) ? "#FFF0F5" : "transparent",
+                        backgroundColor: "#FFFFFF",
                       },
                     ]}
                   >
