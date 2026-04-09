@@ -27,6 +27,8 @@ export interface OnboardingState {
   pronouns: string;
   phoneNumber: string;
   language: string;
+  education: string;
+  wantsInternship: boolean;
 
   // Step 2: Project Selection
   selectedProject: string;
@@ -58,6 +60,8 @@ const defaultState: OnboardingState = {
   pronouns: "",
   phoneNumber: "",
   language: "Nederlands",
+  education: "",
+  wantsInternship: false,
 
   selectedProject: "",
   projectUndecided: false,

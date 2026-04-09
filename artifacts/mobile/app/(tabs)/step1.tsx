@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 
 import { KeyboardAwareScrollViewCompat } from "@/components/KeyboardAwareScrollViewCompat";
 import { ProgressHeader } from "@/components/ProgressHeader";
@@ -11,6 +11,7 @@ import { useColors } from "@/hooks/useColors";
 
 const LANGUAGES = ["Nederlands", "Engels", "Arabisch", "Turks", "Duits", "Frans"];
 const PRONOUNS = ["Hij/hem", "Zij/haar", "Die/diens", "Geen voorkeur"];
+const EDUCATION_LEVELS = ["MBO", "HBO", "WO", "Geen"];
 
 export default function Step1Screen() {
   const router = useRouter();
@@ -109,6 +110,68 @@ export default function Step1Screen() {
                   />
                 ))}
               </View>
+            </View>
+
+            <View>
+              <Typography variant="caption" color="textSecondary" style={styles.selectorLabel}>
+                Opleidingsniveau
+              </Typography>
+              <View style={styles.educationRow}>
+                {EDUCATION_LEVELS.map((level) => (
+                  <TouchableOpacity
+                    key={level}
+                    onPress={() => {
+                      update({
+                        education: level,
+                        wantsInternship: level === "Geen" ? false : data.wantsInternship,
+                      });
+                    }}
+                    style={[
+                      styles.educationBtn,
+                      {
+                        borderColor: data.education === level ? colors.secondary : DS.palette.border,
+                        backgroundColor: data.education === level ? colors.accent : "transparent",
+                      },
+                    ]}
+                  >
+                    <Typography
+                      variant="caption"
+                      style={{
+                        color: data.education === level ? colors.secondary : DS.palette.text.secondary,
+                        fontFamily: DS.typography.fontFamily.medium,
+                        textAlign: "center",
+                      }}
+                    >
+                      {level}
+                    </Typography>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              {data.education && data.education !== "Geen" && (
+                <TouchableOpacity
+                  onPress={() => update({ wantsInternship: !data.wantsInternship })}
+                  style={styles.checkboxRow}
+                  activeOpacity={0.7}
+                >
+                  <View
+                    style={[
+                      styles.checkbox,
+                      {
+                        borderColor: data.wantsInternship ? colors.secondary : DS.palette.border,
+                        backgroundColor: data.wantsInternship ? colors.secondary : "transparent",
+                      },
+                    ]}
+                  >
+                    {data.wantsInternship && (
+                      <Typography style={styles.checkmark}>✓</Typography>
+                    )}
+                  </View>
+                  <Typography variant="caption" color="textSecondary" style={styles.checkboxLabel}>
+                    Ik wil me aanmelden voor een stageplek.
+                  </Typography>
+                </TouchableOpacity>
+              )}
             </View>
           </View>
 
@@ -209,6 +272,41 @@ const styles = StyleSheet.create({
     borderRadius: DS.shape.radius.full,
     paddingHorizontal: DS.spacing.md,
     paddingVertical: DS.spacing.xs + 1,
+  },
+  educationRow: {
+    flexDirection: "row",
+    gap: DS.spacing.sm,
+  },
+  educationBtn: {
+    flex: 1,
+    borderWidth: 1,
+    borderRadius: DS.shape.radius.md,
+    paddingVertical: DS.spacing.sm + 2,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  checkboxRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: DS.spacing.sm,
+    marginTop: DS.spacing.md,
+  },
+  checkbox: {
+    width: 18,
+    height: 18,
+    borderWidth: 2,
+    borderRadius: 4,
+    alignItems: "center",
+    justifyContent: "center",
+    flexShrink: 0,
+  },
+  checkmark: {
+    fontSize: 11,
+    color: "#FFFFFF",
+    lineHeight: 14,
+  },
+  checkboxLabel: {
+    flex: 1,
   },
   navRow: {
     flexDirection: "row",
