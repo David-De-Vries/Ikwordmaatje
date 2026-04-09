@@ -411,7 +411,7 @@ export default function StageInfoScreen() {
                     styles.dateTrigger,
                     {
                       borderColor: startDate ? colors.secondary : DS.palette.border,
-                      backgroundColor: startDate ? "#FFF0F5" : "#FAFAFA",
+                      backgroundColor: "#FFFFFF",
                     },
                   ]}
                   onPress={() => setCalTarget("start")}
@@ -437,7 +437,7 @@ export default function StageInfoScreen() {
                     styles.dateTrigger,
                     {
                       borderColor: endDate ? colors.secondary : DS.palette.border,
-                      backgroundColor: endDate ? "#FFF0F5" : "#FAFAFA",
+                      backgroundColor: "#FFFFFF",
                     },
                   ]}
                   onPress={() => setCalTarget("end")}
