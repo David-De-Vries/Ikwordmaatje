@@ -14,12 +14,14 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Button, Card, TextField, Typography } from "@/components/ui";
 import { DS } from "@/constants/design-system";
+import { useOnboarding } from "@/context/OnboardingContext";
 import { useColors } from "@/hooks/useColors";
 
 export default function SignupScreen() {
   const router = useRouter();
   const colors = useColors();
   const insets = useSafeAreaInsets();
+  const { update } = useOnboarding();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -36,7 +38,10 @@ export default function SignupScreen() {
   };
 
   const handleCreate = () => {
-    if (validate()) router.push("/step1");
+    if (validate()) {
+      update({ email });
+      router.push("/step1");
+    }
   };
 
   const topPad =

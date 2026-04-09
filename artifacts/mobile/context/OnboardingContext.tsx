@@ -20,6 +20,9 @@ export interface AvailabilitySlot {
 }
 
 export interface OnboardingState {
+  // Signup
+  email: string;
+
   // Step 1: Account — About You
   firstName: string;
   lastName: string;
@@ -59,6 +62,7 @@ export interface OnboardingState {
 }
 
 const defaultState: OnboardingState = {
+  email: "",
   firstName: "",
   lastName: "",
   dateOfBirth: "",

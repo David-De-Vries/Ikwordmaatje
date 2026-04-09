@@ -29,6 +29,7 @@ import Animated, {
   interpolate,
   interpolateColor,
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
   withRepeat,
   withSequence,
@@ -933,10 +934,16 @@ export default function DashboardScreen() {
     drawerX.value = withTiming(-280, { duration: 200 });
   }, [menuProgress, drawerX]);
 
+  const topRotate = useDerivedValue(() =>
+    String(interpolate(menuProgress.value, [0, 1], [0, 45])) + "deg"
+  );
+  const botRotate = useDerivedValue(() =>
+    String(interpolate(menuProgress.value, [0, 1], [0, -45])) + "deg"
+  );
   const topBarStyle = useAnimatedStyle(() => ({
     transform: [
       { translateY: interpolate(menuProgress.value, [0, 1], [0, 6]) },
-      { rotate: `${interpolate(menuProgress.value, [0, 1], [0, 45])}deg` },
+      { rotate: topRotate.value },
     ],
   }));
   const midBarStyle = useAnimatedStyle(() => ({
@@ -945,7 +952,7 @@ export default function DashboardScreen() {
   const botBarStyle = useAnimatedStyle(() => ({
     transform: [
       { translateY: interpolate(menuProgress.value, [0, 1], [0, -6]) },
-      { rotate: `${interpolate(menuProgress.value, [0, 1], [0, -45])}deg` },
+      { rotate: botRotate.value },
     ],
   }));
   const drawerStyle = useAnimatedStyle(() => ({
