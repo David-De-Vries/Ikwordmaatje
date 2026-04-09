@@ -128,24 +128,28 @@ export default function SignupScreen() {
           <View style={styles.socialButtons}>
             {/* Google */}
             <TouchableOpacity
-              style={styles.googleBtn}
+              style={styles.socialBtn}
               onPress={() => router.push("/step1")}
               activeOpacity={0.82}
             >
-              <Ionicons name="logo-google" size={20} color="#4285F4" />
-              <Typography variant="body2" style={styles.googleBtnText}>
+              <Image
+                source={require("../../assets/images/google-logo.png")}
+                style={styles.socialLogo}
+                resizeMode="contain"
+              />
+              <Typography variant="body2" style={styles.socialBtnText}>
                 Ga verder met Google
               </Typography>
             </TouchableOpacity>
 
             {/* Apple */}
             <TouchableOpacity
-              style={styles.appleBtn}
+              style={styles.socialBtn}
               onPress={() => router.push("/step1")}
               activeOpacity={0.82}
             >
-              <Ionicons name="logo-apple" size={21} color="#FFFFFF" />
-              <Typography variant="body2" style={styles.appleBtnText}>
+              <Ionicons name="logo-apple" size={21} color="#000000" />
+              <Typography variant="body2" style={styles.socialBtnText}>
                 Ga verder met Apple
               </Typography>
             </TouchableOpacity>
@@ -215,7 +219,7 @@ const styles = StyleSheet.create({
   socialButtons: {
     gap: DS.spacing.sm,
   },
-  googleBtn: {
+  socialBtn: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -224,24 +228,15 @@ const styles = StyleSheet.create({
     borderRadius: DS.shape.radius.md,
     backgroundColor: "#FFFFFF",
     borderWidth: 1,
-    borderColor: "#DADCE0",
+    borderColor: "#E0E0E0",
   },
-  googleBtnText: {
-    color: "#3C4043",
+  socialBtnText: {
+    color: "#1A1A1A",
     fontWeight: "500",
   },
-  appleBtn: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: DS.spacing.sm,
-    height: 48,
-    borderRadius: DS.shape.radius.md,
-    backgroundColor: "#000000",
-  },
-  appleBtnText: {
-    color: "#FFFFFF",
-    fontWeight: "500",
+  socialLogo: {
+    width: 20,
+    height: 20,
   },
   loginRow: {
     flexDirection: "row",
