@@ -80,7 +80,7 @@ export default function Step9Preferences({ onNext, onBack }: Props) {
         <div className="flex gap-3">
           <button
             onClick={onBack}
-            className="flex-1 py-3 rounded-lg border border-gray-200 text-gray-600 text-sm font-medium hover:bg-gray-50 transition"
+            className="flex-1 py-3 rounded-lg border border-[#A01550] text-[#A01550] text-sm font-medium hover:bg-[#FFF5F8] transition"
           >
             Terug
           </button>

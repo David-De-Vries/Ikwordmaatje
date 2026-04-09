@@ -109,6 +109,8 @@ export function Button({
         : contrast
       : disabled
       ? DS.palette.text.disabled
+      : color === "default"
+      ? contrast
       : main;
 
   return (
