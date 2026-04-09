@@ -201,7 +201,7 @@ function MatchingStatusCard() {
           <Feather name="users" size={20} color={DS.palette.warning.main} />
         </View>
         <View style={{ flex: 1 }}>
-          <Typography variant="h5">Je koppeling</Typography>
+          <Typography variant="h5">Update</Typography>
           <Typography variant="caption" color="textSecondary">
             Hier zijn we mee bezig
           </Typography>
