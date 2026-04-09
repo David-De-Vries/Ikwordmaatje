@@ -40,10 +40,10 @@ export default function StepInternship({ onNext, onBack }: Props) {
   const [school, setSchool] = useState(data.internshipSchool);
   const [schoolQuery, setSchoolQuery] = useState(data.internshipSchool);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [startMonth, setStartMonth] = useState(data.internshipStart.split("-")[0] || "");
-  const [startYear, setStartYear] = useState(data.internshipStart.split("-")[1] || "");
-  const [endMonth, setEndMonth] = useState(data.internshipEnd.split("-")[0] || "");
-  const [endYear, setEndYear] = useState(data.internshipEnd.split("-")[1] || "");
+  const [startMonth, setStartMonth] = useState((data.internshipStart || "").split("-")[0] || "");
+  const [startYear, setStartYear] = useState((data.internshipStart || "").split("-")[1] || "");
+  const [endMonth, setEndMonth] = useState((data.internshipEnd || "").split("-")[0] || "");
+  const [endYear, setEndYear] = useState((data.internshipEnd || "").split("-")[1] || "");
   const [hours, setHours] = useState<number | "">(data.internshipHoursPerWeek || "");
   const inputRef = useRef<HTMLInputElement>(null);
 
