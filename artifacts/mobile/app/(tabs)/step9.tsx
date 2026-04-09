@@ -51,15 +51,15 @@ export default function Step9Screen() {
       >
         <Card elevation={2} padding="lg" style={styles.card}>
           <Banner
-            variant="success"
-            title="Gelukt!"
-            message={`We hebben ${MATCHES.length} passende seniors gevonden die bij jou passen.`}
+            variant="info"
+            title="Eerste blik op je mogelijke matches"
+            message="Dit zijn senioren die goed bij jou lijken te passen. Je kiest nog niets — we bespreken dit samen tijdens een persoonlijk gesprek."
           />
 
           <View style={styles.header}>
-            <Typography variant="h3">Jouw matches</Typography>
+            <Typography variant="h3">Mogelijke matches</Typography>
             <Typography variant="body2" color="textSecondary">
-              Bekijk je potentiele matches en plan een eerste ontmoeting in.
+              Ter kennismaking alvast een voorproefje. De uiteindelijke koppeling wordt in overleg met jou bepaald.
             </Typography>
           </View>
 
@@ -103,28 +103,9 @@ export default function Step9Screen() {
                     ))}
                   </View>
                 </View>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  size="sm"
-                  onPress={() => router.push("/step10")}
-                >
-                  Kies
-                </Button>
               </View>
             ))}
           </View>
-
-          <Button
-            variant="text"
-            color="primary"
-            size="md"
-            fullWidth
-            onPress={() => {}}
-            endIconName="arrow-right"
-          >
-            Bekijk al je matches
-          </Button>
 
           <View style={styles.navRow}>
             <Button
