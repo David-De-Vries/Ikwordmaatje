@@ -309,8 +309,8 @@ function MatchCard() {
   return (
     <Card elevation={2} padding="lg" style={{ gap: DS.spacing.lg }}>
       <View style={styles.cardHeader}>
-        <View style={[styles.iconBadge, { backgroundColor: "#FAE0EC" }]}>
-          <Feather name="heart" size={20} color={DS.palette.primary.main} />
+        <View style={[styles.iconBadge, { backgroundColor: "#D6ECEA" }]}>
+          <Feather name="user-plus" size={20} color="#3A9490" />
         </View>
         <View style={{ flex: 1 }}>
           <Typography variant="h5">Jouw match</Typography>
@@ -321,8 +321,8 @@ function MatchCard() {
       </View>
 
       <View style={styles.emptyState}>
-        <View style={[styles.emptyIconCircle, { backgroundColor: "#FAE0EC" }]}>
-          <Feather name="heart" size={30} color={DS.palette.primary.light} />
+        <View style={[styles.emptyIconCircle, { backgroundColor: "#D6ECEA" }]}>
+          <Feather name="user-plus" size={30} color="#8CBFBB" />
         </View>
         <Typography variant="subtitle1" align="center">
           Nog geen match gevonden
@@ -338,11 +338,11 @@ function MatchCard() {
         </Typography>
       </View>
 
-      <View style={[styles.infoBanner, { backgroundColor: "#FAE0EC" }]}>
-        <Feather name="info" size={13} color={DS.palette.primary.main} />
+      <View style={[styles.infoBanner, { backgroundColor: "#D6ECEA" }]}>
+        <Feather name="info" size={13} color="#3A9490" />
         <Typography
           variant="caption"
-          style={{ color: DS.palette.primary.main, flex: 1 }}
+          style={{ color: "#3A9490", flex: 1 }}
         >
           We zoeken actief naar de beste match voor jou. Dit duurt gemiddeld
           3–5 werkdagen.
