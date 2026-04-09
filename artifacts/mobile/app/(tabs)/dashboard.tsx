@@ -302,6 +302,56 @@ function MatchingStatusCard() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Section 1b — Match Card
+// ─────────────────────────────────────────────────────────────────────────────
+
+function MatchCard() {
+  return (
+    <Card elevation={2} padding="lg" style={{ gap: DS.spacing.lg }}>
+      <View style={styles.cardHeader}>
+        <View style={[styles.iconBadge, { backgroundColor: "#FAE0EC" }]}>
+          <Feather name="heart" size={20} color={DS.palette.primary.main} />
+        </View>
+        <View style={{ flex: 1 }}>
+          <Typography variant="h5">Jouw match</Typography>
+          <Typography variant="caption" color="textSecondary">
+            Nog geen koppeling
+          </Typography>
+        </View>
+      </View>
+
+      <View style={styles.emptyState}>
+        <View style={[styles.emptyIconCircle, { backgroundColor: "#FAE0EC" }]}>
+          <Feather name="heart" size={30} color={DS.palette.primary.light} />
+        </View>
+        <Typography variant="subtitle1" align="center">
+          Nog geen match gevonden
+        </Typography>
+        <Typography
+          variant="body2"
+          color="textSecondary"
+          align="center"
+          style={{ maxWidth: 260 }}
+        >
+          Zodra we een passende senior voor jou hebben gevonden, zie je hier
+          alle informatie over jouw match.
+        </Typography>
+      </View>
+
+      <View style={[styles.infoBanner, { backgroundColor: "#FAE0EC" }]}>
+        <Feather name="info" size={13} color={DS.palette.primary.main} />
+        <Typography
+          variant="caption"
+          style={{ color: DS.palette.primary.main, flex: 1 }}
+        >
+          We zoeken actief naar de beste match voor jou. Dit duurt gemiddeld
+          3–5 werkdagen.
+        </Typography>
+      </View>
+    </Card>
+  );
+}
+
 // Section 2 — Diary
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -998,6 +1048,8 @@ export default function DashboardScreen() {
         >
           <MatchingStatusCard />
         </WizardSection>
+
+        <MatchCard />
 
         <WizardSection
           sectionIndex={2}
