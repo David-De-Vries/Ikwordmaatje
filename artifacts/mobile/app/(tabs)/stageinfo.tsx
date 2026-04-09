@@ -1,15 +1,21 @@
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  Animated,
   Keyboard,
+  LayoutAnimation,
   Modal,
+  Platform,
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  UIManager,
   View,
 } from "react-native";
+
+if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 import { KeyboardAwareScrollViewCompat } from "@/components/KeyboardAwareScrollViewCompat";
 import { ProgressHeader } from "@/components/ProgressHeader";
@@ -312,16 +318,15 @@ export default function StageInfoScreen() {
     data.internshipHoursPerWeek ? String(data.internshipHoursPerWeek) : ""
   );
 
-  const infoAnim = useRef(new Animated.Value(0)).current;
   const isComplete = Boolean(course && schoolQuery && startDate && endDate && hours);
 
   useEffect(() => {
-    Animated.spring(infoAnim, {
-      toValue: isComplete ? 1 : 0,
-      useNativeDriver: true,
-      tension: 60,
-      friction: 10,
-    }).start();
+    LayoutAnimation.configureNext({
+      duration: 350,
+      create: { type: "easeInEaseOut", property: "opacity" },
+      update: { type: "spring", springDamping: 0.75 },
+      delete: { type: "easeInEaseOut", property: "opacity" },
+    });
   }, [isComplete]);
 
   const suggestions = SCHOOLS.filter(
@@ -508,28 +513,13 @@ export default function StageInfoScreen() {
             </View>
           </View>
 
-          <Animated.View
-            style={[
-              styles.infoBox,
-              { backgroundColor: "#FFFFFF", borderColor: colors.secondary },
-              {
-                opacity: infoAnim,
-                transform: [
-                  {
-                    translateY: infoAnim.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [14, 0],
-                    }),
-                  },
-                ],
-              },
-            ]}
-            pointerEvents={isComplete ? "auto" : "none"}
-          >
-            <Typography variant="caption" style={{ color: colors.secondary }}>
-              Jouw stagegegevens worden doorgestuurd naar ons stagebegeleiders-team. Je hoort snel van ons!
-            </Typography>
-          </Animated.View>
+          {isComplete && (
+            <View style={[styles.infoBox, { backgroundColor: "#FFFFFF", borderColor: colors.secondary }]}>
+              <Typography variant="caption" style={{ color: colors.secondary }}>
+                Jouw stagegegevens worden doorgestuurd naar ons stagebegeleiders-team. Je hoort snel van ons!
+              </Typography>
+            </View>
+          )}
 
           <View style={styles.navRow}>
             <Button
