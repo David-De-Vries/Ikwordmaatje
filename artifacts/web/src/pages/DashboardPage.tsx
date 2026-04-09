@@ -103,21 +103,21 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#F2F3F5" }}>
       {/* Top bar */}
-      <header className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between sticky top-0 z-20">
+      <header className="px-6 py-3 flex items-center justify-between sticky top-0 z-20" style={{ backgroundColor: "#8CBFBB" }}>
         <div className="flex items-center gap-2">
           <img src="/web/logo.png" alt="Careibu" className="w-7 h-7 object-contain" />
-          <span className="text-lg font-bold text-[#A01550]">Careibu</span>
+          <span className="text-lg font-bold text-white">Careibu</span>
         </div>
         <div className="flex items-center gap-3">
-          <button className="relative p-2 rounded-lg hover:bg-gray-100 transition text-gray-500">
+          <button className="relative p-2 rounded-lg hover:bg-white/20 transition text-white">
             <Bell size={18} />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#A01550]" />
+            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-white" />
           </button>
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-[#FAE0EC] border-2 border-[#A01550] flex items-center justify-center text-[#A01550] text-sm font-bold">
+            <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold" style={{ backgroundColor: "rgba(255,255,255,0.25)" }}>
               {name[0]?.toUpperCase() || "V"}
             </div>
-            <span className="text-sm font-medium text-gray-700 hidden sm:block">{name}</span>
+            <span className="text-sm font-medium text-white hidden sm:block">{name}</span>
           </div>
         </div>
       </header>

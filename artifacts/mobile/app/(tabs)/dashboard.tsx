@@ -934,24 +934,24 @@ export default function DashboardScreen() {
 
   return (
     <Animated.View style={[{ flex: 1 }, rootBgStyle]}>
-      <View style={{ height: topPad }} />
-
-      <View style={styles.header}>
-        <View>
-          <Typography
-            variant="overline"
-            style={{ color: DS.palette.text.secondary }}
-          >
-            Goedemorgen
-          </Typography>
-          <Typography variant="h4" style={{ color: DS.palette.text.primary }}>
-            {data.firstName || "Vrijwilliger"}
-          </Typography>
-        </View>
-        <View style={[styles.avatarCircle, { backgroundColor: "#FAE0EC" }]}>
-          <Typography variant="h4" style={{ color: DS.palette.primary.main }}>
-            {(data.firstName?.[0] ?? "V").toUpperCase()}
-          </Typography>
+      <View style={{ backgroundColor: "#8CBFBB", paddingTop: topPad }}>
+        <View style={styles.header}>
+          <View>
+            <Typography
+              variant="overline"
+              style={{ color: "rgba(255,255,255,0.75)" }}
+            >
+              Goedemorgen
+            </Typography>
+            <Typography variant="h4" style={{ color: "#FFFFFF" }}>
+              {data.firstName || "Vrijwilliger"}
+            </Typography>
+          </View>
+          <View style={[styles.avatarCircle, { backgroundColor: "rgba(255,255,255,0.25)" }]}>
+            <Typography variant="h4" style={{ color: "#FFFFFF" }}>
+              {(data.firstName?.[0] ?? "V").toUpperCase()}
+            </Typography>
+          </View>
         </View>
       </View>
 
