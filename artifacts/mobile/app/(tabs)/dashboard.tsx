@@ -306,24 +306,6 @@ function MatchingStatusCard() {
 // ─────────────────────────────────────────────────────────────────────────────
 
 function DiaryCard() {
-  const floatAnim = useSharedValue(0);
-
-  useEffect(() => {
-    floatAnim.value = withRepeat(
-      withSequence(
-        withTiming(-5, { duration: 1200 }),
-        withTiming(0, { duration: 1200 })
-      ),
-      -1,
-      true
-    );
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const floatStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: floatAnim.value }],
-  }));
-
   return (
     <Card elevation={2} padding="lg" style={{ gap: DS.spacing.lg }}>
       <View style={styles.cardHeader}>
@@ -339,15 +321,9 @@ function DiaryCard() {
       </View>
 
       <View style={styles.emptyState}>
-        <Animated.View
-          style={[
-            styles.emptyIconCircle,
-            { backgroundColor: "#FAE0EC" },
-            floatStyle,
-          ]}
-        >
+        <View style={[styles.emptyIconCircle, { backgroundColor: "#FAE0EC" }]}>
           <Feather name="feather" size={30} color={DS.palette.primary.light} />
-        </Animated.View>
+        </View>
         <Typography variant="subtitle1" align="center">
           Nog geen notities
         </Typography>
