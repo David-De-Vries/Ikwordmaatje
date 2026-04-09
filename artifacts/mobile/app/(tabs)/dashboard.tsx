@@ -313,7 +313,7 @@ function DiaryCard() {
           <Feather name="book-open" size={20} color={DS.palette.primary.main} />
         </View>
         <View>
-          <Typography variant="h5">Jouw dagboek</Typography>
+          <Typography variant="h5">Logboeken</Typography>
           <Typography variant="caption" color="textSecondary">
             0 notities
           </Typography>
