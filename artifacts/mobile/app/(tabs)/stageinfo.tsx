@@ -125,8 +125,8 @@ function CalendarModal({ visible, value, minDate, onConfirm, onDismiss }: Calend
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onDismiss}>
-      <View style={cal.overlay}>
-        <View style={cal.container}>
+      <TouchableOpacity style={cal.overlay} activeOpacity={1} onPress={onDismiss}>
+        <TouchableOpacity style={cal.container} activeOpacity={1} onPress={() => {}}>
           <View style={cal.handle} />
 
           <View style={cal.header}>
@@ -199,8 +199,8 @@ function CalendarModal({ visible, value, minDate, onConfirm, onDismiss }: Calend
               Wissen
             </Typography>
           </TouchableOpacity>
-        </View>
-      </View>
+        </TouchableOpacity>
+      </TouchableOpacity>
     </Modal>
   );
 }
