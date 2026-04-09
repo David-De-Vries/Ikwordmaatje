@@ -32,7 +32,7 @@ const MONTHS = [
   "Juli", "Augustus", "September", "Oktober", "November", "December",
 ];
 
-const YEARS = ["2026", "2027", "2028"];
+const YEARS = ["2026", "2027"];
 
 export default function StepInternship({ onNext, onBack }: Props) {
   const { data, update } = useOnboarding();

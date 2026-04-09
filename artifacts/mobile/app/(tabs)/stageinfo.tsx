@@ -44,7 +44,7 @@ const MONTHS = [
   "Jul", "Aug", "Sep", "Okt", "Nov", "Dec",
 ];
 
-const YEARS = ["2026", "2027", "2028"];
+const YEARS = ["2026", "2027"];
 
 const HOUR_PRESETS = [8, 16, 24, 32, 40];
 
