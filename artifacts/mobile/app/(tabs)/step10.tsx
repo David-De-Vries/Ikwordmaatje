@@ -1,7 +1,7 @@
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
-import { ScrollView, StyleSheet, Switch, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 
 import { KeyboardAwareScrollViewCompat } from "@/components/KeyboardAwareScrollViewCompat";
 import { ProgressHeader } from "@/components/ProgressHeader";
@@ -13,7 +13,10 @@ import { useColors } from "@/hooks/useColors";
 export default function Step10Screen() {
   const router = useRouter();
   const colors = useColors();
-  const { data, update } = useOnboarding();
+  const { data } = useOnboarding();
+
+  const phone = data.phoneNumber?.trim() || null;
+  const email = data.email?.trim() || null;
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
@@ -53,68 +56,62 @@ export default function Step10Screen() {
           <View style={styles.divider} />
 
           <View style={styles.section}>
-            <Typography variant="h5">Contactgegevens delen</Typography>
-            <Typography variant="body2" color="textSecondary">
-              Kies hoe de senior jou kan bereiken na jullie ontmoeting.
-            </Typography>
-
-            <View
-              style={[
-                styles.contactRow,
-                {
-                  borderColor: data.contactWhatsApp ? colors.secondary : DS.palette.border,
-                  backgroundColor: data.contactWhatsApp ? colors.accent : "#FFFFFF",
-                },
-              ]}
-            >
-              <View style={styles.contactIcon}>
-                <Feather name="message-circle" size={20} color={colors.secondary} />
-              </View>
-              <View style={{ flex: 1, gap: 2 }}>
-                <Typography variant="h6">WhatsApp</Typography>
-                <Typography variant="caption" color="textSecondary">
-                  Deel je WhatsApp-nummer
-                </Typography>
-              </View>
-              <Switch
-                value={data.contactWhatsApp}
-                onValueChange={(v) => update({ contactWhatsApp: v })}
-                trackColor={{ false: DS.palette.border, true: colors.secondary }}
-                thumbColor="#FFFFFF"
-              />
+            <View style={styles.sectionHead}>
+              <Typography variant="h5">Zo nemen we contact met je op</Typography>
+              <Typography variant="body2" color="textSecondary">
+                We gebruiken de contactgegevens die je eerder hebt ingevuld om je op de hoogte te houden van je koppeling.
+              </Typography>
             </View>
 
-            <View
-              style={[
-                styles.contactRow,
-                {
-                  borderColor: data.contactEmail ? colors.secondary : DS.palette.border,
-                  backgroundColor: data.contactEmail ? colors.accent : "#FFFFFF",
-                },
-              ]}
-            >
-              <View style={styles.contactIcon}>
-                <Feather name="mail" size={20} color={colors.secondary} />
+            <View style={styles.contactRow}>
+              <View style={[styles.contactIcon, { backgroundColor: "#E0F2E1" }]}>
+                <Feather name="phone" size={18} color="#2E7D32" />
               </View>
-              <View style={{ flex: 1, gap: 2 }}>
-                <Typography variant="h6">E-mail</Typography>
+              <View style={{ flex: 1 }}>
                 <Typography variant="caption" color="textSecondary">
-                  Deel je e-mailadres
+                  Telefoonnummer
+                </Typography>
+                <Typography variant="h6" style={{ marginTop: 2 }}>
+                  {phone ?? "Niet opgegeven"}
                 </Typography>
               </View>
-              <Switch
-                value={data.contactEmail}
-                onValueChange={(v) => update({ contactEmail: v })}
-                trackColor={{ false: DS.palette.border, true: colors.secondary }}
-                thumbColor="#FFFFFF"
-              />
+              {phone && (
+                <View style={[styles.badge, { backgroundColor: "#E0F2E1" }]}>
+                  <Feather name="check" size={12} color="#2E7D32" />
+                  <Typography variant="caption" style={{ color: "#2E7D32" }}>
+                    Bevestigd
+                  </Typography>
+                </View>
+              )}
+            </View>
+
+            <View style={styles.contactRow}>
+              <View style={[styles.contactIcon, { backgroundColor: DS.palette.iconBadge.navy.bg }]}>
+                <Feather name="mail" size={18} color={DS.palette.iconBadge.navy.icon} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Typography variant="caption" color="textSecondary">
+                  E-mailadres
+                </Typography>
+                <Typography variant="h6" style={{ marginTop: 2 }}>
+                  {email ?? "Niet opgegeven"}
+                </Typography>
+              </View>
+              {email && (
+                <View style={[styles.badge, { backgroundColor: DS.palette.iconBadge.navy.bg }]}>
+                  <Feather name="check" size={12} color={DS.palette.iconBadge.navy.icon} />
+                  <Typography variant="caption" style={{ color: DS.palette.iconBadge.navy.icon }}>
+                    Bevestigd
+                  </Typography>
+                </View>
+              )}
             </View>
           </View>
 
           <Banner
             variant="info"
             title="Privacy"
-            message="Je contactgegevens worden alleen gedeeld met jouw geverifieerde match."
+            message="Je contactgegevens worden alleen gebruikt door Careibu en nooit gedeeld zonder jouw toestemming."
           />
 
           <Button
@@ -124,7 +121,7 @@ export default function Step10Screen() {
             fullWidth
             onPress={() => router.push("/step11")}
           >
-            Contactgegevens opgeslagen - verder
+            Verder
           </Button>
 
           <Button
@@ -173,22 +170,36 @@ const styles = StyleSheet.create({
     backgroundColor: DS.palette.border,
   },
   section: {
-    gap: DS.spacing.lg,
+    gap: DS.spacing.md,
+  },
+  sectionHead: {
+    gap: DS.spacing.xs,
+    marginBottom: DS.spacing.xs,
   },
   contactRow: {
     flexDirection: "row",
     alignItems: "center",
     gap: DS.spacing.md,
     borderWidth: 1,
+    borderColor: DS.palette.border,
     borderRadius: DS.shape.radius.sm,
     padding: DS.spacing.md,
+    backgroundColor: "#FFFFFF",
   },
   contactIcon: {
-    width: 36,
-    height: 36,
+    width: 40,
+    height: 40,
     borderRadius: DS.shape.radius.xs,
-    backgroundColor: DS.palette.background.input,
     alignItems: "center",
     justifyContent: "center",
+    flexShrink: 0,
+  },
+  badge: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    paddingHorizontal: DS.spacing.sm,
+    paddingVertical: DS.spacing.xxs,
+    borderRadius: DS.shape.radius.full,
   },
 });
