@@ -895,7 +895,7 @@ export default function DashboardScreen() {
 
   const scrollRef = useRef<ScrollView>(null);
   const sectionOffsets = useRef<Record<number, number>>({});
-  const [wizardStep, setWizardStep] = useState(0);
+  const [wizardStep, setWizardStep] = useState(-1);
 
   const topPad =
     Platform.OS === "web" ? Math.max(insets.top, 67) : insets.top;
