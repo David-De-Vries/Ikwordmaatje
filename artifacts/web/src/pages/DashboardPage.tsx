@@ -101,7 +101,7 @@ export default function DashboardPage() {
     setSettings((s) => ({ ...s, [key]: v }));
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#F7F8FA" }}>
+    <div className="min-h-screen flex flex-col bg-white">
       {/* Top bar */}
       <header className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between sticky top-0 z-20">
         <div className="flex items-center gap-2">
@@ -122,9 +122,9 @@ export default function DashboardPage() {
         </div>
       </header>
 
-      <div className="flex flex-1 max-w-5xl mx-auto w-full px-4 py-6 gap-6">
+      <div className="flex flex-1 w-full">
         {/* Sidebar */}
-        <aside className="hidden md:flex flex-col w-52 flex-shrink-0 gap-1">
+        <aside className="hidden md:flex flex-col w-56 flex-shrink-0 gap-1 border-r border-gray-100 px-4 py-6">
           {NAV.map(({ id, icon: Icon, label }) => (
             <button
               key={id}
@@ -149,7 +149,7 @@ export default function DashboardPage() {
         </aside>
 
         {/* Main content */}
-        <main className="flex-1 min-w-0">
+        <main className="flex-1 min-w-0 px-6 py-6 max-w-4xl" style={{ backgroundColor: "#F7F8FA" }}>
           {activeTab === "dashboard" && (
             <div className="space-y-4">
               {/* Welcome */}
