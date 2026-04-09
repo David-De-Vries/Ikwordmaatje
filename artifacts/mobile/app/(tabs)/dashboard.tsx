@@ -325,7 +325,7 @@ function DiaryCard() {
           <Feather name="feather" size={30} color={DS.palette.primary.light} />
         </View>
         <Typography variant="subtitle1" align="center">
-          Hier komen je Logboeken te staan
+          Hier komen je logboeken te staan
         </Typography>
         <Typography
           variant="body2"
