@@ -1068,25 +1068,6 @@ export default function DashboardScreen() {
         </WizardSection>
       </ScrollView>
 
-      {/* FAB — Contact */}
-      <TouchableOpacity
-        style={[
-          styles.fab,
-          { bottom: insets.bottom + DS.spacing.lg },
-        ]}
-        activeOpacity={0.85}
-      >
-        <View style={styles.fabInner}>
-          <Feather name="phone" size={20} color="#FFFFFF" />
-          <Typography
-            variant="caption"
-            style={{ color: "#FFFFFF", fontWeight: "600" }}
-          >
-            Neem contact op
-          </Typography>
-        </View>
-      </TouchableOpacity>
-
       {/* Bottom-sheet wizard (steps 1–3) */}
       <WizardBottomSheet
         wizardStep={wizardStep}
@@ -1484,24 +1465,5 @@ const styles = StyleSheet.create({
     borderRadius: 42,
     alignItems: "center",
     justifyContent: "center",
-  },
-  // FAB
-  fab: {
-    position: "absolute",
-    right: DS.spacing.lg,
-    backgroundColor: "#3A9490",
-    borderRadius: 32,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 6,
-  },
-  fabInner: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: DS.spacing.sm,
-    paddingVertical: DS.spacing.md,
-    paddingHorizontal: DS.spacing.lg,
   },
 });
