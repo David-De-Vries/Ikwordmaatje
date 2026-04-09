@@ -1,10 +1,13 @@
+import { Calendar, Heart, Shield, Users } from "lucide-react";
 import StepLayout from "../components/StepLayout";
 
 interface Props { onNext: () => void; onBack: () => void; }
 
 const STEPS = [
   {
-    color: "#F4B5AD",
+    Icon: Calendar,
+    iconBg: "#D4EBE9",
+    iconColor: "#5A9E97",
     title: "Jij kiest een project dat bij je past",
     content: (
       <>
@@ -18,7 +21,9 @@ const STEPS = [
     ),
   },
   {
-    color: "#8CBFBB",
+    Icon: Users,
+    iconBg: "#E0E8F5",
+    iconColor: "#1565C0",
     title: "We matchen je met de juiste senior",
     content: (
       <>
@@ -32,7 +37,9 @@ const STEPS = [
     ),
   },
   {
-    color: "#F5A87A",
+    Icon: Heart,
+    iconBg: "#FAE0EC",
+    iconColor: "#A01550",
     title: "Je start je project",
     content: (
       <>
@@ -46,7 +53,9 @@ const STEPS = [
     ),
   },
   {
-    color: "#7DC87A",
+    Icon: Shield,
+    iconBg: "#E0F2E1",
+    iconColor: "#2E7D32",
     title: "Je ontvang een MDT-Certificaat",
     content: (
       <p className="text-sm text-gray-600">
@@ -70,9 +79,11 @@ export default function Step3Journey({ onNext, onBack }: Props) {
           {STEPS.map((s, i) => (
             <div key={i} className="flex gap-4">
               <div
-                className="w-11 h-11 rounded-xl flex-shrink-0"
-                style={{ backgroundColor: s.color }}
-              />
+                className="w-11 h-11 rounded-xl flex-shrink-0 flex items-center justify-center"
+                style={{ backgroundColor: s.iconBg }}
+              >
+                <s.Icon size={20} color={s.iconColor} strokeWidth={2} />
+              </div>
               <div className="flex-1">
                 <p className="text-sm font-bold text-gray-800 mb-1">{s.title}</p>
                 {s.content}
