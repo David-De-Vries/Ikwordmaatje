@@ -190,7 +190,7 @@ export default function Step1Screen() {
               variant="contained"
               color="primary"
               size="md"
-              onPress={() => router.push("/step2")}
+              onPress={() => router.push(data.wantsInternship ? "/stageinfo" : "/step2")}
               style={styles.nextBtn}
             >
               Verder

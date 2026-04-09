@@ -10,6 +10,12 @@ interface OnboardingData {
   phone: string;
   language: string;
   education: string;
+  wantsInternship: boolean;
+  internshipCourse: string;
+  internshipSchool: string;
+  internshipStart: string;
+  internshipEnd: string;
+  internshipHoursPerWeek: number;
   project: string;
   activities: string[];
   dementiaExperience: string;
@@ -34,6 +40,12 @@ const defaults: OnboardingData = {
   phone: "",
   language: "Nederlands",
   education: "",
+  wantsInternship: false,
+  internshipCourse: "",
+  internshipSchool: "",
+  internshipStart: "",
+  internshipEnd: "",
+  internshipHoursPerWeek: 0,
   project: "",
   activities: [],
   dementiaExperience: "",

@@ -2,7 +2,7 @@ import { useState } from "react";
 import StepLayout from "../components/StepLayout";
 import { useOnboarding } from "../context/OnboardingContext";
 
-interface Props { onNext: () => void; onBack: () => void; }
+interface Props { onNext: (wantsInternship: boolean) => void; onBack: () => void; }
 
 const PRONOUNS = ["Hij/hem", "Zij/haar", "Hen/hun", "Geen voorkeur"];
 const EDUCATION_LEVELS = ["MBO", "HBO", "WO", "Geen"];
@@ -17,11 +17,11 @@ export default function Step1PersonalInfo({ onNext, onBack }: Props) {
   const [phone, setPhone] = useState(data.phone);
   const [language, setLanguage] = useState(data.language);
   const [education, setEducation] = useState(data.education);
-  const [stageplek, setStageplek] = useState(false);
+  const [stageplek, setStageplek] = useState(data.wantsInternship);
 
   const handleNext = () => {
-    update({ firstName, lastName, dob, pronouns, phone, language, education });
-    onNext();
+    update({ firstName, lastName, dob, pronouns, phone, language, education, wantsInternship: stageplek });
+    onNext(stageplek);
   };
 
   return (

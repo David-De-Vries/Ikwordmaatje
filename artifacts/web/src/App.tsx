@@ -2,6 +2,7 @@ import { useState } from "react";
 import { OnboardingProvider } from "./context/OnboardingContext";
 import SignupPage from "./pages/SignupPage";
 import Step1PersonalInfo from "./pages/Step1PersonalInfo";
+import StepInternship from "./pages/StepInternship";
 import Step2Projects from "./pages/Step2Projects";
 import Step3Journey from "./pages/Step3Journey";
 import Step4Activities from "./pages/Step4Activities";
@@ -16,6 +17,7 @@ import DashboardPage from "./pages/DashboardPage";
 type Screen =
   | "signup"
   | "step1"
+  | "internship"
   | "step2"
   | "step3"
   | "step4"
@@ -36,7 +38,14 @@ function AppContent() {
     case "signup":
       return <SignupPage onNext={go("step1")} />;
     case "step1":
-      return <Step1PersonalInfo onNext={go("step2")} onBack={go("signup")} />;
+      return (
+        <Step1PersonalInfo
+          onNext={(wantsInternship) => setScreen(wantsInternship ? "internship" : "step2")}
+          onBack={go("signup")}
+        />
+      );
+    case "internship":
+      return <StepInternship onNext={go("step2")} onBack={go("step1")} />;
     case "step2":
       return <Step2Projects onNext={go("step3")} onBack={go("step1")} />;
     case "step3":

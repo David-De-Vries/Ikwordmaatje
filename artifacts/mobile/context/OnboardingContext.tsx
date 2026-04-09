@@ -29,6 +29,11 @@ export interface OnboardingState {
   language: string;
   education: string;
   wantsInternship: boolean;
+  internshipCourse: string;
+  internshipSchool: string;
+  internshipStart: string;
+  internshipEnd: string;
+  internshipHoursPerWeek: number;
 
   // Step 2: Project Selection
   selectedProject: string;
@@ -62,6 +67,11 @@ const defaultState: OnboardingState = {
   language: "Nederlands",
   education: "",
   wantsInternship: false,
+  internshipCourse: "",
+  internshipSchool: "",
+  internshipStart: "",
+  internshipEnd: "",
+  internshipHoursPerWeek: 0,
 
   selectedProject: "",
   projectUndecided: false,

@@ -13,6 +13,7 @@ export default function OnboardingLayout() {
       <Stack.Screen name="index" />
       <Stack.Screen name="signup" />
       <Stack.Screen name="step1" />
+      <Stack.Screen name="stageinfo" />
       <Stack.Screen name="step2" />
       <Stack.Screen name="step3" />
       <Stack.Screen name="step4" />
