@@ -277,6 +277,7 @@ function MatchingStatusCard() {
                     : isActive
                     ? DS.palette.text.primary
                     : DS.palette.text.disabled,
+                  textDecorationLine: isDone ? "line-through" : "none",
                   paddingBottom: i < MATCHING_STEPS.length - 1 ? DS.spacing.lg : 0,
                   flex: 1,
                 }}
