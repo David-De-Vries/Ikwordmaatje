@@ -170,7 +170,7 @@ function ProfileCard({ senior, bookmarked, onToggleBookmark }: ProfileCardProps)
 
           {/* Distance */}
           <View style={styles.distanceRow}>
-            <Feather name="map-pin" size={11} color={DS.palette.text.secondary} />
+            <Feather name="map-pin" size={12} color={DS.palette.text.secondary} />
             <Typography variant="caption" color="textSecondary">
               {senior.distanceKm.toFixed(1).replace(".", ",")} km van jou
             </Typography>
@@ -214,7 +214,7 @@ function ProfileCard({ senior, bookmarked, onToggleBookmark }: ProfileCardProps)
         >
           <Feather
             name="bookmark"
-            size={18}
+            size={20}
             color={bookmarked ? "#A01550" : DS.palette.text.hint}
           />
         </TouchableOpacity>
