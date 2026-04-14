@@ -307,6 +307,7 @@ function MatchingStatusCard() {
 
 function MatchCard() {
   const router = useRouter();
+  const { allTasksDone } = useContext(DashboardModeContext);
   return (
     <Card elevation={2} padding="md" style={{ gap: DS.spacing.lg }}>
       <View style={styles.cardHeader}>
@@ -316,17 +317,17 @@ function MatchCard() {
         <View style={{ flex: 1 }}>
           <Typography variant="h5">Jouw match</Typography>
           <Typography variant="caption" color="textSecondary">
-            Nog geen koppeling
+            {allTasksDone ? "Klaar om te matchen" : "Nog geen koppeling"}
           </Typography>
         </View>
       </View>
 
       <View style={styles.emptyState}>
         <View style={[styles.emptyIconCircle, { backgroundColor: "#D6ECEA" }]}>
-          <Feather name="user-plus" size={30} color="#8CBFBB" />
+          <Feather name={allTasksDone ? "users" : "user-plus"} size={30} color="#8CBFBB" />
         </View>
         <Typography variant="subtitle1" align="center">
-          Nog geen match gevonden
+          {allTasksDone ? "Bekijk senioren bij jou in de buurt" : "Nog geen match gevonden"}
         </Typography>
         <Typography
           variant="body2"
@@ -334,8 +335,9 @@ function MatchCard() {
           align="center"
           style={{ maxWidth: 260 }}
         >
-          Zodra we een passende senior voor jou hebben gevonden, zie je hier
-          alle informatie over jouw match.
+          {allTasksDone
+            ? "Ontdek wie er in jouw omgeving op zoek is naar een vrijwilliger."
+            : "Zodra we een passende senior voor jou hebben gevonden, zie je hier alle informatie over jouw match."}
         </Typography>
       </View>
 
