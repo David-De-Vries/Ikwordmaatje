@@ -165,40 +165,47 @@ function WizardSection({
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Section 1 — Matching Status
+// Section 1 — Task List
 // ─────────────────────────────────────────────────────────────────────────────
 
-const MATCHING_STEPS = [
-  { key: "profile", label: "Profiel aanmaken", status: "done" },
-  { key: "intro", label: "Introductiegesprek inplannen", status: "active" },
-  { key: "vog", label: "V.O.G. aanvragen", status: "upcoming" },
-  { key: "seniors", label: "Bekijk senioren bij jou in de buurt", status: "upcoming" },
+const TASK_ITEMS = [
+  {
+    key: "profile",
+    label: "Profiel aanmaken",
+    sublabel: "Jouw gegevens en voorkeuren zijn opgeslagen.",
+    status: "done",
+    buttonLabel: null,
+  },
+  {
+    key: "intro",
+    label: "Introductiegesprek inplannen",
+    sublabel: "Plan een kennismakingsgesprek met een Careibu-medewerker.",
+    status: "active",
+    buttonLabel: "Plan gesprek",
+  },
+  {
+    key: "vog",
+    label: "V.O.G. aanvragen",
+    sublabel: "Een Verklaring Omtrent het Gedrag is verplicht voor vrijwilligerswerk.",
+    status: "upcoming",
+    buttonLabel: "Aanvragen",
+  },
+  {
+    key: "seniors",
+    label: "Bekijk senioren bij jou in de buurt",
+    sublabel: "Ontdek wie er in jouw omgeving op zoek is naar een vrijwilliger.",
+    status: "upcoming",
+    buttonLabel: "Bekijken",
+  },
 ];
 
 function MatchingStatusCard() {
-  const pulseDot = useSharedValue(1);
-
-  useEffect(() => {
-    pulseDot.value = withRepeat(
-      withSequence(
-        withTiming(0.25, { duration: 850 }),
-        withTiming(1, { duration: 850 })
-      ),
-      -1,
-      true
-    );
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const pulseStyle = useAnimatedStyle(() => ({
-    opacity: pulseDot.value,
-  }));
-
   return (
     <Card elevation={2} padding="lg" style={{ gap: DS.spacing.lg }}>
+      {/* Card header */}
       <View style={styles.cardHeader}>
-        <View style={[styles.iconBadge, { backgroundColor: "#FFF0D9" }]}>
-          <Feather name="users" size={20} color={DS.palette.warning.main} />
+        <View style={[styles.iconBadge, { backgroundColor: "#D6ECEA" }]}>
+          <Feather name="check-square" size={20} color="#3A9490" />
         </View>
         <View style={{ flex: 1 }}>
           <Typography variant="h5">Taken lijst</Typography>
@@ -207,96 +214,99 @@ function MatchingStatusCard() {
           </Typography>
         </View>
         <View style={[styles.pill, { backgroundColor: "#FFF0D9" }]}>
-          <Animated.View
-            style={[
-              styles.pillDot,
-              { backgroundColor: DS.palette.warning.main },
-              pulseStyle,
-            ]}
-          />
-          <Typography
-            variant="caption"
-            style={{ color: DS.palette.warning.dark }}
-          >
-            Bezig
+          <View style={[styles.pillDot, { backgroundColor: DS.palette.warning.main }]} />
+          <Typography variant="caption" style={{ color: DS.palette.warning.dark }}>
+            1 / 4
           </Typography>
         </View>
       </View>
 
+      {/* Task rows */}
       <View style={{ gap: 0 }}>
-        {MATCHING_STEPS.map((step, i) => {
-          const isDone = step.status === "done";
-          const isActive = step.status === "active";
+        {TASK_ITEMS.map((task, i) => {
+          const isDone = task.status === "done";
+          const isActive = task.status === "active";
+          const isUpcoming = task.status === "upcoming";
           return (
-            <View key={step.key} style={styles.stepRow}>
-              <View style={styles.stepTrack}>
+            <View key={task.key}>
+              <View style={styles.taskRow}>
+                {/* Status badge */}
                 <View
                   style={[
-                    styles.stepNode,
-                    isDone && {
-                      backgroundColor: DS.palette.success.main,
-                      borderColor: DS.palette.success.main,
-                    },
-                    isActive && {
-                      borderColor: DS.palette.warning.main,
-                      borderWidth: 2,
-                    },
+                    styles.taskBadge,
+                    isDone && { backgroundColor: DS.palette.success.main, borderColor: DS.palette.success.main },
+                    isActive && { borderColor: "#3A9490", borderWidth: 2 },
+                    isUpcoming && { borderColor: DS.palette.border },
                   ]}
                 >
-                  {isDone && (
-                    <Feather name="check" size={10} color="#FFFFFF" />
-                  )}
-                  {isActive && (
-                    <Animated.View
-                      style={[
-                        styles.activeDot,
-                        { backgroundColor: DS.palette.warning.main },
-                        pulseStyle,
-                      ]}
-                    />
+                  {isDone ? (
+                    <Feather name="check" size={11} color="#FFFFFF" />
+                  ) : (
+                    <Typography
+                      variant="caption"
+                      style={{
+                        color: isActive ? "#3A9490" : DS.palette.text.hint,
+                        fontWeight: "700",
+                        fontSize: 11,
+                      }}
+                    >
+                      {i + 1}
+                    </Typography>
                   )}
                 </View>
-                {i < MATCHING_STEPS.length - 1 && (
-                  <View
+
+                {/* Title + subtitle */}
+                <View style={{ flex: 1, gap: 2 }}>
+                  <Typography
+                    variant="subtitle2"
+                    style={{
+                      color: isDone
+                        ? DS.palette.text.secondary
+                        : DS.palette.text.primary,
+                      textDecorationLine: isDone ? "line-through" : "none",
+                    }}
+                  >
+                    {task.label}
+                  </Typography>
+                  <Typography variant="caption" color="textSecondary">
+                    {task.sublabel}
+                  </Typography>
+                </View>
+
+                {/* Action */}
+                {isDone ? (
+                  <View style={styles.doneChip}>
+                    <Feather name="check" size={11} color={DS.palette.success.main} />
+                    <Typography variant="caption" style={{ color: DS.palette.success.main }}>
+                      Klaar
+                    </Typography>
+                  </View>
+                ) : (
+                  <TouchableOpacity
                     style={[
-                      styles.stepConnector,
-                      {
-                        backgroundColor: isDone
-                          ? DS.palette.success.light
-                          : DS.palette.border,
-                      },
+                      styles.taskBtn,
+                      isActive && styles.taskBtnActive,
+                      isUpcoming && styles.taskBtnUpcoming,
                     ]}
-                  />
+                    activeOpacity={0.8}
+                    onPress={() => {}}
+                  >
+                    <Typography
+                      variant="caption"
+                      style={{
+                        color: isActive ? "#FFFFFF" : DS.palette.text.primary,
+                        fontWeight: "600",
+                      }}
+                    >
+                      {task.buttonLabel}
+                    </Typography>
+                  </TouchableOpacity>
                 )}
               </View>
-              <Typography
-                variant={isActive ? "subtitle2" : "body2"}
-                style={{
-                  color: isDone
-                    ? DS.palette.success.main
-                    : isActive
-                    ? DS.palette.text.primary
-                    : DS.palette.text.disabled,
-                  textDecorationLine: isDone ? "line-through" : "none",
-                  paddingBottom: i < MATCHING_STEPS.length - 1 ? DS.spacing.lg : 0,
-                  flex: 1,
-                }}
-              >
-                {step.label}
-              </Typography>
+              {i < TASK_ITEMS.length - 1 && <View style={styles.taskDivider} />}
             </View>
           );
         })}
-      </View>
-
-      <View style={[styles.infoBanner, { backgroundColor: "#FFF8EE" }]}>
-        <Feather name="clock" size={13} color={DS.palette.warning.dark} />
-        <Typography
-          variant="caption"
-          style={{ color: DS.palette.warning.dark, flex: 1 }}
-        >
-          Rond deze stappen af om gekoppeld te worden aan een senior bij jou in de buurt.
-        </Typography>
       </View>
     </Card>
   );
@@ -1268,35 +1278,54 @@ const styles = StyleSheet.create({
     height: 7,
     borderRadius: 4,
   },
-  // Matching step track
-  stepRow: {
+  // Task list rows
+  taskRow: {
     flexDirection: "row",
-    alignItems: "flex-start",
-    gap: DS.spacing.md,
-  },
-  stepTrack: {
     alignItems: "center",
-    width: 22,
+    gap: DS.spacing.md,
+    paddingVertical: DS.spacing.md,
   },
-  stepNode: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
+  taskDivider: {
+    height: 1,
+    backgroundColor: DS.palette.border,
+  },
+  taskBadge: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
     borderWidth: 1.5,
     borderColor: DS.palette.border,
     backgroundColor: "#FFFFFF",
     alignItems: "center",
     justifyContent: "center",
+    flexShrink: 0,
   },
-  activeDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+  taskBtn: {
+    paddingHorizontal: DS.spacing.md,
+    paddingVertical: DS.spacing.xs,
+    borderRadius: DS.shape.radius.full,
+    borderWidth: 1.5,
+    borderColor: DS.palette.border,
+    backgroundColor: "#FFFFFF",
+    flexShrink: 0,
   },
-  stepConnector: {
-    width: 1.5,
-    height: 24,
-    marginTop: 2,
+  taskBtnActive: {
+    backgroundColor: "#3A9490",
+    borderColor: "#3A9490",
+  },
+  taskBtnUpcoming: {
+    backgroundColor: "#FFFFFF",
+    borderColor: DS.palette.border,
+  },
+  doneChip: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    paddingHorizontal: DS.spacing.sm,
+    paddingVertical: DS.spacing.xxs,
+    borderRadius: DS.shape.radius.full,
+    backgroundColor: DS.palette.success.light,
+    flexShrink: 0,
   },
   infoBanner: {
     flexDirection: "row",
