@@ -254,10 +254,7 @@ function MatchingStatusCard() {
                   </View>
                 ) : isPending ? (
                   <View style={styles.pendingChip}>
-                    <Feather name="clock" size={11} color={DS.palette.warning.dark} />
-                    <Typography style={{ color: DS.palette.warning.dark, fontWeight: "600", fontSize: 11 }}>
-                      {task.buttonLabel}
-                    </Typography>
+                    <Feather name="clock" size={16} color={DS.palette.warning.dark} />
                   </View>
                 ) : (
                   <View style={styles.taskBtnRow}>
