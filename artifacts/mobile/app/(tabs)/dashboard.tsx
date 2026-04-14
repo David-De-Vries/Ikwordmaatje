@@ -188,7 +188,7 @@ const TASK_ITEMS = [
   {
     key: "vog",
     label: "V.O.G. aanvragen",
-    sublabel: "Een Verklaring Omtrent het Gedrag is verplicht voor vrijwilligerswerk.",
+    sublabel: "Een Verklaring Omtrent Gedrag is verplicht voor vrijwilligerswerk.",
     status: "upcoming",
     buttonLabel: "Aanvragen",
   },
