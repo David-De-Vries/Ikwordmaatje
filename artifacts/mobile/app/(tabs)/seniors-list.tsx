@@ -2,6 +2,7 @@ import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
+  Platform,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -233,6 +234,7 @@ export default function SeniorsListScreen() {
   const router = useRouter();
   const colors = useColors();
   const insets = useSafeAreaInsets();
+  const topPad = Platform.OS === "web" ? Math.max(insets.top, 67) : insets.top;
   const [viewMode, setViewMode] = useState<ViewMode>("list");
   const [bookmarked, setBookmarked] = useState<Set<string>>(new Set());
 
@@ -251,7 +253,7 @@ export default function SeniorsListScreen() {
   return (
     <View style={[styles.root, { backgroundColor: colors.background }]}>
       {/* Header */}
-      <View style={[styles.header, { paddingTop: insets.top + DS.spacing.lg }]}>
+      <View style={[styles.header, { paddingTop: topPad }]}>
         <TouchableOpacity
           style={styles.backBtn}
           activeOpacity={0.7}
