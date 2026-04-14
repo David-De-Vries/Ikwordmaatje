@@ -265,7 +265,7 @@ function MatchingStatusCard() {
                 {/* Action */}
                 {isDone ? (
                   <View style={styles.doneCircle}>
-                    <Feather name="check" size={14} color="#FFFFFF" />
+                    <Feather name="check" size={14} color={DS.palette.success.dark} />
                   </View>
                 ) : isPending ? (
                   <View style={styles.pendingChip}>
@@ -1282,7 +1282,7 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: DS.palette.success.main,
+    backgroundColor: DS.palette.success.bg,
     alignItems: "center",
     justifyContent: "center",
     flexShrink: 0,
