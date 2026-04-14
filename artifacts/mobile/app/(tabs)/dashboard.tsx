@@ -179,9 +179,9 @@ const TASK_ITEMS = [
   {
     key: "intro",
     label: "Introductiegesprek inplannen",
-    sublabel: "Plan een kennismakingsgesprek met een Careibu-medewerker.",
-    status: "active",
-    buttonLabel: "Plan gesprek",
+    sublabel: "Een Careibu-medewerker neemt binnenkort contact op om dit in te plannen.",
+    status: "pending",
+    buttonLabel: "In behandeling",
   },
   {
     key: "vog",
@@ -225,6 +225,7 @@ function MatchingStatusCard() {
       <View>
         {TASK_ITEMS.map((task, i) => {
           const isDone = task.status === "done";
+          const isPending = task.status === "pending";
           return (
             <View key={task.key}>
               <View style={styles.taskRow}>
@@ -250,6 +251,13 @@ function MatchingStatusCard() {
                 {isDone ? (
                   <View style={styles.doneCircle}>
                     <Feather name="check" size={14} color="#FFFFFF" />
+                  </View>
+                ) : isPending ? (
+                  <View style={styles.pendingChip}>
+                    <Feather name="clock" size={11} color={DS.palette.warning.dark} />
+                    <Typography style={{ color: DS.palette.warning.dark, fontWeight: "600", fontSize: 11 }}>
+                      {task.buttonLabel}
+                    </Typography>
                   </View>
                 ) : (
                   <View style={styles.taskBtnRow}>
@@ -1264,6 +1272,16 @@ const styles = StyleSheet.create({
     backgroundColor: DS.palette.success.main,
     alignItems: "center",
     justifyContent: "center",
+    flexShrink: 0,
+  },
+  pendingChip: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    backgroundColor: "#FFF0D9",
+    borderRadius: DS.shape.radius.full,
+    paddingHorizontal: DS.spacing.sm,
+    paddingVertical: DS.spacing.xs,
     flexShrink: 0,
   },
   infoBanner: {
