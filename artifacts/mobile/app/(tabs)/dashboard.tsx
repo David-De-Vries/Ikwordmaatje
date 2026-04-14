@@ -309,8 +309,7 @@ function MatchCard() {
       </View>
 
       <TouchableOpacity style={styles.viewSeniorsBtn} activeOpacity={0.85} onPress={() => {}}>
-        <Feather name="users" size={16} color="#FFFFFF" />
-        <Typography style={{ color: "#FFFFFF", fontWeight: "600", fontSize: 14 }}>
+        <Typography style={{ color: "#FFFFFF", fontWeight: "600", fontSize: 14, textAlign: "center" }}>
           Bekijk senioren bij jou in de buurt
         </Typography>
       </TouchableOpacity>
