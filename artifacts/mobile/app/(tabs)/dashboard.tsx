@@ -254,7 +254,7 @@ function MatchingStatusCard() {
                   </View>
                 ) : isPending ? (
                   <View style={styles.pendingChip}>
-                    <Feather name="clock" size={16} color={DS.palette.warning.dark} />
+                    <Feather name="clock" size={14} color={DS.palette.warning.dark} />
                   </View>
                 ) : (
                   <View style={styles.taskBtnRow}>
@@ -1272,13 +1272,12 @@ const styles = StyleSheet.create({
     flexShrink: 0,
   },
   pendingChip: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
     backgroundColor: "#FFF0D9",
-    borderRadius: DS.shape.radius.full,
-    paddingHorizontal: DS.spacing.sm,
-    paddingVertical: DS.spacing.xs,
+    alignItems: "center",
+    justifyContent: "center",
     flexShrink: 0,
   },
   infoBanner: {
