@@ -251,7 +251,7 @@ export default function SeniorsListScreen() {
   };
 
   return (
-    <View style={[styles.root, { backgroundColor: "#FFFFFF" }]}>
+    <View style={[styles.root, { backgroundColor: colors.background }]}>
       {/* Header */}
       <View style={[styles.header, { paddingTop: topPad }]}>
         <TouchableOpacity
