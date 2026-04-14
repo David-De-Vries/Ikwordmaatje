@@ -59,6 +59,7 @@ export interface OnboardingState {
   // Step 10: Schedule / Contact
   contactWhatsApp: boolean;
   contactEmail: boolean;
+  scheduleIntakeLater: boolean;
 }
 
 const defaultState: OnboardingState = {
@@ -93,6 +94,7 @@ const defaultState: OnboardingState = {
 
   contactWhatsApp: true,
   contactEmail: false,
+  scheduleIntakeLater: false,
 };
 
 interface OnboardingContextValue {

@@ -1,7 +1,7 @@
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 
 import { KeyboardAwareScrollViewCompat } from "@/components/KeyboardAwareScrollViewCompat";
 import { ProgressHeader } from "@/components/ProgressHeader";
@@ -13,7 +13,7 @@ import { useColors } from "@/hooks/useColors";
 export default function Step10Screen() {
   const router = useRouter();
   const colors = useColors();
-  const { data } = useOnboarding();
+  const { data, update } = useOnboarding();
 
   const phone = data.phoneNumber?.trim() || null;
   const email = data.email?.trim() || null;
@@ -52,6 +52,44 @@ export default function Step10Screen() {
               Open kalender
             </Button>
           </View>
+
+          {/* "of" separator */}
+          <View style={styles.orRow}>
+            <View style={styles.orLine} />
+            <Typography variant="caption" color="textSecondary" style={{ paddingHorizontal: DS.spacing.sm }}>
+              of
+            </Typography>
+            <View style={styles.orLine} />
+          </View>
+
+          {/* Schedule later checkbox */}
+          <TouchableOpacity
+            style={[
+              styles.checkboxRow,
+              data.scheduleIntakeLater && styles.checkboxRowActive,
+            ]}
+            onPress={() => update({ scheduleIntakeLater: !data.scheduleIntakeLater })}
+            activeOpacity={0.8}
+          >
+            <View
+              style={[
+                styles.checkbox,
+                data.scheduleIntakeLater && styles.checkboxChecked,
+              ]}
+            >
+              {data.scheduleIntakeLater && (
+                <Feather name="check" size={13} color="#FFFFFF" />
+              )}
+            </View>
+            <View style={{ flex: 1, gap: 2 }}>
+              <Typography variant="subtitle2">
+                Plan later een intake gesprek in
+              </Typography>
+              <Typography variant="caption" color="textSecondary">
+                Careibu stuurt je een Calendly-link om een afspraak in te plannen.
+              </Typography>
+            </View>
+          </TouchableOpacity>
 
           <View style={styles.divider} />
 
@@ -201,5 +239,43 @@ const styles = StyleSheet.create({
     paddingHorizontal: DS.spacing.sm,
     paddingVertical: DS.spacing.xxs,
     borderRadius: DS.shape.radius.full,
+  },
+  orRow: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  orLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: DS.palette.border,
+  },
+  checkboxRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: DS.spacing.md,
+    borderWidth: 1.5,
+    borderColor: DS.palette.border,
+    borderRadius: DS.shape.radius.md,
+    padding: DS.spacing.md,
+    backgroundColor: "#FFFFFF",
+  },
+  checkboxRowActive: {
+    borderColor: "#3A9490",
+    backgroundColor: "#F0F9F8",
+  },
+  checkbox: {
+    width: 22,
+    height: 22,
+    borderRadius: 6,
+    borderWidth: 1.5,
+    borderColor: "#B0C4C3",
+    backgroundColor: "#FFFFFF",
+    alignItems: "center",
+    justifyContent: "center",
+    flexShrink: 0,
+  },
+  checkboxChecked: {
+    backgroundColor: "#3A9490",
+    borderColor: "#3A9490",
   },
 });
