@@ -333,7 +333,7 @@ function MatchCard() {
           variant="body2"
           color="textSecondary"
           align="center"
-          style={{ maxWidth: 260 }}
+          style={{ maxWidth: 220 }}
         >
           {allTasksDone
             ? "Ontdek wie er in jouw omgeving op zoek is naar een vrijwilliger."
