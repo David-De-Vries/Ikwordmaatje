@@ -308,16 +308,12 @@ function MatchCard() {
         </Typography>
       </View>
 
-      <View style={[styles.infoBanner, { backgroundColor: "#D6ECEA" }]}>
-        <Feather name="info" size={13} color="#3A9490" />
-        <Typography
-          variant="caption"
-          style={{ color: "#3A9490", flex: 1 }}
-        >
-          We zoeken actief naar de beste match voor jou. Dit duurt gemiddeld
-          3–5 werkdagen.
+      <TouchableOpacity style={styles.viewSeniorsBtn} activeOpacity={0.85} onPress={() => {}}>
+        <Feather name="users" size={16} color="#FFFFFF" />
+        <Typography style={{ color: "#FFFFFF", fontWeight: "600", fontSize: 14 }}>
+          Bekijk senioren bij jou in de buurt
         </Typography>
-      </View>
+      </TouchableOpacity>
     </Card>
   );
 }
@@ -1277,6 +1273,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: DS.spacing.md,
     borderRadius: DS.shape.radius.md,
+  },
+  viewSeniorsBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: DS.spacing.sm,
+    backgroundColor: "#3A9490",
+    borderRadius: DS.shape.radius.md,
+    paddingVertical: DS.spacing.md,
+    paddingHorizontal: DS.spacing.lg,
   },
   // Diary empty state
   emptyState: {
