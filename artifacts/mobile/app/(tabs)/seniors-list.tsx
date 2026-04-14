@@ -251,7 +251,7 @@ export default function SeniorsListScreen() {
   return (
     <View style={[styles.root, { backgroundColor: colors.background }]}>
       {/* Header */}
-      <View style={[styles.header, { paddingTop: insets.top + DS.spacing.sm }]}>
+      <View style={[styles.header, { paddingTop: insets.top + DS.spacing.lg }]}>
         <TouchableOpacity
           style={styles.backBtn}
           activeOpacity={0.7}
@@ -362,8 +362,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: DS.spacing.md,
-    paddingHorizontal: DS.spacing.md,
-    paddingBottom: DS.spacing.md,
+    paddingHorizontal: DS.spacing.lg,
+    paddingBottom: DS.spacing.lg,
     backgroundColor: "#FFFFFF",
     borderBottomWidth: 1,
     borderBottomColor: DS.palette.border,
