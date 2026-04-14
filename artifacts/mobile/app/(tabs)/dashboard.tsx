@@ -207,6 +207,10 @@ function MatchingStatusCard() {
     ? TASK_ITEMS.map((t) => ({ ...t, status: "done" as const }))
     : TASK_ITEMS;
 
+  const doneCount = tasks.filter((t) => t.status === "done").length;
+  const totalCount = tasks.length;
+  const allComplete = doneCount === totalCount;
+
   return (
     <Card elevation={2} padding="md" style={{ gap: DS.spacing.lg }}>
       {/* Card header */}
@@ -220,10 +224,16 @@ function MatchingStatusCard() {
             Alles wat moet gebeuren voor je aan de slag kan
           </Typography>
         </View>
-        <View style={[styles.pill, { backgroundColor: "#FFF0D9" }]}>
-          <View style={[styles.pillDot, { backgroundColor: DS.palette.warning.main }]} />
-          <Typography variant="caption" style={{ color: DS.palette.warning.dark }}>
-            1 / 4
+        <View style={[styles.pill, {
+          backgroundColor: allComplete ? DS.palette.success.bg : "#FFF0D9",
+        }]}>
+          <View style={[styles.pillDot, {
+            backgroundColor: allComplete ? DS.palette.success.main : DS.palette.warning.main,
+          }]} />
+          <Typography variant="caption" style={{
+            color: allComplete ? DS.palette.success.dark : DS.palette.warning.dark,
+          }}>
+            {doneCount} / {totalCount}
           </Typography>
         </View>
       </View>
