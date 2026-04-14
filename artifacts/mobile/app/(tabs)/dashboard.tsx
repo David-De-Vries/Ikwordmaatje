@@ -169,10 +169,10 @@ function WizardSection({
 // ─────────────────────────────────────────────────────────────────────────────
 
 const MATCHING_STEPS = [
-  { key: "profile", label: "Profiel aangemaakt", status: "done" },
-  { key: "matching", label: "Match zoeken", status: "active" },
-  { key: "intro", label: "Introductiegesprek", status: "upcoming" },
-  { key: "visit", label: "Eerste bezoek", status: "upcoming" },
+  { key: "profile", label: "Profiel aanmaken", status: "done" },
+  { key: "intro", label: "Introductiegesprek inplannen", status: "active" },
+  { key: "vog", label: "V.O.G. aanvragen", status: "upcoming" },
+  { key: "seniors", label: "Bekijk senioren bij jou in de buurt", status: "upcoming" },
 ];
 
 function MatchingStatusCard() {
@@ -201,9 +201,9 @@ function MatchingStatusCard() {
           <Feather name="users" size={20} color={DS.palette.warning.main} />
         </View>
         <View style={{ flex: 1 }}>
-          <Typography variant="h5">Update</Typography>
+          <Typography variant="h5">Taken lijst</Typography>
           <Typography variant="caption" color="textSecondary">
-            Hier zijn we mee bezig
+            Alles wat moet gebeuren voor je aan de slag kan
           </Typography>
         </View>
         <View style={[styles.pill, { backgroundColor: "#FFF0D9" }]}>
@@ -294,7 +294,7 @@ function MatchingStatusCard() {
           variant="caption"
           style={{ color: DS.palette.warning.dark, flex: 1 }}
         >
-          Gemiddeld duurt het 3–5 werkdagen om een goede match te vinden.
+          Rond deze stappen af om gekoppeld te worden aan een senior bij jou in de buurt.
         </Typography>
       </View>
     </Card>
