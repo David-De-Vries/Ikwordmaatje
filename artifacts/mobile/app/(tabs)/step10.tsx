@@ -157,20 +157,9 @@ export default function Step10Screen() {
             color="primary"
             size="lg"
             fullWidth
-            onPress={() => router.push("/step11")}
+            onPress={() => router.push("/dashboard")}
           >
-            Verder
-          </Button>
-
-          <Button
-            variant="outlined"
-            color="default"
-            size="md"
-            onPress={() => router.back()}
-            startIconName="arrow-left"
-            fullWidth
-          >
-            Terug
+            Naar mijn Dashboard
           </Button>
         </Card>
 
