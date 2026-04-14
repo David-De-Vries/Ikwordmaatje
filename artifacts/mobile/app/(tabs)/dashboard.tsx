@@ -16,7 +16,7 @@
  */
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import {
   LayoutChangeEvent,
   Platform,
@@ -41,6 +41,8 @@ import { Button, Card, Typography } from "@/components/ui";
 import { DS } from "@/constants/design-system";
 import { useOnboarding } from "@/context/OnboardingContext";
 import { useColors } from "@/hooks/useColors";
+
+export const DashboardModeContext = React.createContext({ allTasksDone: false });
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Wizard step data
@@ -200,6 +202,11 @@ const TASK_ITEMS = [
 ];
 
 function MatchingStatusCard() {
+  const { allTasksDone } = useContext(DashboardModeContext);
+  const tasks = allTasksDone
+    ? TASK_ITEMS.map((t) => ({ ...t, status: "done" as const }))
+    : TASK_ITEMS;
+
   return (
     <Card elevation={2} padding="md" style={{ gap: DS.spacing.lg }}>
       {/* Card header */}
@@ -223,7 +230,7 @@ function MatchingStatusCard() {
 
       {/* Task rows */}
       <View>
-        {TASK_ITEMS.map((task, i) => {
+        {tasks.map((task, i) => {
           const isDone = task.status === "done";
           const isPending = task.status === "pending";
           return (
@@ -275,7 +282,7 @@ function MatchingStatusCard() {
                   </View>
                 )}
               </View>
-              {i < TASK_ITEMS.length - 1 && <View style={styles.taskDivider} />}
+              {i < tasks.length - 1 && <View style={styles.taskDivider} />}
             </View>
           );
         })}

@@ -59,10 +59,31 @@ export default function LauncherScreen() {
           </View>
           <View style={{ flex: 1 }}>
             <Typography variant="subtitle1" style={{ color: DS.palette.text.primary }}>
-              Dashboard
+              Dashboard FTUX
             </Typography>
             <Typography variant="caption" color="textSecondary">
-              Ga direct naar het dashboard
+              Taken gedeeltelijk voltooid
+            </Typography>
+          </View>
+          <Feather name="chevron-right" size={18} color={DS.palette.text.hint} />
+        </TouchableOpacity>
+
+        <View style={styles.divider} />
+
+        <TouchableOpacity
+          style={[styles.btn, styles.btnSecondary]}
+          activeOpacity={0.85}
+          onPress={() => router.push("/dashboard-complete")}
+        >
+          <View style={[styles.btnIcon, { backgroundColor: "#D6F0EA" }]}>
+            <Feather name="check-circle" size={20} color="#2E7D6E" />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Typography variant="subtitle1" style={{ color: DS.palette.text.primary }}>
+              Dashboard complete
+            </Typography>
+            <Typography variant="caption" color="textSecondary">
+              Alle taken voltooid
             </Typography>
           </View>
           <Feather name="chevron-right" size={18} color={DS.palette.text.hint} />
