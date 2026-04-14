@@ -201,7 +201,7 @@ const TASK_ITEMS = [
 
 function MatchingStatusCard() {
   return (
-    <Card elevation={2} padding="lg" style={{ gap: DS.spacing.lg }}>
+    <Card elevation={2} padding="md" style={{ gap: DS.spacing.lg }}>
       {/* Card header */}
       <View style={styles.cardHeader}>
         <View style={[styles.iconBadge, { backgroundColor: "#D6ECEA" }]}>
@@ -232,6 +232,7 @@ function MatchingStatusCard() {
                 <View style={{ flex: 1 }}>
                   <Typography
                     variant="subtitle1"
+                    numberOfLines={1}
                     style={{
                       fontWeight: "700",
                       color: isDone ? DS.palette.text.secondary : DS.palette.text.primary,
@@ -275,7 +276,7 @@ function MatchingStatusCard() {
 
 function MatchCard() {
   return (
-    <Card elevation={2} padding="lg" style={{ gap: DS.spacing.lg }}>
+    <Card elevation={2} padding="md" style={{ gap: DS.spacing.lg }}>
       <View style={styles.cardHeader}>
         <View style={[styles.iconBadge, { backgroundColor: "#D6ECEA" }]}>
           <Feather name="user-plus" size={20} color="#3A9490" />
@@ -325,7 +326,7 @@ function MatchCard() {
 
 function DiaryCard() {
   return (
-    <Card elevation={2} padding="lg" style={{ gap: DS.spacing.lg }}>
+    <Card elevation={2} padding="md" style={{ gap: DS.spacing.lg }}>
       <View style={styles.cardHeader}>
         <View style={[styles.iconBadge, { backgroundColor: "#FAE0EC" }]}>
           <Feather name="book-open" size={20} color={DS.palette.primary.main} />
@@ -398,7 +399,7 @@ const INFO_MODULES = [
 
 function InfoModulesCard() {
   return (
-    <Card elevation={2} padding="lg" style={{ gap: DS.spacing.lg }}>
+    <Card elevation={2} padding="md" style={{ gap: DS.spacing.lg }}>
       <View style={styles.cardHeader}>
         <View style={[styles.iconBadge, { backgroundColor: DS.palette.info.bg }]}>
           <Feather name="layers" size={20} color={DS.palette.info.main} />
@@ -1205,7 +1206,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   scrollContent: {
-    padding: DS.spacing.lg,
+    paddingVertical: DS.spacing.lg,
+    paddingHorizontal: DS.spacing.sm,
     gap: DS.spacing.xl,
   },
   // Card header
@@ -1249,7 +1251,7 @@ const styles = StyleSheet.create({
   taskPill: {
     backgroundColor: "#3A9490",
     borderRadius: DS.shape.radius.full,
-    paddingHorizontal: DS.spacing.lg,
+    paddingHorizontal: DS.spacing.md,
     paddingVertical: DS.spacing.sm,
     flexShrink: 0,
   },
