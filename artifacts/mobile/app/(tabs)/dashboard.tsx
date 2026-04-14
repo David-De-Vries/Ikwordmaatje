@@ -296,6 +296,7 @@ function MatchingStatusCard() {
 // ─────────────────────────────────────────────────────────────────────────────
 
 function MatchCard() {
+  const router = useRouter();
   return (
     <Card elevation={2} padding="md" style={{ gap: DS.spacing.lg }}>
       <View style={styles.cardHeader}>
@@ -328,7 +329,7 @@ function MatchCard() {
         </Typography>
       </View>
 
-      <TouchableOpacity style={styles.viewSeniorsBtn} activeOpacity={0.85} onPress={() => {}}>
+      <TouchableOpacity style={styles.viewSeniorsBtn} activeOpacity={0.85} onPress={() => router.push("/seniors-list")}>
         <Typography style={{ color: "#FFFFFF", fontWeight: "600", fontSize: 14, textAlign: "center" }}>
           Bekijk senioren bij jou in de buurt
         </Typography>
