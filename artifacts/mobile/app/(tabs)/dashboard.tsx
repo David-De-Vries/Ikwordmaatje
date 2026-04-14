@@ -234,7 +234,8 @@ function MatchingStatusCard() {
                     variant="subtitle1"
                     numberOfLines={1}
                     style={{
-                      fontWeight: "700",
+                      fontSize: 14,
+                      fontWeight: "600",
                       color: isDone ? DS.palette.text.secondary : DS.palette.text.primary,
                     }}
                   >
