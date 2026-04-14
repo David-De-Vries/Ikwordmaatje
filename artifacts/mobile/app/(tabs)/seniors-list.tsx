@@ -78,7 +78,7 @@ const SENIORS: SeniorProfile[] = [
     initials: "MJ",
     distanceKm: 1.9,
     activities: ["kletsen", "creatief", "digitaal"],
-    availability: ["Ma", "Di", "Wo", "Do"],
+    availability: ["Ma", "Di", "Wo", "Do", "Vr", "Za", "Zo"],
   },
   {
     id: "4",
