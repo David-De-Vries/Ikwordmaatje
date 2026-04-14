@@ -178,7 +178,7 @@ function ProfileCard({ senior, bookmarked, onToggleBookmark }: ProfileCardProps)
           </View>
 
           {/* Activities */}
-          <View style={styles.chipsRow}>
+          <View style={[styles.chipsRow, { marginTop: DS.spacing.sm }]}>
             {visibleActivities.map((actId) => {
               const meta = ACTIVITY_META[actId];
               return (
