@@ -238,11 +238,19 @@ function MatchingStatusCard() {
                       fontSize: 14,
                       fontWeight: "600",
                       color: isDone ? DS.palette.text.secondary : DS.palette.text.primary,
+                      textDecorationLine: isDone ? "line-through" : "none",
                     }}
                   >
                     {task.label}
                   </Typography>
-                  <Typography variant="caption" color="textSecondary" style={{ marginTop: 2 }}>
+                  <Typography
+                    variant="caption"
+                    color="textSecondary"
+                    style={{
+                      marginTop: 2,
+                      textDecorationLine: isDone ? "line-through" : "none",
+                    }}
+                  >
                     {task.sublabel}
                   </Typography>
                 </View>
