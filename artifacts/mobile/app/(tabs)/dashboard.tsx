@@ -222,85 +222,42 @@ function MatchingStatusCard() {
       </View>
 
       {/* Task rows */}
-      <View style={{ gap: 0 }}>
+      <View>
         {TASK_ITEMS.map((task, i) => {
           const isDone = task.status === "done";
-          const isActive = task.status === "active";
-          const isUpcoming = task.status === "upcoming";
           return (
             <View key={task.key}>
               <View style={styles.taskRow}>
-                {/* Status badge */}
-                <View
-                  style={[
-                    styles.taskBadge,
-                    isDone && { backgroundColor: DS.palette.success.main, borderColor: DS.palette.success.main },
-                    isActive && { borderColor: "#3A9490", borderWidth: 2 },
-                    isUpcoming && { borderColor: DS.palette.border },
-                  ]}
-                >
-                  {isDone ? (
-                    <Feather name="check" size={11} color="#FFFFFF" />
-                  ) : (
-                    <Typography
-                      variant="caption"
-                      style={{
-                        color: isActive ? "#3A9490" : DS.palette.text.hint,
-                        fontWeight: "700",
-                        fontSize: 11,
-                      }}
-                    >
-                      {i + 1}
-                    </Typography>
-                  )}
-                </View>
-
                 {/* Title + subtitle */}
-                <View style={{ flex: 1, gap: 2 }}>
+                <View style={{ flex: 1 }}>
                   <Typography
-                    variant="subtitle2"
+                    variant="subtitle1"
                     style={{
-                      color: isDone
-                        ? DS.palette.text.secondary
-                        : DS.palette.text.primary,
-                      textDecorationLine: isDone ? "line-through" : "none",
+                      fontWeight: "700",
+                      color: isDone ? DS.palette.text.secondary : DS.palette.text.primary,
                     }}
                   >
                     {task.label}
                   </Typography>
-                  <Typography variant="caption" color="textSecondary">
+                  <Typography variant="caption" color="textSecondary" style={{ marginTop: 2 }}>
                     {task.sublabel}
                   </Typography>
                 </View>
 
                 {/* Action */}
                 {isDone ? (
-                  <View style={styles.doneChip}>
-                    <Feather name="check" size={11} color={DS.palette.success.main} />
-                    <Typography variant="caption" style={{ color: DS.palette.success.main }}>
-                      Klaar
-                    </Typography>
+                  <View style={styles.doneCircle}>
+                    <Feather name="check" size={14} color="#FFFFFF" />
                   </View>
                 ) : (
-                  <TouchableOpacity
-                    style={[
-                      styles.taskBtn,
-                      isActive && styles.taskBtnActive,
-                      isUpcoming && styles.taskBtnUpcoming,
-                    ]}
-                    activeOpacity={0.8}
-                    onPress={() => {}}
-                  >
-                    <Typography
-                      variant="caption"
-                      style={{
-                        color: isActive ? "#FFFFFF" : DS.palette.text.primary,
-                        fontWeight: "600",
-                      }}
-                    >
-                      {task.buttonLabel}
-                    </Typography>
-                  </TouchableOpacity>
+                  <View style={styles.taskBtnRow}>
+                    <TouchableOpacity style={styles.taskPill} activeOpacity={0.8} onPress={() => {}}>
+                      <Typography style={{ color: "#FFFFFF", fontWeight: "700", fontSize: 13 }}>
+                        {task.buttonLabel}
+                      </Typography>
+                    </TouchableOpacity>
+                    <Feather name="chevron-right" size={16} color={DS.palette.text.hint} />
+                  </View>
                 )}
               </View>
               {i < TASK_ITEMS.length - 1 && <View style={styles.taskDivider} />}
@@ -1283,48 +1240,32 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: DS.spacing.md,
-    paddingVertical: DS.spacing.md,
+    paddingVertical: DS.spacing.lg,
   },
   taskDivider: {
     height: 1,
     backgroundColor: DS.palette.border,
   },
-  taskBadge: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    borderWidth: 1.5,
-    borderColor: DS.palette.border,
-    backgroundColor: "#FFFFFF",
-    alignItems: "center",
-    justifyContent: "center",
-    flexShrink: 0,
-  },
-  taskBtn: {
-    paddingHorizontal: DS.spacing.md,
-    paddingVertical: DS.spacing.xs,
-    borderRadius: DS.shape.radius.full,
-    borderWidth: 1.5,
-    borderColor: DS.palette.border,
-    backgroundColor: "#FFFFFF",
-    flexShrink: 0,
-  },
-  taskBtnActive: {
+  taskPill: {
     backgroundColor: "#3A9490",
-    borderColor: "#3A9490",
+    borderRadius: DS.shape.radius.full,
+    paddingHorizontal: DS.spacing.lg,
+    paddingVertical: DS.spacing.sm,
+    flexShrink: 0,
   },
-  taskBtnUpcoming: {
-    backgroundColor: "#FFFFFF",
-    borderColor: DS.palette.border,
-  },
-  doneChip: {
+  taskBtnRow: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 4,
-    paddingHorizontal: DS.spacing.sm,
-    paddingVertical: DS.spacing.xxs,
-    borderRadius: DS.shape.radius.full,
-    backgroundColor: DS.palette.success.light,
+    gap: DS.spacing.xs,
+    flexShrink: 0,
+  },
+  doneCircle: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: DS.palette.success.main,
+    alignItems: "center",
+    justifyContent: "center",
     flexShrink: 0,
   },
   infoBanner: {
