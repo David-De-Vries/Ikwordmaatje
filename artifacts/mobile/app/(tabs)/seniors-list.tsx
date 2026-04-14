@@ -251,7 +251,7 @@ export default function SeniorsListScreen() {
   };
 
   return (
-    <View style={[styles.root, { backgroundColor: colors.background }]}>
+    <View style={[styles.root, { backgroundColor: "#FFFFFF" }]}>
       {/* Header */}
       <View style={[styles.header, { paddingTop: topPad }]}>
         <TouchableOpacity
@@ -260,14 +260,14 @@ export default function SeniorsListScreen() {
           onPress={() => router.back()}
           hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
         >
-          <Feather name="arrow-left" size={22} color={DS.palette.text.primary} />
+          <Feather name="arrow-left" size={22} color="#FFFFFF" />
         </TouchableOpacity>
 
         <View style={{ flex: 1 }}>
-          <Typography variant="h5" style={styles.headerTitle}>
+          <Typography variant="h5" style={[styles.headerTitle, { color: "#FFFFFF" }]}>
             Senioren bij jou in de buurt
           </Typography>
-          <Typography variant="caption" color="textSecondary">
+          <Typography variant="caption" style={{ color: "rgba(255,255,255,0.75)" }}>
             {SENIORS.length} beschikbare senioren
           </Typography>
         </View>
@@ -282,12 +282,12 @@ export default function SeniorsListScreen() {
             <Feather
               name="list"
               size={14}
-              color={viewMode === "list" ? "#FFFFFF" : DS.palette.text.secondary}
+              color={viewMode === "list" ? "#3A9490" : "rgba(255,255,255,0.85)"}
             />
             <Typography
               style={[
                 styles.toggleLabel,
-                { color: viewMode === "list" ? "#FFFFFF" : DS.palette.text.secondary },
+                { color: viewMode === "list" ? "#3A9490" : "rgba(255,255,255,0.85)" },
               ]}
             >
               Lijst
@@ -301,12 +301,12 @@ export default function SeniorsListScreen() {
             <Feather
               name="map"
               size={14}
-              color={viewMode === "map" ? "#FFFFFF" : DS.palette.text.secondary}
+              color={viewMode === "map" ? "#3A9490" : "rgba(255,255,255,0.85)"}
             />
             <Typography
               style={[
                 styles.toggleLabel,
-                { color: viewMode === "map" ? "#FFFFFF" : DS.palette.text.secondary },
+                { color: viewMode === "map" ? "#3A9490" : "rgba(255,255,255,0.85)" },
               ]}
             >
               Kaart
@@ -366,9 +366,7 @@ const styles = StyleSheet.create({
     gap: DS.spacing.md,
     paddingHorizontal: DS.spacing.lg,
     paddingBottom: DS.spacing.lg,
-    backgroundColor: "#FFFFFF",
-    borderBottomWidth: 1,
-    borderBottomColor: DS.palette.border,
+    backgroundColor: "#8CBFBB",
   },
   backBtn: {
     width: 36,
@@ -385,7 +383,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     borderRadius: DS.shape.radius.full,
     borderWidth: 1,
-    borderColor: DS.palette.border,
+    borderColor: "rgba(255,255,255,0.5)",
     overflow: "hidden",
   },
   toggleBtn: {
@@ -396,7 +394,7 @@ const styles = StyleSheet.create({
     paddingVertical: DS.spacing.xs,
   },
   toggleBtnActive: {
-    backgroundColor: "#3A9490",
+    backgroundColor: "#FFFFFF",
   },
   toggleLabel: {
     fontSize: 12,
