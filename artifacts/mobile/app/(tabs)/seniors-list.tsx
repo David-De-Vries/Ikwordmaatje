@@ -2,7 +2,6 @@ import { Feather, Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-  Alert,
   Platform,
   ScrollView,
   StyleSheet,
@@ -241,13 +240,7 @@ function ProfileCard({ senior, bookmarked, onToggleBookmark }: ProfileCardProps)
       <TouchableOpacity
         style={styles.ctaRow}
         activeOpacity={0.7}
-        onPress={() =>
-          Alert.alert(
-            senior.name,
-            "Het gedetailleerde seniorenprofiel is binnenkort beschikbaar.",
-            [{ text: "OK" }]
-          )
-        }
+        onPress={() => router.push(`/senior-profile?id=${senior.id}`)}
       >
         <Typography style={styles.ctaText}>Bekijk profiel</Typography>
         <Feather name="arrow-right" size={13} color="#3A9490" />

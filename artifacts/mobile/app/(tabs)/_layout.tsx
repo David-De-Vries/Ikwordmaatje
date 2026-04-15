@@ -29,6 +29,7 @@ export default function OnboardingLayout() {
       <Stack.Screen name="dashboard-intake" />
       <Stack.Screen name="dashboard-seniors" />
       <Stack.Screen name="seniors-list" />
+      <Stack.Screen name="senior-profile" />
     </Stack>
   );
 }
