@@ -119,10 +119,12 @@ function normalizeLanguages(raw: unknown): LanguageEntry[] {
       result.push({ name: item.trim(), level: "fluent" });
     } else if (item && typeof item === "object" && typeof (item as Record<string, unknown>).name === "string") {
       const obj = item as Record<string, unknown>;
+      const trimmedName = (obj.name as string).trim();
+      if (!trimmedName) continue;
       const level = typeof obj.level === "string" && VALID_LEVELS.has(obj.level)
         ? (obj.level as LanguageEntry["level"])
         : "fluent";
-      result.push({ name: (obj.name as string).trim(), level });
+      result.push({ name: trimmedName, level });
     }
   }
   return result;
