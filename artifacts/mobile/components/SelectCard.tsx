@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: DS.shape.radius.sm,
     padding: DS.spacing.md,
-    gap: DS.spacing.lg,
+    gap: DS.spacing.md,
   },
   hThumb: {
     width: 72,
