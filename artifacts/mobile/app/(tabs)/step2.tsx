@@ -1,5 +1,5 @@
 import { Feather } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   LayoutAnimation,
@@ -167,6 +167,8 @@ function VideoModal({ project, onClose }: VideoModalProps) {
 
 export default function Step2Screen() {
   const router = useRouter();
+  const { edit } = useLocalSearchParams<{ edit?: string }>();
+  const isEditMode = edit === "1";
   const colors = useColors();
   const { data, update } = useOnboarding();
 
@@ -322,27 +324,39 @@ export default function Step2Screen() {
             </View>
           </TouchableOpacity>
 
-          <View style={styles.navRow}>
-            <Button
-              variant="outlined"
-              color="default"
-              size="md"
-              onPress={() => router.back()}
-              startIconName="arrow-left"
-              style={styles.backBtn}
-            >
-              Terug
-            </Button>
+          {isEditMode ? (
             <Button
               variant="contained"
               color="primary"
-              size="md"
-              onPress={() => router.push("/step3")}
-              style={styles.nextBtn}
+              size="lg"
+              fullWidth
+              onPress={() => router.replace("/step8")}
             >
-              Verder
+              Wijzigingen opslaan
             </Button>
-          </View>
+          ) : (
+            <View style={styles.navRow}>
+              <Button
+                variant="outlined"
+                color="default"
+                size="md"
+                onPress={() => router.back()}
+                startIconName="arrow-left"
+                style={styles.backBtn}
+              >
+                Terug
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                size="md"
+                onPress={() => router.push("/step3")}
+                style={styles.nextBtn}
+              >
+                Verder
+              </Button>
+            </View>
+          )}
         </Card>
 
         <View style={{ height: DS.spacing.xl }} />

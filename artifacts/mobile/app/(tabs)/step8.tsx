@@ -61,7 +61,7 @@ export default function Step8Screen() {
             iconName="user"
             color="teal"
             title="Persoonlijke gegevens"
-            onEdit={() => router.push("/step1")}
+            onEdit={() => router.push("/step1?edit=1")}
           >
             {data.firstName || data.lastName ? (
               <Typography variant="body2">
@@ -84,7 +84,7 @@ export default function Step8Screen() {
             iconName="layers"
             color="navy"
             title="Project"
-            onEdit={() => router.push("/step2")}
+            onEdit={() => router.push("/step2?edit=1")}
           >
             {data.selectedProject ? (
               <Chip
@@ -105,7 +105,7 @@ export default function Step8Screen() {
             iconName="star"
             color="orange"
             title="Activiteiten & voorkeuren"
-            onEdit={() => router.push("/step4")}
+            onEdit={() => router.push("/step4?edit=1")}
           >
             {data.selectedActivities.length > 0 ? (
               <View style={styles.chipRow}>
@@ -137,7 +137,7 @@ export default function Step8Screen() {
             iconName="map-pin"
             color="green"
             title="Beschikbaarheid & locatie"
-            onEdit={() => router.push("/step5")}
+            onEdit={() => router.push("/step5?edit=1")}
           >
             {data.availabilityUnknown ? (
               <Typography variant="body2" color="textSecondary">Nog niet bepaald</Typography>
