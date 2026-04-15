@@ -1,11 +1,21 @@
 /**
  * Dashboard Intake — Careibu FTUX Dashboard (post intake scheduling)
  *
- * Identical layout to dashboard.tsx (FTUX) — same header, wizard, drawer,
- * MatchingStatusCard, MatchCard, DiaryCard, InfoModulesCard.
+ * Identical to dashboard.tsx. Only difference: "Introductiegesprek inplannen"
+ * task is marked done and shows the date/time the user selected.
  *
- * Only difference: TASK_ITEMS "Introductiegesprek inplannen" is marked done
- * and its sublabel shows the date/time the user scheduled.
+ * Sections:
+ *   1. Matching status (mock status indicators)
+ *   2. Diary (placeholder with empty state)
+ *   3. Information modules (horizontal scroll)
+ *
+ * Wizard: 5-step onboarding tour
+ *   step 0 → Welcome overlay
+ *   step 1 → Highlight matching section
+ *   step 2 → Highlight diary section
+ *   step 3 → Highlight info modules
+ *   step 4 → Done overlay
+ *   step -1 → Dismissed
  */
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -38,7 +48,7 @@ import { useColors } from "@/hooks/useColors";
 export const DashboardModeContext = React.createContext({ allTasksDone: false });
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Dutch date helpers
+// Dutch date helpers (intake-specific)
 // ─────────────────────────────────────────────────────────────────────────────
 
 const DUTCH_MONTHS = [
@@ -112,6 +122,7 @@ function WizardSection({
   const opacity = useSharedValue(1);
   const scale = useSharedValue(1);
   const borderOpacity = useSharedValue(0);
+
   const glowOpacity = useSharedValue(0);
 
   useEffect(() => {
@@ -158,6 +169,7 @@ function WizardSection({
 
   return (
     <Animated.View style={containerStyle} onLayout={onLayout}>
+      {/* Glow halo behind the card */}
       <Animated.View
         style={[
           StyleSheet.absoluteFillObject,
@@ -167,6 +179,7 @@ function WizardSection({
         ]}
       />
       {children}
+      {/* Pulsing border ring */}
       <Animated.View
         style={[
           StyleSheet.absoluteFillObject,
@@ -180,7 +193,7 @@ function WizardSection({
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Task items — same as dashboard.tsx except "intro" is done with scheduled date
+// Section 1 — Task List
 // ─────────────────────────────────────────────────────────────────────────────
 
 function makeTaskItems(intakeDateLabel: string) {
@@ -224,18 +237,14 @@ function makeTaskItems(intakeDateLabel: string) {
   ];
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Section 1 — Task List
-// ─────────────────────────────────────────────────────────────────────────────
-
 function MatchingStatusCard({ intakeDateLabel }: { intakeDateLabel: string }) {
   const { allTasksDone } = useContext(DashboardModeContext);
-  const baseItems = makeTaskItems(intakeDateLabel);
+  const TASK_ITEMS = makeTaskItems(intakeDateLabel);
   const tasks = allTasksDone
-    ? baseItems.map((t) =>
+    ? TASK_ITEMS.map((t) =>
         (t as any).alwaysPending ? t : { ...t, status: "done" as const }
       )
-    : baseItems;
+    : TASK_ITEMS;
 
   const doneCount = tasks.filter((t) => t.status === "done").length;
   const totalCount = tasks.length;
@@ -243,6 +252,7 @@ function MatchingStatusCard({ intakeDateLabel }: { intakeDateLabel: string }) {
 
   return (
     <Card elevation={2} padding="md" style={{ gap: DS.spacing.lg }}>
+      {/* Card header */}
       <View style={styles.cardHeader}>
         <View style={[styles.iconBadge, { backgroundColor: "#D6ECEA" }]}>
           <Feather name="check-square" size={20} color="#3A9490" />
@@ -267,6 +277,7 @@ function MatchingStatusCard({ intakeDateLabel }: { intakeDateLabel: string }) {
         </View>
       </View>
 
+      {/* Task rows */}
       <View>
         {tasks.map((task, i) => {
           const isDone = task.status === "done";
@@ -274,6 +285,7 @@ function MatchingStatusCard({ intakeDateLabel }: { intakeDateLabel: string }) {
           return (
             <View key={task.key}>
               <View style={styles.taskRow}>
+                {/* Title + subtitle */}
                 <View style={{ flex: 1 }}>
                   <Typography
                     variant="subtitle1"
@@ -300,6 +312,7 @@ function MatchingStatusCard({ intakeDateLabel }: { intakeDateLabel: string }) {
                   </Typography>
                 </View>
 
+                {/* Action */}
                 {isDone ? (
                   <View style={styles.doneCircle}>
                     <Feather name="check" size={14} color={DS.palette.success.dark} />
@@ -375,7 +388,6 @@ function MatchCard() {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 // Section 2 — Diary
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -936,6 +948,9 @@ export default function DashboardIntakeScreen() {
   const scrollToSection = useCallback((idx: number) => {
     const y = sectionOffsets.current[idx];
     if (y !== undefined) {
+      // For section 3, scroll further (larger y value) so the section appears
+      // near the TOP of the viewport, well clear of the wizard bottom sheet.
+      // Higher scrollPos → content shifts up → section appears higher on screen.
       const scrollY = idx === 3 ? Math.max(0, y - 8) : Math.max(0, y - 24);
       scrollRef.current?.scrollTo({ y: scrollY, animated: true });
     }
@@ -964,6 +979,7 @@ export default function DashboardIntakeScreen() {
     setWizardStep(-1);
   }, []);
 
+  // ── Hamburger / drawer ────────────────────────────────────────────────────
   const [menuOpen, setMenuOpen] = useState(false);
   const menuProgress = useSharedValue(0);
   const drawerX = useSharedValue(-280);
@@ -994,6 +1010,7 @@ export default function DashboardIntakeScreen() {
     opacity: interpolate(menuProgress.value, [0, 1], [0, 0.45]),
   }));
 
+  // ── Background dim ────────────────────────────────────────────────────────
   const bgDim = useSharedValue(0);
   useEffect(() => {
     bgDim.value = withTiming(
@@ -1012,157 +1029,165 @@ export default function DashboardIntakeScreen() {
   }));
 
   return (
-    <DashboardModeContext.Provider value={{ allTasksDone: false }}>
-      <Animated.View style={[{ flex: 1 }, rootBgStyle]}>
-        <View style={{ backgroundColor: "#8CBFBB", paddingTop: topPad }}>
-          <View style={styles.header}>
-            <TouchableOpacity
-              onPress={toggleMenu}
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-              style={styles.hamburgerBtn}
+    <Animated.View style={[{ flex: 1 }, rootBgStyle]}>
+      <View style={{ backgroundColor: "#8CBFBB", paddingTop: topPad }}>
+        <View style={styles.header}>
+          {/* Hamburger / X toggle */}
+          <TouchableOpacity
+            onPress={toggleMenu}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            style={styles.hamburgerBtn}
+          >
+            <Animated.View style={[StyleSheet.absoluteFill, styles.hamburgerBars, barsOpacity]}>
+              <View style={styles.hamburgerBar} />
+              <View style={styles.hamburgerBar} />
+              <View style={styles.hamburgerBar} />
+            </Animated.View>
+            <Animated.View style={[StyleSheet.absoluteFill, styles.xIcon, xOpacity]}>
+              <Feather name="x" size={20} color="#FFFFFF" />
+            </Animated.View>
+          </TouchableOpacity>
+
+          {/* Greeting */}
+          <View style={{ flex: 1, marginLeft: DS.spacing.md }}>
+            <Typography
+              variant="overline"
+              style={{ color: "rgba(255,255,255,0.75)" }}
             >
-              <Animated.View style={[StyleSheet.absoluteFill, styles.hamburgerBars, barsOpacity]}>
-                <View style={styles.hamburgerBar} />
-                <View style={styles.hamburgerBar} />
-                <View style={styles.hamburgerBar} />
-              </Animated.View>
-              <Animated.View style={[StyleSheet.absoluteFill, styles.xIcon, xOpacity]}>
-                <Feather name="x" size={20} color="#FFFFFF" />
-              </Animated.View>
-            </TouchableOpacity>
+              Goedemorgen
+            </Typography>
+            <Typography variant="h4" style={{ color: "#FFFFFF" }}>
+              {data.firstName || "Vrijwilliger"}
+            </Typography>
+          </View>
 
-            <View style={{ flex: 1, marginLeft: DS.spacing.md }}>
-              <Typography
-                variant="overline"
-                style={{ color: "rgba(255,255,255,0.75)" }}
-              >
-                Goedemorgen
-              </Typography>
-              <Typography variant="h4" style={{ color: "#FFFFFF" }}>
-                {data.firstName || "Vrijwilliger"}
-              </Typography>
-            </View>
+          {/* Avatar */}
+          <View style={[styles.avatarCircle, { backgroundColor: "rgba(255,255,255,0.25)" }]}>
+            <Typography variant="h4" style={{ color: "#FFFFFF" }}>
+              {(data.firstName?.[0] ?? "V").toUpperCase()}
+            </Typography>
+          </View>
+        </View>
+      </View>
 
-            <View style={[styles.avatarCircle, { backgroundColor: "rgba(255,255,255,0.25)" }]}>
-              <Typography variant="h4" style={{ color: "#FFFFFF" }}>
-                {(data.firstName?.[0] ?? "V").toUpperCase()}
-              </Typography>
-            </View>
+      <ScrollView
+        ref={scrollRef}
+        style={{ flex: 1 }}
+        contentContainerStyle={[
+          styles.scrollContent,
+          { paddingBottom: insets.bottom + DS.spacing.xxxxl },
+        ]}
+        showsVerticalScrollIndicator={false}
+      >
+        <WizardSection
+          sectionIndex={1}
+          wizardStep={wizardStep}
+          onLayout={captureLayout(1)}
+        >
+          <MatchingStatusCard intakeDateLabel={intakeDateLabel} />
+        </WizardSection>
+
+        <MatchCard />
+
+        <WizardSection
+          sectionIndex={2}
+          wizardStep={wizardStep}
+          onLayout={captureLayout(2)}
+        >
+          <DiaryCard />
+        </WizardSection>
+
+        <WizardSection
+          sectionIndex={3}
+          wizardStep={wizardStep}
+          onLayout={captureLayout(3)}
+        >
+          <InfoModulesCard />
+        </WizardSection>
+      </ScrollView>
+
+      {/* Bottom-sheet wizard (steps 1–3) */}
+      <WizardBottomSheet
+        wizardStep={wizardStep}
+        onNext={handleNext}
+        onSkip={handleSkip}
+        insetBottom={insets.bottom}
+      />
+
+      {/* Welcome overlay (step 0) */}
+      <WizardWelcomeOverlay
+        visible={wizardStep === 0}
+        onStart={handleNext}
+        onSkip={handleSkip}
+        firstName={data.firstName}
+      />
+
+      {/* Done overlay (step 4) */}
+      <WizardDoneOverlay visible={wizardStep === 4} onFinish={handleFinish} />
+
+      {/* ── Drawer overlay ─────────────────────────────────────────────── */}
+      {menuOpen && (
+        <TouchableOpacity
+          style={StyleSheet.absoluteFill}
+          activeOpacity={1}
+          onPress={closeMenu}
+        >
+          <Animated.View
+            style={[
+              StyleSheet.absoluteFill,
+              { backgroundColor: "#000" },
+              overlayOpacity,
+            ]}
+          />
+        </TouchableOpacity>
+      )}
+
+      {/* ── Slide-in drawer ────────────────────────────────────────────── */}
+      <Animated.View style={[styles.drawer, drawerStyle]}>
+        {/* Drawer header */}
+        <View style={styles.drawerHeader}>
+          <View style={styles.drawerAvatar}>
+            <Typography variant="h4" style={{ color: "#FFFFFF" }}>
+              {(data.firstName?.[0] ?? "V").toUpperCase()}
+            </Typography>
+          </View>
+          <View>
+            <Typography variant="h5" style={{ color: "#FFFFFF" }}>
+              {data.firstName || "Vrijwilliger"}
+            </Typography>
+            <Typography variant="caption" style={{ color: "rgba(255,255,255,0.7)" }}>
+              Vrijwilliger
+            </Typography>
           </View>
         </View>
 
-        <ScrollView
-          ref={scrollRef}
-          style={{ flex: 1 }}
-          contentContainerStyle={[
-            styles.scrollContent,
-            { paddingBottom: insets.bottom + DS.spacing.xxxxl },
-          ]}
-          showsVerticalScrollIndicator={false}
-        >
-          <WizardSection
-            sectionIndex={1}
-            wizardStep={wizardStep}
-            onLayout={captureLayout(1)}
-          >
-            <MatchingStatusCard intakeDateLabel={intakeDateLabel} />
-          </WizardSection>
-
-          <MatchCard />
-
-          <WizardSection
-            sectionIndex={2}
-            wizardStep={wizardStep}
-            onLayout={captureLayout(2)}
-          >
-            <DiaryCard />
-          </WizardSection>
-
-          <WizardSection
-            sectionIndex={3}
-            wizardStep={wizardStep}
-            onLayout={captureLayout(3)}
-          >
-            <InfoModulesCard />
-          </WizardSection>
-        </ScrollView>
-
-        <WizardBottomSheet
-          wizardStep={wizardStep}
-          onNext={handleNext}
-          onSkip={handleSkip}
-          insetBottom={insets.bottom}
-        />
-
-        <WizardWelcomeOverlay
-          visible={wizardStep === 0}
-          onStart={handleNext}
-          onSkip={handleSkip}
-          firstName={data.firstName}
-        />
-
-        <WizardDoneOverlay visible={wizardStep === 4} onFinish={handleFinish} />
-
-        {menuOpen && (
+        {/* Nav items */}
+        {[
+          { icon: "home" as const,      label: "Dashboard" },
+          { icon: "heart" as const,     label: "Matches" },
+          { icon: "book-open" as const, label: "Logboeken" },
+          { icon: "settings" as const,  label: "Instellingen" },
+        ].map(({ icon, label }) => (
           <TouchableOpacity
-            style={StyleSheet.absoluteFill}
-            activeOpacity={1}
+            key={label}
+            style={styles.drawerItem}
             onPress={closeMenu}
           >
-            <Animated.View
-              style={[
-                StyleSheet.absoluteFill,
-                { backgroundColor: "#000" },
-                overlayOpacity,
-              ]}
-            />
+            <View style={styles.drawerIconWrap}>
+              <Feather name={icon} size={18} color="#8CBFBB" />
+            </View>
+            <Typography variant="body1" style={{ color: DS.palette.text.primary }}>
+              {label}
+            </Typography>
           </TouchableOpacity>
-        )}
-
-        <Animated.View style={[styles.drawer, drawerStyle]}>
-          <View style={styles.drawerHeader}>
-            <View style={styles.drawerAvatar}>
-              <Typography variant="h4" style={{ color: "#FFFFFF" }}>
-                {(data.firstName?.[0] ?? "V").toUpperCase()}
-              </Typography>
-            </View>
-            <View>
-              <Typography variant="h5" style={{ color: "#FFFFFF" }}>
-                {data.firstName || "Vrijwilliger"}
-              </Typography>
-              <Typography variant="caption" style={{ color: "rgba(255,255,255,0.7)" }}>
-                Vrijwilliger
-              </Typography>
-            </View>
-          </View>
-
-          {[
-            { icon: "home" as const,      label: "Dashboard" },
-            { icon: "heart" as const,     label: "Matches" },
-            { icon: "book-open" as const, label: "Logboeken" },
-            { icon: "settings" as const,  label: "Instellingen" },
-          ].map(({ icon, label }) => (
-            <TouchableOpacity
-              key={label}
-              style={styles.drawerItem}
-              onPress={closeMenu}
-            >
-              <View style={styles.drawerIconWrap}>
-                <Feather name={icon} size={18} color="#8CBFBB" />
-              </View>
-              <Typography variant="body1" style={{ color: DS.palette.text.primary }}>
-                {label}
-              </Typography>
-            </TouchableOpacity>
-          ))}
-        </Animated.View>
+        ))}
       </Animated.View>
-    </DashboardModeContext.Provider>
+    </Animated.View>
   );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Styles — identical to dashboard.tsx
+// Styles
 // ─────────────────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
@@ -1174,6 +1199,7 @@ const styles = StyleSheet.create({
     paddingVertical: DS.spacing.md,
     marginBottom: DS.spacing.xs,
   },
+  // Hamburger
   hamburgerBtn: {
     width: 32,
     height: 32,
@@ -1193,6 +1219,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  // Drawer
   drawer: {
     position: "absolute",
     top: 0,
@@ -1252,6 +1279,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: DS.spacing.sm,
     gap: DS.spacing.xl,
   },
+  // Card header
   cardHeader: {
     flexDirection: "row",
     alignItems: "center",
@@ -1278,6 +1306,7 @@ const styles = StyleSheet.create({
     height: 7,
     borderRadius: 4,
   },
+  // Task list rows
   taskRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -1321,19 +1350,28 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     flexShrink: 0,
   },
+  infoBanner: {
+    flexDirection: "row",
+    gap: DS.spacing.sm,
+    alignItems: "center",
+    padding: DS.spacing.md,
+    borderRadius: DS.shape.radius.md,
+  },
   viewSeniorsBtn: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
+    gap: DS.spacing.sm,
     backgroundColor: "#3A9490",
     borderRadius: DS.shape.radius.md,
     paddingVertical: DS.spacing.md,
     paddingHorizontal: DS.spacing.lg,
   },
+  // Diary empty state
   emptyState: {
     alignItems: "center",
     gap: DS.spacing.md,
-    paddingVertical: DS.spacing.md,
+    paddingVertical: DS.spacing.sm,
   },
   emptyIconCircle: {
     width: 72,
@@ -1342,10 +1380,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  // Info modules
   moduleCard: {
-    width: 160,
-    borderRadius: DS.shape.radius.lg,
+    width: 172,
     padding: DS.spacing.md,
+    borderRadius: DS.shape.radius.lg,
     gap: DS.spacing.sm,
   },
   moduleIconBox: {
@@ -1358,74 +1397,92 @@ const styles = StyleSheet.create({
   readTimeRow: {
     flexDirection: "row",
     alignItems: "center",
-    gap: DS.spacing.xxs,
-    marginTop: DS.spacing.xs,
+    gap: DS.spacing.xs,
   },
+  // Wizard section highlight border
+  highlightBorder: {
+    borderWidth: 2.5,
+    borderColor: DS.palette.primary.main,
+    borderRadius: DS.shape.radius.lg + 2,
+  },
+  // Glow halo behind highlighted section
+  highlightGlow: {
+    borderRadius: DS.shape.radius.lg + 8,
+    margin: -8,
+    shadowColor: DS.palette.primary.main,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.55,
+    shadowRadius: 24,
+    elevation: 24,
+    backgroundColor: "transparent",
+  },
+  // Wizard bottom sheet
   bottomSheet: {
     position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
     backgroundColor: "#FFFFFF",
-    borderTopLeftRadius: DS.shape.radius.xl,
-    borderTopRightRadius: DS.shape.radius.xl,
-    paddingTop: DS.spacing.md,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    paddingTop: DS.spacing.lg,
     paddingHorizontal: DS.spacing.xl,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: -4 },
-    shadowOpacity: 0.12,
-    shadowRadius: 16,
-    elevation: 20,
-    zIndex: 100,
+    shadowColor: "#000000",
+    shadowOffset: { width: 0, height: -6 },
+    shadowOpacity: 0.14,
+    shadowRadius: 18,
+    elevation: 14,
   },
   sheetHandle: {
-    alignSelf: "center",
     width: 40,
     height: 4,
     borderRadius: 2,
     backgroundColor: DS.palette.border,
+    alignSelf: "center",
     marginBottom: DS.spacing.lg,
   },
   wizardIconBadge: {
-    width: 52,
-    height: 52,
-    borderRadius: DS.shape.radius.md,
+    width: 56,
+    height: 56,
+    borderRadius: DS.shape.radius.lg,
     alignItems: "center",
     justifyContent: "center",
     flexShrink: 0,
   },
   dotsRow: {
     flexDirection: "row",
-    gap: DS.spacing.sm,
     justifyContent: "center",
+    alignItems: "center",
+    gap: DS.spacing.sm,
   },
   dot: {
-    width: 8,
     height: 8,
+    width: 8,
     borderRadius: 4,
   },
+  // Overlays
   overlayBg: {
-    backgroundColor: "rgba(0,0,0,0.55)",
+    backgroundColor: "rgba(0,0,0,0.68)",
     justifyContent: "flex-end",
-    zIndex: 300,
+    zIndex: DS.zIndex.modal,
   },
   overlayCard: {
     backgroundColor: "#FFFFFF",
-    borderTopLeftRadius: DS.shape.radius.xl,
-    borderTopRightRadius: DS.shape.radius.xl,
-    paddingTop: DS.spacing.xxxl,
+    borderTopLeftRadius: 28,
+    borderTopRightRadius: 28,
     gap: DS.spacing.xl,
     overflow: "hidden",
   },
+  // Welcome hero
   welcomeHero: {
     alignItems: "center",
+    paddingTop: DS.spacing.xxxl,
     gap: DS.spacing.md,
-    paddingHorizontal: DS.spacing.xl,
   },
   heroBubble: {
-    width: 96,
-    height: 96,
-    borderRadius: 48,
+    width: 84,
+    height: 84,
+    borderRadius: 42,
     backgroundColor: "#FAE0EC",
     alignItems: "center",
     justifyContent: "center",
@@ -1435,15 +1492,15 @@ const styles = StyleSheet.create({
     gap: DS.spacing.sm,
   },
   heroDot: {
-    width: 10,
-    height: 10,
+    width: 9,
+    height: 9,
     borderRadius: 5,
   },
   featurePillRow: {
     flexDirection: "row",
-    justifyContent: "center",
-    gap: DS.spacing.sm,
     flexWrap: "wrap",
+    gap: DS.spacing.sm,
+    justifyContent: "center",
     paddingHorizontal: DS.spacing.xl,
   },
   featurePill: {
@@ -1451,34 +1508,25 @@ const styles = StyleSheet.create({
     paddingVertical: DS.spacing.xs,
     borderRadius: DS.shape.radius.full,
   },
+  // Done hero
   doneHero: {
     alignItems: "center",
     justifyContent: "center",
-    height: 140,
+    paddingTop: DS.spacing.xxxl,
+    height: 120,
   },
   particleContainer: {
     position: "absolute",
+    width: 0,
+    height: 0,
     alignItems: "center",
     justifyContent: "center",
-    width: "100%",
-    height: "100%",
   },
   doneCheckCircle: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: 84,
+    height: 84,
+    borderRadius: 42,
     alignItems: "center",
     justifyContent: "center",
-  },
-  highlightGlow: {
-    borderRadius: DS.shape.radius.lg,
-    backgroundColor: "rgba(140,191,187,0.18)",
-    margin: -6,
-  },
-  highlightBorder: {
-    borderRadius: DS.shape.radius.lg,
-    borderWidth: 2,
-    borderColor: "#8CBFBB",
-    margin: -1,
   },
 });
