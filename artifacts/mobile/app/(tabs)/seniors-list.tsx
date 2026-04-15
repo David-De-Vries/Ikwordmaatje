@@ -167,10 +167,7 @@ function ProfileCard({ senior, bookmarked, onToggleBookmark }: ProfileCardProps)
   const overflowCount = senior.activities.length - MAX_VISIBLE_ACTIVITIES;
 
   return (
-    <Card elevation={2} padding="md" style={{ overflow: "hidden" }}>
-      {/* Left accent bar */}
-      <View style={styles.accentBar} />
-
+    <Card elevation={2} padding="md">
       {/* Top row: avatar · name/meta · bookmark */}
       <View style={styles.cardRow}>
         <View style={styles.avatar}>
@@ -438,15 +435,6 @@ const styles = StyleSheet.create({
     gap: DS.spacing.md,
   },
   // Profile card
-  accentBar: {
-    position: "absolute",
-    left: 0,
-    top: DS.spacing.md,
-    bottom: DS.spacing.md,
-    width: 3,
-    borderRadius: 2,
-    backgroundColor: "#3A9490",
-  },
   cardRow: {
     flexDirection: "row",
     alignItems: "flex-start",
