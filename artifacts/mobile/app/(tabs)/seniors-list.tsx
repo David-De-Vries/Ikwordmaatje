@@ -1,4 +1,4 @@
-import { Feather } from "@expo/vector-icons";
+import { Feather, Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -195,8 +195,8 @@ function ProfileCard({ senior, bookmarked, onToggleBookmark }: ProfileCardProps)
           activeOpacity={0.8}
           onPress={onToggleBookmark}
         >
-          <Feather
-            name="bookmark"
+          <Ionicons
+            name={bookmarked ? "bookmark" : "bookmark-outline"}
             size={20}
             color={bookmarked ? "#A01550" : DS.palette.text.hint}
           />
