@@ -93,20 +93,18 @@ export function SelectCard({
           {iconName && (
             <Feather name={iconName} size={24} color="#FFFFFF" />
           )}
-          {(mode === "multi" || (mode === "single" && selected)) && (
-            <View
-              style={[
-                styles.hBadge,
-                {
-                  borderColor: selected ? colors.secondary : DS.palette.border,
-                  backgroundColor: selected ? colors.secondary : "rgba(255,255,255,0.85)",
-                },
-              ]}
-            >
-              {selected && <Feather name="check" size={9} color="#FFFFFF" />}
-            </View>
-          )}
         </View>
+
+        {selected && (
+          <View
+            style={[
+              styles.hBadge,
+              { backgroundColor: colors.secondary },
+            ]}
+          >
+            <Feather name="check" size={10} color="#FFFFFF" />
+          </View>
+        )}
 
         <View style={styles.hContent}>
           {category ? (
@@ -259,6 +257,7 @@ const styles = StyleSheet.create({
     borderRadius: DS.shape.radius.sm,
     padding: DS.spacing.md,
     gap: DS.spacing.md,
+    position: "relative",
   },
   hThumb: {
     width: 72,
@@ -270,12 +269,11 @@ const styles = StyleSheet.create({
   },
   hBadge: {
     position: "absolute",
-    top: 6,
-    right: 6,
-    width: 18,
-    height: 18,
-    borderRadius: 9,
-    borderWidth: 1.5,
+    top: 8,
+    right: 8,
+    width: 22,
+    height: 22,
+    borderRadius: 11,
     alignItems: "center",
     justifyContent: "center",
   },
