@@ -109,6 +109,27 @@ export default function LauncherScreen() {
           </View>
           <Feather name="chevron-right" size={18} color={DS.palette.text.hint} />
         </TouchableOpacity>
+
+        <View style={styles.divider} />
+
+        <TouchableOpacity
+          style={[styles.btn, styles.btnSecondary]}
+          activeOpacity={0.85}
+          onPress={() => router.push("/dashboard-seniors")}
+        >
+          <View style={[styles.btnIcon, { backgroundColor: "#D6ECEA" }]}>
+            <Feather name="users" size={20} color="#3A9490" />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Typography variant="subtitle1" style={{ color: DS.palette.text.primary }}>
+              Dashboard Seniors
+            </Typography>
+            <Typography variant="caption" color="textSecondary">
+              Na het bekijken van senioren
+            </Typography>
+          </View>
+          <Feather name="chevron-right" size={18} color={DS.palette.text.hint} />
+        </TouchableOpacity>
       </View>
     </View>
   );
