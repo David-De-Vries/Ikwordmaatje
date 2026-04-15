@@ -1,6 +1,6 @@
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   ScrollView,
@@ -49,10 +49,8 @@ export default function Step1Screen() {
   const [langPickerRow, setLangPickerRow] = useState<string | null>(null);
   const [levelPickerRow, setLevelPickerRow] = useState<string | null>(null);
   const [customLangText, setCustomLangText] = useState("");
-  const skipSyncRef = useRef(false);
 
   useEffect(() => {
-    if (skipSyncRef.current) { skipSyncRef.current = false; return; }
     const committed = rows
       .filter((r) => r.name.trim() !== "")
       .map((r) => ({
@@ -225,7 +223,7 @@ export default function Step1Screen() {
                     >
                       {row.level
                         ? LEVELS.find((l) => l.key === row.level)?.label ?? "—"
-                        : "Niveau"}
+                        : "Selecteer niveau"}
                     </Typography>
                     <Feather name="chevron-down" size={14} color={DS.palette.text.secondary} />
                   </TouchableOpacity>
