@@ -1294,6 +1294,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: DS.spacing.md,
     paddingVertical: DS.spacing.sm,
     flexShrink: 0,
+    minWidth: 88,
+    alignItems: "center",
   },
   taskBtnRow: {
     flexDirection: "row",
