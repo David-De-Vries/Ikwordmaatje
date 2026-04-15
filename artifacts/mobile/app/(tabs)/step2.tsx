@@ -106,7 +106,6 @@ interface VideoModalProps {
 }
 
 function VideoModal({ project, onClose }: VideoModalProps) {
-  const colors = useColors();
   const [playing, setPlaying] = useState(false);
 
   if (!project) return null;
@@ -387,6 +386,7 @@ const styles = StyleSheet.create({
   },
   expandedPanel: {
     paddingHorizontal: DS.spacing.md,
+    paddingTop: DS.spacing.md,
     paddingBottom: DS.spacing.md,
     gap: DS.spacing.md,
   },
