@@ -19,6 +19,11 @@ export interface AvailabilitySlot {
   endTime: string;
 }
 
+export interface LanguageEntry {
+  name: string;
+  level: "native" | "fluent" | "basic";
+}
+
 export interface OnboardingState {
   // Signup
   email: string;
@@ -29,7 +34,7 @@ export interface OnboardingState {
   dateOfBirth: string;
   pronouns: string;
   phoneNumber: string;
-  languages: string[];
+  languages: LanguageEntry[];
   education: string;
   wantsInternship: boolean;
   internshipCourse: string;
@@ -69,7 +74,7 @@ const defaultState: OnboardingState = {
   dateOfBirth: "",
   pronouns: "",
   phoneNumber: "",
-  languages: ["Nederlands"],
+  languages: [],
   education: "",
   wantsInternship: false,
   internshipCourse: "",

@@ -7,12 +7,19 @@ import { KeyboardAwareScrollViewCompat } from "@/components/KeyboardAwareScrollV
 import { ProgressHeader } from "@/components/ProgressHeader";
 import { Button, Card, TextField, Typography } from "@/components/ui";
 import { DS } from "@/constants/design-system";
+import type { LanguageEntry } from "@/context/OnboardingContext";
 import { useOnboarding } from "@/context/OnboardingContext";
 import { useColors } from "@/hooks/useColors";
 
-const PRESET_LANGUAGES = ["Nederlands", "Engels", "Arabisch", "Turks", "Duits", "Frans"];
+const COMMON_LANGUAGES = ["Nederlands", "Engels", "Arabisch", "Turks", "Frans"];
 const PRONOUNS = ["Hij/hem", "Zij/haar", "Die/diens", "Geen voorkeur"];
 const EDUCATION_LEVELS = ["MBO", "HBO", "WO", "Geen"];
+
+const LEVELS: Array<{ key: LanguageEntry["level"]; label: string }> = [
+  { key: "native", label: "Moedertaal" },
+  { key: "fluent", label: "Vloeiend" },
+  { key: "basic", label: "Beetje" },
+];
 
 export default function Step1Screen() {
   const router = useRouter();
@@ -22,32 +29,34 @@ export default function Step1Screen() {
   const [addingCustom, setAddingCustom] = useState(false);
   const [customText, setCustomText] = useState("");
 
-  const toggleLanguage = (lang: string) => {
+  const addLanguage = (name: string) => {
     const current = data.languages ?? [];
-    const isSelected = current.includes(lang);
+    if (current.find((e) => e.name === name)) return;
+    update({ languages: [...current, { name, level: "fluent" }] });
+  };
+
+  const removeLanguage = (name: string) => {
+    update({ languages: (data.languages ?? []).filter((e) => e.name !== name) });
+  };
+
+  const setLevel = (name: string, level: LanguageEntry["level"]) => {
     update({
-      languages: isSelected
-        ? current.filter((x) => x !== lang)
-        : [...current, lang],
+      languages: (data.languages ?? []).map((e) =>
+        e.name === name ? { ...e, level } : e
+      ),
     });
   };
 
   const confirmCustomLanguage = () => {
     const trimmed = customText.trim();
-    if (trimmed) {
-      const current = data.languages ?? [];
-      if (!current.includes(trimmed)) {
-        update({ languages: [...current, trimmed] });
-      }
-    }
+    if (trimmed) addLanguage(trimmed);
     setCustomText("");
     setAddingCustom(false);
   };
 
-  const allLanguages = [
-    ...PRESET_LANGUAGES,
-    ...(data.languages ?? []).filter((l) => !PRESET_LANGUAGES.includes(l)),
-  ];
+  const availableCommon = COMMON_LANGUAGES.filter(
+    (l) => !(data.languages ?? []).find((e) => e.name === l)
+  );
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
@@ -104,7 +113,7 @@ export default function Step1Screen() {
               </Typography>
               <View style={styles.chipRow}>
                 {PRONOUNS.map((p) => (
-                  <PronounChip
+                  <SelectChip
                     key={p}
                     label={p}
                     selected={data.pronouns === p}
@@ -125,60 +134,92 @@ export default function Step1Screen() {
               returnKeyType="next"
             />
 
-            <View>
+            {/* ── Talenkennis ── */}
+            <View style={styles.langSection}>
               <Typography variant="caption" color="textSecondary" style={styles.selectorLabel}>
-                Voorkeurstaal
+                Talenkennis
               </Typography>
-              <View style={styles.chipRow}>
-                {allLanguages.map((l) => (
-                  <PronounChip
-                    key={l}
-                    label={l}
-                    selected={(data.languages ?? []).includes(l)}
-                    onPress={() => toggleLanguage(l)}
-                    activeColor={colors.secondary}
-                    activeBg={colors.accent}
-                  />
-                ))}
 
-                {addingCustom ? (
-                  <View style={styles.customInputRow}>
-                    <TextInput
-                      autoFocus
-                      value={customText}
-                      onChangeText={setCustomText}
-                      onSubmitEditing={confirmCustomLanguage}
-                      onBlur={() => { setAddingCustom(false); setCustomText(""); }}
-                      placeholder="Taal..."
-                      placeholderTextColor={DS.palette.text.secondary}
-                      style={[
-                        styles.customInput,
-                        { borderColor: colors.secondary, color: DS.palette.text.primary },
-                      ]}
-                      returnKeyType="done"
+              {/* Added languages */}
+              {(data.languages ?? []).length === 0 ? (
+                <View style={styles.emptyHint}>
+                  <Feather name="globe" size={16} color={DS.palette.text.secondary} />
+                  <Typography variant="caption" color="textSecondary">
+                    Voeg je eerste taal toe
+                  </Typography>
+                </View>
+              ) : (
+                <View style={styles.langList}>
+                  {(data.languages ?? []).map((entry, idx) => (
+                    <LanguageRow
+                      key={entry.name}
+                      entry={entry}
+                      isLast={idx === (data.languages ?? []).length - 1}
+                      onRemove={() => removeLanguage(entry.name)}
+                      onSetLevel={(lvl) => setLevel(entry.name, lvl)}
+                      activeColor={colors.secondary}
                     />
+                  ))}
+                </View>
+              )}
+
+              {/* Quick-add chips */}
+              <View style={styles.addSection}>
+                <Typography variant="caption" color="textSecondary">
+                  Voeg een taal toe
+                </Typography>
+                <View style={styles.chipRow}>
+                  {availableCommon.map((l) => (
                     <TouchableOpacity
-                      onPressIn={confirmCustomLanguage}
-                      style={[styles.confirmBtn, { backgroundColor: colors.secondary }]}
+                      key={l}
+                      onPress={() => addLanguage(l)}
+                      style={[styles.chip, { borderColor: colors.secondary }]}
                     >
-                      <Feather name="check" size={12} color="#FFFFFF" />
+                      <Typography
+                        variant="caption"
+                        style={{ color: colors.secondary, fontFamily: DS.typography.fontFamily.medium }}
+                      >
+                        + {l}
+                      </Typography>
                     </TouchableOpacity>
-                  </View>
-                ) : (
-                  <TouchableOpacity
-                    onPress={() => setAddingCustom(true)}
-                    style={[
-                      styles.chip,
-                      styles.addChip,
-                      { borderColor: colors.secondary },
-                    ]}
-                  >
-                    <Feather name="plus" size={13} color={colors.secondary} />
-                  </TouchableOpacity>
-                )}
+                  ))}
+
+                  {addingCustom ? (
+                    <View style={styles.customInputRow}>
+                      <TextInput
+                        autoFocus
+                        value={customText}
+                        onChangeText={setCustomText}
+                        onSubmitEditing={confirmCustomLanguage}
+                        onBlur={() => { setCustomText(""); setAddingCustom(false); }}
+                        placeholder="Taal..."
+                        placeholderTextColor={DS.palette.text.secondary}
+                        style={[
+                          styles.customInput,
+                          { borderColor: colors.secondary, color: DS.palette.text.primary },
+                        ]}
+                        returnKeyType="done"
+                      />
+                      <TouchableOpacity
+                        onPressIn={confirmCustomLanguage}
+                        style={[styles.confirmBtn, { backgroundColor: colors.secondary }]}
+                      >
+                        <Feather name="check" size={12} color="#FFFFFF" />
+                      </TouchableOpacity>
+                    </View>
+                  ) : (
+                    <TouchableOpacity
+                      onPress={() => setAddingCustom(true)}
+                      style={[styles.chip, styles.addIconChip, { borderColor: DS.palette.border }]}
+                    >
+                      <Feather name="plus" size={13} color={DS.palette.text.secondary} />
+                    </TouchableOpacity>
+                  )}
+                </View>
               </View>
             </View>
 
+            {/* ── Opleidingsniveau ── */}
             <View>
               <Typography variant="caption" color="textSecondary" style={styles.selectorLabel}>
                 Opleidingsniveau
@@ -271,7 +312,71 @@ export default function Step1Screen() {
   );
 }
 
-function PronounChip({
+function LanguageRow({
+  entry,
+  isLast,
+  onRemove,
+  onSetLevel,
+  activeColor,
+}: {
+  entry: LanguageEntry;
+  isLast: boolean;
+  onRemove: () => void;
+  onSetLevel: (level: LanguageEntry["level"]) => void;
+  activeColor: string;
+}) {
+  return (
+    <View
+      style={[
+        styles.langRow,
+        !isLast && { borderBottomWidth: 1, borderBottomColor: DS.palette.border },
+      ]}
+    >
+      <Typography
+        variant="body2"
+        style={{ flex: 1, color: DS.palette.text.primary, fontFamily: DS.typography.fontFamily.medium }}
+      >
+        {entry.name}
+      </Typography>
+
+      <View style={styles.levelPills}>
+        {LEVELS.map((l) => {
+          const isSelected = entry.level === l.key;
+          return (
+            <TouchableOpacity
+              key={l.key}
+              onPress={() => onSetLevel(l.key)}
+              style={[
+                styles.levelPill,
+                {
+                  borderColor: isSelected ? activeColor : DS.palette.border,
+                  backgroundColor: isSelected ? activeColor : "transparent",
+                },
+              ]}
+            >
+              <Typography
+                variant="caption"
+                style={{
+                  color: isSelected ? "#FFFFFF" : DS.palette.text.secondary,
+                  fontFamily: DS.typography.fontFamily.medium,
+                  fontSize: 10,
+                }}
+              >
+                {l.label}
+              </Typography>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+
+      <TouchableOpacity onPress={onRemove} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+        <Feather name="x" size={14} color={DS.palette.text.secondary} />
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+function SelectChip({
   label,
   selected,
   onPress,
@@ -341,7 +446,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: DS.spacing.md,
     paddingVertical: DS.spacing.xs + 1,
   },
-  addChip: {
+  addIconChip: {
     paddingHorizontal: DS.spacing.sm + 2,
     alignItems: "center",
     justifyContent: "center",
@@ -366,6 +471,45 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: "center",
     justifyContent: "center",
+  },
+  langSection: {
+    gap: DS.spacing.md,
+  },
+  emptyHint: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: DS.spacing.sm,
+    borderWidth: 1,
+    borderColor: DS.palette.border,
+    borderRadius: DS.shape.radius.sm,
+    padding: DS.spacing.md,
+    backgroundColor: DS.palette.background.input,
+  },
+  langList: {
+    borderWidth: 1,
+    borderColor: DS.palette.border,
+    borderRadius: DS.shape.radius.sm,
+    overflow: "hidden",
+  },
+  langRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: DS.spacing.sm,
+    paddingHorizontal: DS.spacing.md,
+    paddingVertical: DS.spacing.sm + 2,
+  },
+  levelPills: {
+    flexDirection: "row",
+    gap: DS.spacing.xs,
+  },
+  levelPill: {
+    borderWidth: 1,
+    borderRadius: DS.shape.radius.full,
+    paddingHorizontal: DS.spacing.sm,
+    paddingVertical: 3,
+  },
+  addSection: {
+    gap: DS.spacing.sm,
   },
   educationRow: {
     flexDirection: "row",
