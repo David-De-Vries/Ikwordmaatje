@@ -237,14 +237,14 @@ export default function Step2Screen() {
                   >
                     <Typography
                       variant="caption"
-                      style={{ color: colors.secondary, fontWeight: "600" }}
+                      style={{ color: "#555555", fontWeight: "600" }}
                     >
                       Meer informatie
                     </Typography>
                     <Feather
                       name={isExpanded ? "chevron-up" : "chevron-down"}
                       size={14}
-                      color={colors.secondary}
+                      color="#555555"
                     />
                   </TouchableOpacity>
 
