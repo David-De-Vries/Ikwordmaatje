@@ -1,6 +1,6 @@
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
 import { KeyboardAwareScrollViewCompat } from "@/components/KeyboardAwareScrollViewCompat";
@@ -21,7 +21,6 @@ export default function Step1Screen() {
 
   const [addingCustom, setAddingCustom] = useState(false);
   const [customText, setCustomText] = useState("");
-  const inputRef = useRef<TextInput>(null);
 
   const toggleLanguage = (lang: string) => {
     const current = data.languages ?? [];
@@ -145,12 +144,11 @@ export default function Step1Screen() {
                 {addingCustom ? (
                   <View style={styles.customInputRow}>
                     <TextInput
-                      ref={inputRef}
                       autoFocus
                       value={customText}
                       onChangeText={setCustomText}
                       onSubmitEditing={confirmCustomLanguage}
-                      onBlur={confirmCustomLanguage}
+                      onBlur={() => { setAddingCustom(false); setCustomText(""); }}
                       placeholder="Taal..."
                       placeholderTextColor={DS.palette.text.secondary}
                       style={[
@@ -160,7 +158,7 @@ export default function Step1Screen() {
                       returnKeyType="done"
                     />
                     <TouchableOpacity
-                      onPress={confirmCustomLanguage}
+                      onPressIn={confirmCustomLanguage}
                       style={[styles.confirmBtn, { backgroundColor: colors.secondary }]}
                     >
                       <Feather name="check" size={12} color="#FFFFFF" />
