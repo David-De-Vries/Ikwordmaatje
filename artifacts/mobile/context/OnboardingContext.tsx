@@ -29,7 +29,7 @@ export interface OnboardingState {
   dateOfBirth: string;
   pronouns: string;
   phoneNumber: string;
-  language: string;
+  languages: string[];
   education: string;
   wantsInternship: boolean;
   internshipCourse: string;
@@ -69,7 +69,7 @@ const defaultState: OnboardingState = {
   dateOfBirth: "",
   pronouns: "",
   phoneNumber: "",
-  language: "Nederlands",
+  languages: ["Nederlands"],
   education: "",
   wantsInternship: false,
   internshipCourse: "",

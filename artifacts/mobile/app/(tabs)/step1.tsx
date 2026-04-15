@@ -1,6 +1,7 @@
+import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import React, { useRef, useState } from "react";
+import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
 import { KeyboardAwareScrollViewCompat } from "@/components/KeyboardAwareScrollViewCompat";
 import { ProgressHeader } from "@/components/ProgressHeader";
@@ -9,7 +10,7 @@ import { DS } from "@/constants/design-system";
 import { useOnboarding } from "@/context/OnboardingContext";
 import { useColors } from "@/hooks/useColors";
 
-const LANGUAGES = ["Nederlands", "Engels", "Arabisch", "Turks", "Duits", "Frans"];
+const PRESET_LANGUAGES = ["Nederlands", "Engels", "Arabisch", "Turks", "Duits", "Frans"];
 const PRONOUNS = ["Hij/hem", "Zij/haar", "Die/diens", "Geen voorkeur"];
 const EDUCATION_LEVELS = ["MBO", "HBO", "WO", "Geen"];
 
@@ -17,6 +18,37 @@ export default function Step1Screen() {
   const router = useRouter();
   const colors = useColors();
   const { data, update } = useOnboarding();
+
+  const [addingCustom, setAddingCustom] = useState(false);
+  const [customText, setCustomText] = useState("");
+  const inputRef = useRef<TextInput>(null);
+
+  const toggleLanguage = (lang: string) => {
+    const current = data.languages ?? [];
+    const isSelected = current.includes(lang);
+    update({
+      languages: isSelected
+        ? current.filter((x) => x !== lang)
+        : [...current, lang],
+    });
+  };
+
+  const confirmCustomLanguage = () => {
+    const trimmed = customText.trim();
+    if (trimmed) {
+      const current = data.languages ?? [];
+      if (!current.includes(trimmed)) {
+        update({ languages: [...current, trimmed] });
+      }
+    }
+    setCustomText("");
+    setAddingCustom(false);
+  };
+
+  const allLanguages = [
+    ...PRESET_LANGUAGES,
+    ...(data.languages ?? []).filter((l) => !PRESET_LANGUAGES.includes(l)),
+  ];
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
@@ -99,16 +131,53 @@ export default function Step1Screen() {
                 Voorkeurstaal
               </Typography>
               <View style={styles.chipRow}>
-                {LANGUAGES.map((l) => (
+                {allLanguages.map((l) => (
                   <PronounChip
                     key={l}
                     label={l}
-                    selected={data.language === l}
-                    onPress={() => update({ language: l })}
+                    selected={(data.languages ?? []).includes(l)}
+                    onPress={() => toggleLanguage(l)}
                     activeColor={colors.secondary}
                     activeBg={colors.accent}
                   />
                 ))}
+
+                {addingCustom ? (
+                  <View style={styles.customInputRow}>
+                    <TextInput
+                      ref={inputRef}
+                      autoFocus
+                      value={customText}
+                      onChangeText={setCustomText}
+                      onSubmitEditing={confirmCustomLanguage}
+                      onBlur={confirmCustomLanguage}
+                      placeholder="Taal..."
+                      placeholderTextColor={DS.palette.text.secondary}
+                      style={[
+                        styles.customInput,
+                        { borderColor: colors.secondary, color: DS.palette.text.primary },
+                      ]}
+                      returnKeyType="done"
+                    />
+                    <TouchableOpacity
+                      onPress={confirmCustomLanguage}
+                      style={[styles.confirmBtn, { backgroundColor: colors.secondary }]}
+                    >
+                      <Feather name="check" size={12} color="#FFFFFF" />
+                    </TouchableOpacity>
+                  </View>
+                ) : (
+                  <TouchableOpacity
+                    onPress={() => setAddingCustom(true)}
+                    style={[
+                      styles.chip,
+                      styles.addChip,
+                      { borderColor: colors.secondary },
+                    ]}
+                  >
+                    <Feather name="plus" size={13} color={colors.secondary} />
+                  </TouchableOpacity>
+                )}
               </View>
             </View>
 
@@ -218,7 +287,8 @@ function PronounChip({
   activeBg: string;
 }) {
   return (
-    <View
+    <TouchableOpacity
+      onPress={onPress}
       style={[
         styles.chip,
         {
@@ -233,11 +303,10 @@ function PronounChip({
           color: selected ? activeColor : DS.palette.text.secondary,
           fontFamily: DS.typography.fontFamily.medium,
         }}
-        onPress={onPress}
       >
         {label}
       </Typography>
-    </View>
+    </TouchableOpacity>
   );
 }
 
@@ -266,12 +335,39 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     gap: DS.spacing.sm,
+    alignItems: "center",
   },
   chip: {
     borderWidth: 1,
     borderRadius: DS.shape.radius.full,
     paddingHorizontal: DS.spacing.md,
     paddingVertical: DS.spacing.xs + 1,
+  },
+  addChip: {
+    paddingHorizontal: DS.spacing.sm + 2,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  customInputRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: DS.spacing.xs,
+  },
+  customInput: {
+    borderWidth: 1,
+    borderRadius: DS.shape.radius.full,
+    paddingHorizontal: DS.spacing.md,
+    paddingVertical: DS.spacing.xs + 1,
+    fontSize: 12,
+    minWidth: 90,
+    maxWidth: 140,
+  },
+  confirmBtn: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
   },
   educationRow: {
     flexDirection: "row",
