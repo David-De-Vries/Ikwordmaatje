@@ -50,6 +50,7 @@ interface SeniorProfile {
   id: string;
   name: string;
   initials: string;
+  age: number;
   distanceKm: number;
   activities: ActivityId[];
   availability: string[];
@@ -60,6 +61,7 @@ const SENIORS: SeniorProfile[] = [
     id: "1",
     name: "Ans de Vries",
     initials: "AV",
+    age: 79,
     distanceKm: 0.8,
     activities: ["buiten", "kletsen", "lezen"],
     availability: ["Ma", "Wo", "Vr"],
@@ -68,6 +70,7 @@ const SENIORS: SeniorProfile[] = [
     id: "2",
     name: "Cor Bakker",
     initials: "CB",
+    age: 83,
     distanceKm: 1.2,
     activities: ["muziek", "eten"],
     availability: ["Di", "Do", "Za"],
@@ -76,6 +79,7 @@ const SENIORS: SeniorProfile[] = [
     id: "3",
     name: "Mien Janssen",
     initials: "MJ",
+    age: 76,
     distanceKm: 1.9,
     activities: ["kletsen", "creatief", "digitaal"],
     availability: ["Ma", "Di", "Wo", "Do", "Vr", "Za", "Zo"],
@@ -84,6 +88,7 @@ const SENIORS: SeniorProfile[] = [
     id: "4",
     name: "Piet Smit",
     initials: "PS",
+    age: 81,
     distanceKm: 2.3,
     activities: ["sport", "buiten"],
     availability: ["Wo", "Za", "Zo"],
@@ -92,6 +97,7 @@ const SENIORS: SeniorProfile[] = [
     id: "5",
     name: "Truus van Dijk",
     initials: "TD",
+    age: 87,
     distanceKm: 3.1,
     activities: ["lezen", "muziek", "eten", "kletsen"],
     availability: ["Di", "Vr"],
@@ -100,6 +106,7 @@ const SENIORS: SeniorProfile[] = [
     id: "6",
     name: "Jan Bosman",
     initials: "JB",
+    age: 74,
     distanceKm: 3.7,
     activities: ["digitaal", "kletsen"],
     availability: ["Ma", "Do"],
@@ -108,6 +115,7 @@ const SENIORS: SeniorProfile[] = [
     id: "7",
     name: "Ria Hendriks",
     initials: "RH",
+    age: 80,
     distanceKm: 4.2,
     activities: ["creatief", "lezen"],
     availability: ["Wo", "Vr", "Za"],
@@ -116,6 +124,7 @@ const SENIORS: SeniorProfile[] = [
     id: "8",
     name: "Gerrit Mulder",
     initials: "GM",
+    age: 77,
     distanceKm: 4.8,
     activities: ["buiten", "sport", "eten"],
     availability: ["Di", "Do", "Zo"],
@@ -124,6 +133,7 @@ const SENIORS: SeniorProfile[] = [
     id: "9",
     name: "Lien Visser",
     initials: "LV",
+    age: 82,
     distanceKm: 5.5,
     activities: ["kletsen", "muziek", "digitaal"],
     availability: ["Ma", "Wo"],
@@ -132,6 +142,7 @@ const SENIORS: SeniorProfile[] = [
     id: "10",
     name: "Kees Postma",
     initials: "KP",
+    age: 78,
     distanceKm: 6.0,
     activities: ["lezen", "creatief", "buiten", "sport"],
     availability: ["Do", "Za"],
@@ -155,59 +166,32 @@ function ProfileCard({ senior, bookmarked, onToggleBookmark }: ProfileCardProps)
   const overflowCount = senior.activities.length - MAX_VISIBLE_ACTIVITIES;
 
   return (
-    <Card elevation={2} padding="md">
+    <Card elevation={2} padding="md" style={{ overflow: "hidden" }}>
+      {/* Left accent bar */}
+      <View style={styles.accentBar} />
+
+      {/* Top row: avatar · name/meta · bookmark */}
       <View style={styles.cardRow}>
-        {/* Avatar */}
         <View style={styles.avatar}>
           <Typography style={styles.avatarInitials}>{senior.initials}</Typography>
         </View>
 
-        {/* Info */}
         <View style={styles.info}>
-          {/* Name */}
           <Typography variant="subtitle1" style={styles.name}>
             {senior.name}
           </Typography>
-
-          {/* Distance */}
-          <View style={styles.distanceRow}>
-            <Feather name="map-pin" size={12} color={DS.palette.text.secondary} />
+          <View style={styles.metaRow}>
             <Typography variant="caption" color="textSecondary">
-              {senior.distanceKm.toFixed(1).replace(".", ",")} km van jou
+              {senior.age} jaar
             </Typography>
-          </View>
-
-          {/* Activities */}
-          <View style={[styles.chipsRow, { marginTop: DS.spacing.sm }]}>
-            {visibleActivities.map((actId) => {
-              const meta = ACTIVITY_META[actId];
-              return (
-                <View key={actId} style={styles.activityChip}>
-                  <Feather name={meta.icon} size={10} color={DS.palette.text.secondary} />
-                  <Typography style={styles.chipLabel}>{meta.label}</Typography>
-                </View>
-              );
-            })}
-            {overflowCount > 0 && (
-              <View style={[styles.activityChip, styles.overflowChip]}>
-                <Typography style={[styles.chipLabel, { color: DS.palette.text.secondary }]}>
-                  +{overflowCount}
-                </Typography>
-              </View>
-            )}
-          </View>
-
-          {/* Availability */}
-          <View style={styles.chipsRow}>
-            {senior.availability.map((day) => (
-              <View key={day} style={styles.dayChip}>
-                <Typography style={styles.dayLabel}>{day}</Typography>
-              </View>
-            ))}
+            <Typography variant="caption" color="textSecondary" style={styles.metaDot}>·</Typography>
+            <Feather name="map-pin" size={11} color={DS.palette.text.secondary} />
+            <Typography variant="caption" color="textSecondary">
+              {senior.distanceKm.toFixed(1).replace(".", ",")} km
+            </Typography>
           </View>
         </View>
 
-        {/* Bookmark */}
         <TouchableOpacity
           style={[styles.bookmarkBtn, bookmarked && styles.bookmarkBtnActive]}
           activeOpacity={0.8}
@@ -220,6 +204,43 @@ function ProfileCard({ senior, bookmarked, onToggleBookmark }: ProfileCardProps)
           />
         </TouchableOpacity>
       </View>
+
+      {/* Activity chips */}
+      <View style={[styles.chipsRow, { marginTop: DS.spacing.sm }]}>
+        {visibleActivities.map((actId) => {
+          const meta = ACTIVITY_META[actId];
+          return (
+            <View key={actId} style={styles.activityChip}>
+              <Feather name={meta.icon} size={10} color="#3A9490" />
+              <Typography style={styles.chipLabel}>{meta.label}</Typography>
+            </View>
+          );
+        })}
+        {overflowCount > 0 && (
+          <View style={[styles.activityChip, styles.overflowChip]}>
+            <Typography style={styles.chipLabel}>+{overflowCount}</Typography>
+          </View>
+        )}
+      </View>
+
+      {/* Availability */}
+      <View style={styles.availRow}>
+        <Typography variant="caption" color="textSecondary" style={styles.availLabel}>
+          Beschikbaar:
+        </Typography>
+        {senior.availability.map((day) => (
+          <View key={day} style={styles.dayChip}>
+            <Typography style={styles.dayLabel}>{day}</Typography>
+          </View>
+        ))}
+      </View>
+
+      {/* Divider + CTA */}
+      <View style={styles.cardDivider} />
+      <TouchableOpacity style={styles.ctaRow} activeOpacity={0.7} onPress={() => {}}>
+        <Typography style={styles.ctaText}>Bekijk profiel</Typography>
+        <Feather name="arrow-right" size={13} color="#3A9490" />
+      </TouchableOpacity>
     </Card>
   );
 }
@@ -406,22 +427,31 @@ const styles = StyleSheet.create({
     gap: DS.spacing.md,
   },
   // Profile card
+  accentBar: {
+    position: "absolute",
+    left: 0,
+    top: DS.spacing.md,
+    bottom: DS.spacing.md,
+    width: 3,
+    borderRadius: 2,
+    backgroundColor: "#3A9490",
+  },
   cardRow: {
     flexDirection: "row",
     alignItems: "flex-start",
     gap: DS.spacing.md,
   },
   avatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
     backgroundColor: "#D6ECEA",
     alignItems: "center",
     justifyContent: "center",
     flexShrink: 0,
   },
   avatarInitials: {
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: "700",
     color: "#3A9490",
   },
@@ -433,10 +463,13 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     fontSize: 15,
   },
-  distanceRow: {
+  metaRow: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 4,
+    gap: DS.spacing.xs,
+  },
+  metaDot: {
+    marginHorizontal: 1,
   },
   chipsRow: {
     flexDirection: "row",
@@ -447,17 +480,27 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 3,
-    backgroundColor: "#F0F0F0",
+    backgroundColor: "#EEF7F6",
     borderRadius: DS.shape.radius.full,
     paddingHorizontal: DS.spacing.sm,
     paddingVertical: DS.spacing.xxs,
   },
   overflowChip: {
-    backgroundColor: "#E8E8E8",
+    backgroundColor: "#D6ECEA",
   },
   chipLabel: {
     fontSize: 11,
-    color: DS.palette.text.secondary,
+    color: "#3A9490",
+  },
+  availRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    flexWrap: "wrap",
+    gap: DS.spacing.xs,
+    marginTop: DS.spacing.xs,
+  },
+  availLabel: {
+    marginRight: DS.spacing.xxs,
   },
   dayChip: {
     backgroundColor: "#EEF7F6",
@@ -469,6 +512,23 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: "600",
     color: "#3A9490",
+  },
+  cardDivider: {
+    height: 1,
+    backgroundColor: DS.palette.border,
+    marginTop: DS.spacing.md,
+  },
+  ctaRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: DS.spacing.xs,
+    paddingTop: DS.spacing.sm,
+  },
+  ctaText: {
+    color: "#3A9490",
+    fontWeight: "600",
+    fontSize: 13,
   },
   // Bookmark
   bookmarkBtn: {
