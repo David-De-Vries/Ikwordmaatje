@@ -346,9 +346,7 @@ function MatchCard() {
           align="center"
           style={{ maxWidth: 200 }}
         >
-          {allTasksDone
-            ? "Ontdek wie er in jouw omgeving op zoek is naar een vrijwilliger."
-            : "Zodra we een passende senior voor jou hebben gevonden, zie je hier alle informatie over jouw match."}
+          {"Zodra we een passende senior voor jou hebben gevonden, zie je hier alle informatie over jouw match."}
         </Typography>
       </View>
 
