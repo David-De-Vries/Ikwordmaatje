@@ -275,6 +275,7 @@ function MatchingStatusCard() {
                     color="textSecondary"
                     style={{
                       marginTop: 2,
+                      marginRight: 30,
                       textDecorationLine: isDone ? "line-through" : "none",
                     }}
                   >
