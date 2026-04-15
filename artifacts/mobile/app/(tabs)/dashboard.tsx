@@ -210,6 +210,7 @@ const TASK_ITEMS = [
 ];
 
 function MatchingStatusCard() {
+  const router = useRouter();
   const { allTasksDone } = useContext(DashboardModeContext);
   const tasks = allTasksDone
     ? TASK_ITEMS.map((t) =>
@@ -294,7 +295,11 @@ function MatchingStatusCard() {
                   </View>
                 ) : (
                   <View style={styles.taskBtnRow}>
-                    <TouchableOpacity style={styles.taskPill} activeOpacity={0.8} onPress={() => {}}>
+                    <TouchableOpacity
+                      style={styles.taskPill}
+                      activeOpacity={0.8}
+                      onPress={() => task.key === "seniors" ? router.push("/seniors-list") : undefined}
+                    >
                       <Typography style={{ color: "#FFFFFF", fontWeight: "700", fontSize: 13 }}>
                         {task.buttonLabel}
                       </Typography>

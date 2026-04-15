@@ -238,6 +238,7 @@ function makeTaskItems(intakeDateLabel: string) {
 }
 
 function MatchingStatusCard({ intakeDateLabel }: { intakeDateLabel: string }) {
+  const router = useRouter();
   const { allTasksDone } = useContext(DashboardModeContext);
   const TASK_ITEMS = makeTaskItems(intakeDateLabel);
   const tasks = allTasksDone
@@ -323,7 +324,11 @@ function MatchingStatusCard({ intakeDateLabel }: { intakeDateLabel: string }) {
                   </View>
                 ) : (
                   <View style={styles.taskBtnRow}>
-                    <TouchableOpacity style={styles.taskPill} activeOpacity={0.8} onPress={() => {}}>
+                    <TouchableOpacity
+                      style={styles.taskPill}
+                      activeOpacity={0.8}
+                      onPress={() => task.key === "seniors" ? router.push("/seniors-list") : undefined}
+                    >
                       <Typography style={{ color: "#FFFFFF", fontWeight: "700", fontSize: 13 }}>
                         {task.buttonLabel}
                       </Typography>
