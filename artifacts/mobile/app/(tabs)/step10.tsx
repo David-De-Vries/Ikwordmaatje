@@ -168,7 +168,7 @@ function MockCalendar({
                     calStyles.dayInner,
                     selected && calStyles.daySelected,
                     !selected && todayDay && calStyles.dayToday,
-                    past && { opacity: 0.3 },
+                    past && { opacity: 0.35 },
                     unavailable && calStyles.dayUnavailable,
                   ]}
                 >
@@ -423,9 +423,9 @@ const calStyles = StyleSheet.create({
     paddingVertical: 2,
   },
   dayInner: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -437,7 +437,7 @@ const calStyles = StyleSheet.create({
     borderColor: "#3A9490",
   },
   dayUnavailable: {
-    opacity: 0.25,
+    opacity: 0.35,
   },
   timesSection: {
     paddingHorizontal: DS.spacing.md,
