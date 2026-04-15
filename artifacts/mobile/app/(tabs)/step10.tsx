@@ -23,6 +23,16 @@ const DUTCH_DAYS_SHORT = ["Ma", "Di", "Wo", "Do", "Vr", "Za", "Zo"];
 const DUTCH_DAYS_LONG = ["Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag", "Zondag"];
 const TIME_SLOTS = ["09:00", "10:30", "13:00", "14:30", "16:00"];
 
+const AVAILABLE_SATURDAYS = new Set([7, 14, 21]);
+
+function isAvailableDay(year: number, month: number, day: number): boolean {
+  const d = new Date(year, month, day);
+  const dow = d.getDay();
+  if (dow === 0) return false;
+  if (dow === 6) return AVAILABLE_SATURDAYS.has(day % 28 || 28);
+  return true;
+}
+
 function getDaysInMonth(year: number, month: number) {
   return new Date(year, month + 1, 0).getDate();
 }
@@ -95,7 +105,7 @@ function MockCalendar({
   };
 
   const selectDay = (day: number) => {
-    if (isPast(day)) return;
+    if (isPast(day) || !isAvailableDay(year, month, day)) return;
     setSelectedDate(new Date(year, month, day));
     setSelectedTime(null);
   };
@@ -140,6 +150,9 @@ function MockCalendar({
           {row.map((day, di) => {
             if (!day) return <View key={di} style={calStyles.dayCell} />;
             const past = isPast(day);
+            const available = isAvailableDay(year, month, day);
+            const unavailable = !past && !available;
+            const disabled = past || unavailable;
             const selected = isSelected(day);
             const todayDay = isToday(day);
             return (
@@ -147,8 +160,8 @@ function MockCalendar({
                 key={di}
                 style={calStyles.dayCell}
                 onPress={() => selectDay(day)}
-                activeOpacity={past ? 1 : 0.7}
-                disabled={past}
+                activeOpacity={disabled ? 1 : 0.7}
+                disabled={disabled}
               >
                 <View
                   style={[
@@ -156,6 +169,7 @@ function MockCalendar({
                     selected && calStyles.daySelected,
                     !selected && todayDay && calStyles.dayToday,
                     past && { opacity: 0.3 },
+                    unavailable && calStyles.dayUnavailable,
                   ]}
                 >
                   <Typography
@@ -163,6 +177,7 @@ function MockCalendar({
                     style={[
                       { textAlign: "center", fontSize: 13 },
                       selected && { color: "#FFFFFF", fontFamily: DS.typography.fontFamily.semiBold },
+                      unavailable && { color: DS.palette.text.disabled },
                     ]}
                   >
                     {day}
@@ -420,6 +435,9 @@ const calStyles = StyleSheet.create({
   dayToday: {
     borderWidth: 1.5,
     borderColor: "#3A9490",
+  },
+  dayUnavailable: {
+    opacity: 0.25,
   },
   timesSection: {
     paddingHorizontal: DS.spacing.md,

@@ -61,20 +61,6 @@ export default function DashboardIntakeScreen() {
         { backgroundColor: colors.background, paddingTop: insets.top },
       ]}
     >
-      {/* Top bar */}
-      <View style={styles.topBar}>
-        <TouchableOpacity
-          onPress={() => router.back()}
-          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-          style={styles.backBtn}
-        >
-          <Feather name="arrow-left" size={22} color="#FFFFFF" />
-        </TouchableOpacity>
-        <Typography variant="h5" style={{ color: "#FFFFFF", flex: 1 }}>
-          Dashboard intake
-        </Typography>
-      </View>
-
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={[styles.scroll, { paddingBottom: insets.bottom + DS.spacing.xl }]}
@@ -82,6 +68,9 @@ export default function DashboardIntakeScreen() {
       >
         {/* ── A. Hero card ── */}
         <Card elevation={2} padding="md" style={styles.card}>
+          <Typography variant="h4" style={{ color: DS.iconBadge.teal.icon }}>
+            Je intake is ingepland!
+          </Typography>
           <View style={styles.heroTop}>
             <View style={styles.heroIcon}>
               <Feather name="check-circle" size={28} color="#FFFFFF" />
@@ -209,16 +198,6 @@ export default function DashboardIntakeScreen() {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-  },
-  topBar: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: DS.spacing.lg,
-    paddingVertical: DS.spacing.md,
-    gap: DS.spacing.md,
-  },
-  backBtn: {
-    padding: DS.spacing.xs,
   },
   scroll: {
     padding: DS.spacing.lg,
