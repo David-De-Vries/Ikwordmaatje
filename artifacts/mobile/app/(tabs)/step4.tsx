@@ -74,6 +74,7 @@ export default function Step4Screen() {
               {ACTIVITIES.map((act) => (
                 <View key={act.id} style={styles.gridItem}>
                   <SelectCard
+                    layout="horizontal"
                     iconName={act.iconName}
                     title={act.title}
                     description={act.description}

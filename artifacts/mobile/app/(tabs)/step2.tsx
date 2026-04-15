@@ -9,12 +9,16 @@ import { DS } from "@/constants/design-system";
 import { useOnboarding } from "@/context/OnboardingContext";
 import { useColors } from "@/hooks/useColors";
 
-const PROJECTS = Array.from({ length: 8 }, (_, i) => ({
-  id: `project-${i + 1}`,
-  name: `Project ${i + 1}`,
-  color: "#8CBFBB",
-  description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-}));
+const PROJECTS = [
+  { id: "p1", name: "Maatjesproject", category: "Vriendschap", color: "#8CBFBB", description: "Wekelijks bezoek aan een eenzame senior in de buurt." },
+  { id: "p2", name: "Wandelmaatje", category: "Buiten", color: "#7BB0AC", description: "Samen buiten wandelen en genieten van de natuur." },
+  { id: "p3", name: "Digitaal Hulpje", category: "Technologie", color: "#6EA8A4", description: "Help senioren met smartphone, tablet en computer." },
+  { id: "p4", name: "Leesmaatje", category: "Cultuur", color: "#8CBFBB", description: "Voorlezen of samen praten over boeken en verhalen." },
+  { id: "p5", name: "Kookmaatje", category: "Eten & Drinken", color: "#7BB0AC", description: "Samen koken en gezellig aan tafel zitten." },
+  { id: "p6", name: "Muziekmaatje", category: "Muziek", color: "#6EA8A4", description: "Muziek luisteren, zingen of naar concerten gaan." },
+  { id: "p7", name: "Sport & Bewegen", category: "Gezondheid", color: "#8CBFBB", description: "Lichte sport en bewegingsoefeningen begeleiden." },
+  { id: "p8", name: "Creatief Atelier", category: "Creativiteit", color: "#7BB0AC", description: "Knutselen, schilderen en handwerken samen." },
+];
 
 export default function Step2Screen() {
   const router = useRouter();
@@ -50,6 +54,8 @@ export default function Step2Screen() {
             {PROJECTS.map((project) => (
               <View key={project.id} style={styles.gridItem}>
                 <SelectCard
+                  layout="horizontal"
+                  category={project.category}
                   title={project.name}
                   description={project.description}
                   accentColor={project.color}

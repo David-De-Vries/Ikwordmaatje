@@ -4,26 +4,30 @@
  * Figma: Components / SelectCard
  *   Properties:
  *     mode: single | multi
+ *     layout: vertical | horizontal
  *     selected: boolean
- *     size: sm | md
  *
- * Usage (activity grid):
+ * Usage (horizontal project card):
  *   <SelectCard
- *     iconName="wind"
- *     title="Wandelen en buiten"
- *     description="Samen wandelen"
- *     selected={selected}
- *     onPress={toggle}
- *     mode="multi"
- *   />
- *
- * Usage (project grid):
- *   <SelectCard
- *     title="Maatje"
- *     accentColor="#7BB5AD"
+ *     layout="horizontal"
+ *     category="Maatjesproject"
+ *     title="Project Naam"
+ *     description="Korte omschrijving"
+ *     accentColor="#8CBFBB"
  *     selected={selected}
  *     onPress={select}
  *     mode="single"
+ *   />
+ *
+ * Usage (horizontal activity card):
+ *   <SelectCard
+ *     layout="horizontal"
+ *     iconName="wind"
+ *     title="Wandelen en buiten"
+ *     description="Samen wandelen of tuinieren"
+ *     selected={selected}
+ *     onPress={toggle}
+ *     mode="multi"
  *   />
  */
 import { Feather } from "@expo/vector-icons";
@@ -36,27 +40,34 @@ import { useColors } from "@/hooks/useColors";
 import { Typography } from "./ui/Typography";
 
 type Mode = "single" | "multi";
+type Layout = "vertical" | "horizontal";
 
 interface SelectCardProps {
   title: string;
   description?: string;
+  category?: string;
   iconName?: React.ComponentProps<typeof Feather>["name"];
   accentColor?: string;
   selected?: boolean;
   onPress?: () => void;
   mode?: Mode;
+  layout?: Layout;
   style?: ViewStyle;
   testID?: string;
 }
 
+const TEAL = "#8CBFBB";
+
 export function SelectCard({
   title,
   description,
+  category,
   iconName,
   accentColor,
   selected = false,
   onPress,
   mode = "multi",
+  layout = "vertical",
   style,
   testID,
 }: SelectCardProps) {
@@ -64,6 +75,60 @@ export function SelectCard({
 
   const borderColor = selected ? colors.secondary : DS.palette.border;
   const bgColor = selected ? colors.accent : "#FFFFFF";
+  const thumbColor = accentColor ?? TEAL;
+
+  if (layout === "horizontal") {
+    return (
+      <TouchableOpacity
+        testID={testID}
+        activeOpacity={0.75}
+        onPress={onPress}
+        style={[
+          styles.hCard,
+          { borderColor, backgroundColor: bgColor },
+          style,
+        ]}
+      >
+        <View style={[styles.hThumb, { backgroundColor: thumbColor }]}>
+          {iconName && (
+            <Feather name={iconName} size={24} color="#FFFFFF" />
+          )}
+          {(mode === "multi" || (mode === "single" && selected)) && (
+            <View
+              style={[
+                styles.hBadge,
+                {
+                  borderColor: selected ? colors.secondary : DS.palette.border,
+                  backgroundColor: selected ? colors.secondary : "rgba(255,255,255,0.85)",
+                },
+              ]}
+            >
+              {selected && <Feather name="check" size={9} color="#FFFFFF" />}
+            </View>
+          )}
+        </View>
+
+        <View style={styles.hContent}>
+          {category ? (
+            <Typography
+              variant="caption"
+              style={{ color: colors.secondary, fontWeight: "600" }}
+            >
+              {category}
+            </Typography>
+          ) : null}
+          <Typography variant="h6" style={{ color: DS.palette.text.primary }}>
+            {title}
+          </Typography>
+          {description ? (
+            <Typography variant="caption" color="textSecondary">
+              {description}
+            </Typography>
+          ) : null}
+        </View>
+      </TouchableOpacity>
+    );
+  }
 
   return (
     <TouchableOpacity
@@ -186,5 +251,36 @@ const styles = StyleSheet.create({
   },
   textBlock: {
     gap: 2,
+  },
+  hCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderRadius: DS.shape.radius.sm,
+    padding: DS.spacing.md,
+    gap: DS.spacing.lg,
+  },
+  hThumb: {
+    width: 72,
+    height: 72,
+    borderRadius: DS.shape.radius.sm,
+    alignItems: "center",
+    justifyContent: "center",
+    flexShrink: 0,
+  },
+  hBadge: {
+    position: "absolute",
+    top: 6,
+    right: 6,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    borderWidth: 1.5,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  hContent: {
+    flex: 1,
+    gap: 3,
   },
 });
