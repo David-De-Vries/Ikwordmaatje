@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   UIManager,
   View,
+  useWindowDimensions,
 } from "react-native";
 
 import { ProgressHeader } from "@/components/ProgressHeader";
@@ -107,6 +108,8 @@ interface VideoModalProps {
 
 function VideoModal({ project, onClose }: VideoModalProps) {
   const [playing, setPlaying] = useState(false);
+  const { height: screenHeight, width: screenWidth } = useWindowDimensions();
+  const playerHeight = Math.round(screenHeight * 0.52);
 
   if (!project) return null;
 
@@ -128,7 +131,7 @@ function VideoModal({ project, onClose }: VideoModalProps) {
           </TouchableOpacity>
         </View>
 
-        <View style={[modalStyles.player, { backgroundColor: project.color }]}>
+        <View style={[modalStyles.player, { backgroundColor: project.color, height: playerHeight, width: screenWidth }]}>
           <TouchableOpacity
             onPress={() => setPlaying((p) => !p)}
             style={modalStyles.playBtn}
@@ -454,9 +457,6 @@ const modalStyles = StyleSheet.create({
     gap: DS.spacing.md,
   },
   player: {
-    width: "100%",
-    aspectRatio: 9 / 16,
-    maxHeight: "55%",
     alignItems: "center",
     justifyContent: "center",
   },
