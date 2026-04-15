@@ -162,6 +162,7 @@ interface ProfileCardProps {
 }
 
 function ProfileCard({ senior, bookmarked, onToggleBookmark }: ProfileCardProps) {
+  const router = useRouter();
   const visibleActivities = senior.activities.slice(0, MAX_VISIBLE_ACTIVITIES);
   const overflowCount = senior.activities.length - MAX_VISIBLE_ACTIVITIES;
 
