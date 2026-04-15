@@ -75,7 +75,7 @@ export default function Step11Screen() {
           </Typography>
         </View>
 
-        <Card elevation={4} padding="lg" style={styles.card}>
+        <Card elevation={4} padding="md" style={styles.card}>
           <View style={styles.section}>
             <Typography variant="h4">Jouw profiel</Typography>
             <View style={styles.profileRow}>

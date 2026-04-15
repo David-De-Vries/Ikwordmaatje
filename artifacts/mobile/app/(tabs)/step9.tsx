@@ -49,7 +49,7 @@ export default function Step9Screen() {
         style={{ flex: 1 }}
         contentContainerStyle={styles.scroll}
       >
-        <Card elevation={2} padding="lg" style={styles.card}>
+        <Card elevation={2} padding="md" style={styles.card}>
           <Banner
             variant="info"
             title="Eerste blik op je mogelijke matches"

@@ -355,7 +355,7 @@ export default function StageInfoScreen() {
         contentContainerStyle={styles.scroll}
         keyboardShouldPersistTaps="handled"
       >
-        <Card elevation={2} padding="lg" style={styles.card}>
+        <Card elevation={2} padding="md" style={styles.card}>
           <View style={styles.header}>
             <Typography variant="h3">Jouw stage bij Careibu</Typography>
             <Typography variant="body2" color="textSecondary">

@@ -63,7 +63,7 @@ export default function Step4Screen() {
         style={{ flex: 1 }}
         contentContainerStyle={styles.scroll}
       >
-        <Card elevation={2} padding="lg" style={styles.card}>
+        <Card elevation={2} padding="md" style={styles.card}>
           <View style={styles.section}>
             <Typography variant="h3">Jouw activiteiten</Typography>
             <Typography variant="body2" color="textSecondary">

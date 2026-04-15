@@ -64,7 +64,7 @@ export default function Step7Screen() {
         style={{ flex: 1 }}
         contentContainerStyle={styles.scroll}
       >
-        <Card elevation={2} padding="lg" style={styles.card}>
+        <Card elevation={2} padding="md" style={styles.card}>
           <View style={styles.header}>
             <Typography variant="h3">Onze verwachtingen</Typography>
             <Typography variant="body2" color="textSecondary">
