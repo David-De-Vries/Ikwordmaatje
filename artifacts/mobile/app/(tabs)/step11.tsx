@@ -9,14 +9,14 @@ import { useOnboarding } from "@/context/OnboardingContext";
 import { useColors } from "@/hooks/useColors";
 
 const PROJECT_NAMES: Record<string, string> = {
-  maatje: "Maatje",
-  huisvriend: "Huisvriend",
-  taalmaatje: "Taalmaatje",
-  studie: "Studie",
-  computer: "Digitaal",
-  tuinieren: "Tuinieren",
-  sport: "Sport",
-  vrij: "Vrij project",
+  p1: "Maatjesproject",
+  p2: "Wandelmaatje",
+  p3: "Digitaal Hulpje",
+  p4: "Leesmaatje",
+  p5: "Kookmaatje",
+  p6: "Muziekmaatje",
+  p7: "Sport & Bewegen",
+  p8: "Creatief Atelier",
 };
 
 const ACTIVITY_NAMES: Record<string, string> = {
