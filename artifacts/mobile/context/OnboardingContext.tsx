@@ -109,6 +109,25 @@ interface OnboardingContextValue {
   isHydrated: boolean;
 }
 
+const VALID_LEVELS = new Set<string>(["native", "fluent", "basic"]);
+
+function normalizeLanguages(raw: unknown): LanguageEntry[] {
+  if (!Array.isArray(raw)) return [];
+  const result: LanguageEntry[] = [];
+  for (const item of raw) {
+    if (typeof item === "string" && item.trim()) {
+      result.push({ name: item.trim(), level: "fluent" });
+    } else if (item && typeof item === "object" && typeof (item as Record<string, unknown>).name === "string") {
+      const obj = item as Record<string, unknown>;
+      const level = typeof obj.level === "string" && VALID_LEVELS.has(obj.level)
+        ? (obj.level as LanguageEntry["level"])
+        : "fluent";
+      result.push({ name: (obj.name as string).trim(), level });
+    }
+  }
+  return result;
+}
+
 const OnboardingContext = createContext<OnboardingContextValue | null>(null);
 
 export function OnboardingProvider({ children }: { children: React.ReactNode }) {
@@ -119,8 +138,11 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
     AsyncStorage.getItem(STORAGE_KEY).then((raw) => {
       if (raw) {
         try {
-          const parsed = JSON.parse(raw) as Partial<OnboardingState>;
-          setData((prev) => ({ ...prev, ...parsed }));
+          const parsed = JSON.parse(raw) as Partial<OnboardingState & { languages: unknown }>;
+          if (parsed.languages !== undefined) {
+            (parsed as Partial<OnboardingState>).languages = normalizeLanguages(parsed.languages);
+          }
+          setData((prev) => ({ ...prev, ...(parsed as Partial<OnboardingState>) }));
         } catch {
           // ignore corrupt data
         }
