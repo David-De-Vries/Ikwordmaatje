@@ -1,22 +1,22 @@
+import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
 import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 
 import { ProgressHeader } from "@/components/ProgressHeader";
-import { SelectCard } from "@/components/SelectCard";
 import { SliderInput } from "@/components/SliderInput";
 import { Button, Card, IconBadge, Typography } from "@/components/ui";
 import { DS } from "@/constants/design-system";
 import { useOnboarding } from "@/context/OnboardingContext";
 import { useColors } from "@/hooks/useColors";
 
-import type { Feather } from "@expo/vector-icons";
+type FeatherIconName = React.ComponentProps<typeof Feather>["name"];
 
 const ACTIVITIES: Array<{
   id: string;
   title: string;
   description: string;
-  iconName: React.ComponentProps<typeof Feather>["name"];
+  iconName: FeatherIconName;
 }> = [
   { id: "buiten", title: "Wandelen en buiten", description: "Samen wandelen of tuinieren", iconName: "wind" },
   { id: "kletsen", title: "Gezellig kletsen", description: "Conversatie en gezelschap", iconName: "message-circle" },
@@ -71,19 +71,19 @@ export default function Step4Screen() {
             </Typography>
 
             <View style={styles.grid}>
-              {ACTIVITIES.map((act) => (
-                <View key={act.id} style={styles.gridItem}>
-                  <SelectCard
-                    layout="horizontal"
-                    iconName={act.iconName}
+              {ACTIVITIES.map((act) => {
+                const selected = data.selectedActivities.includes(act.id);
+                return (
+                  <ActivityTile
+                    key={act.id}
                     title={act.title}
                     description={act.description}
-                    selected={data.selectedActivities.includes(act.id)}
+                    iconName={act.iconName}
+                    selected={selected}
                     onPress={() => toggleActivity(act.id)}
-                    mode="multi"
                   />
-                </View>
-              ))}
+                );
+              })}
             </View>
           </View>
 
@@ -192,6 +192,67 @@ export default function Step4Screen() {
   );
 }
 
+function ActivityTile({
+  title,
+  description,
+  iconName,
+  selected,
+  onPress,
+}: {
+  title: string;
+  description: string;
+  iconName: FeatherIconName;
+  selected: boolean;
+  onPress: () => void;
+}) {
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      activeOpacity={0.75}
+      style={[
+        styles.tile,
+        selected && styles.tileSelected,
+      ]}
+    >
+      {selected && (
+        <View style={styles.tileCheck}>
+          <Feather name="check" size={11} color="#FFFFFF" />
+        </View>
+      )}
+      <View
+        style={[
+          styles.tileIconWrap,
+          selected && styles.tileIconWrapSelected,
+        ]}
+      >
+        <Feather
+          name={iconName}
+          size={22}
+          color={selected ? "#FFFFFF" : DS.iconBadge.teal.icon}
+        />
+      </View>
+      <Typography
+        variant="body2"
+        style={[
+          styles.tileTitle,
+          selected && { color: DS.palette.text.primary },
+        ]}
+        numberOfLines={2}
+      >
+        {title}
+      </Typography>
+      <Typography
+        variant="caption"
+        color="textSecondary"
+        style={styles.tileDesc}
+        numberOfLines={2}
+      >
+        {description}
+      </Typography>
+    </TouchableOpacity>
+  );
+}
+
 const styles = StyleSheet.create({
   scroll: {
     padding: DS.spacing.lg,
@@ -204,11 +265,55 @@ const styles = StyleSheet.create({
     gap: DS.spacing.lg,
   },
   grid: {
-    flexDirection: "column",
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: DS.spacing.md,
   },
-  gridItem: {
-    width: "100%",
+  tile: {
+    width: "47%",
+    borderWidth: 1,
+    borderColor: DS.palette.border,
+    borderRadius: DS.shape.radius.md,
+    padding: DS.spacing.md,
+    gap: DS.spacing.sm,
+    backgroundColor: "#FFFFFF",
+    position: "relative",
+  },
+  tileSelected: {
+    borderColor: DS.iconBadge.teal.icon,
+    backgroundColor: DS.iconBadge.teal.bg,
+  },
+  tileCheck: {
+    position: "absolute",
+    top: DS.spacing.sm,
+    right: DS.spacing.sm,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    backgroundColor: DS.iconBadge.teal.icon,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  tileIconWrap: {
+    width: 44,
+    height: 44,
+    borderRadius: DS.shape.radius.sm,
+    backgroundColor: DS.iconBadge.teal.bg,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  tileIconWrapSelected: {
+    backgroundColor: DS.iconBadge.teal.icon,
+  },
+  tileTitle: {
+    fontFamily: DS.typography.fontFamily.semiBold,
+    fontSize: 13,
+    color: DS.palette.text.primary,
+    lineHeight: 18,
+  },
+  tileDesc: {
+    fontSize: 11,
+    lineHeight: 15,
   },
   divider: {
     height: 1,
