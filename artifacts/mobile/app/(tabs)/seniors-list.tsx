@@ -2,6 +2,7 @@ import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
+  Alert,
   Platform,
   ScrollView,
   StyleSheet,
@@ -237,7 +238,17 @@ function ProfileCard({ senior, bookmarked, onToggleBookmark }: ProfileCardProps)
 
       {/* Divider + CTA */}
       <View style={styles.cardDivider} />
-      <TouchableOpacity style={styles.ctaRow} activeOpacity={0.7} onPress={() => {}}>
+      <TouchableOpacity
+        style={styles.ctaRow}
+        activeOpacity={0.7}
+        onPress={() =>
+          Alert.alert(
+            senior.name,
+            "Het gedetailleerde seniorenprofiel is binnenkort beschikbaar.",
+            [{ text: "OK" }]
+          )
+        }
+      >
         <Typography style={styles.ctaText}>Bekijk profiel</Typography>
         <Feather name="arrow-right" size={13} color="#3A9490" />
       </TouchableOpacity>
