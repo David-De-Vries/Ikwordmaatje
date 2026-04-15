@@ -338,7 +338,7 @@ function MatchCard() {
           <Feather name={allTasksDone ? "users" : "user-plus"} size={30} color="#8CBFBB" />
         </View>
         <Typography variant="subtitle1" align="center">
-          {allTasksDone ? "Bekijk senioren bij jou in de buurt" : "Nog geen match gevonden"}
+          {allTasksDone ? "Bekijk senioren bij jou in de buurt" : "Bezig met matchen"}
         </Typography>
         <Typography
           variant="body2"
