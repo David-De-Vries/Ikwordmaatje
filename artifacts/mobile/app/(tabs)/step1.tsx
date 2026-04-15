@@ -1,7 +1,15 @@
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
-import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  Modal,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 
 import { KeyboardAwareScrollViewCompat } from "@/components/KeyboardAwareScrollViewCompat";
 import { ProgressHeader } from "@/components/ProgressHeader";
@@ -15,48 +23,83 @@ const COMMON_LANGUAGES = ["Nederlands", "Engels", "Arabisch", "Turks", "Frans"];
 const PRONOUNS = ["Hij/hem", "Zij/haar", "Die/diens", "Geen voorkeur"];
 const EDUCATION_LEVELS = ["MBO", "HBO", "WO", "Geen"];
 
-const LEVELS: Array<{ key: LanguageEntry["level"]; label: string }> = [
-  { key: "native", label: "Moedertaal" },
-  { key: "fluent", label: "Vloeiend" },
-  { key: "basic", label: "Beetje" },
+const LEVELS: Array<{ key: LanguageEntry["level"]; label: string; description: string }> = [
+  { key: "native", label: "Moedertaal", description: "Ik ben hiermee opgegroeid" },
+  { key: "fluent", label: "Vloeiend", description: "Ik spreek het goed" },
+  { key: "basic", label: "Beetje", description: "Ik versta de basis" },
 ];
+
+type Row = { id: string; name: string; level: LanguageEntry["level"] | "" };
+
+function uid() {
+  return Math.random().toString(36).slice(2, 9);
+}
+
+function initRows(entries: LanguageEntry[]): Row[] {
+  if (entries.length === 0) return [{ id: uid(), name: "", level: "" }];
+  return entries.map((e) => ({ id: uid(), name: e.name, level: e.level }));
+}
 
 export default function Step1Screen() {
   const router = useRouter();
   const colors = useColors();
   const { data, update } = useOnboarding();
 
-  const [addingCustom, setAddingCustom] = useState(false);
-  const [customText, setCustomText] = useState("");
+  const [rows, setRows] = useState<Row[]>(() => initRows(data.languages ?? []));
+  const [langPickerRow, setLangPickerRow] = useState<string | null>(null);
+  const [levelPickerRow, setLevelPickerRow] = useState<string | null>(null);
+  const [customLangText, setCustomLangText] = useState("");
+  const skipSyncRef = useRef(false);
 
-  const addLanguage = (name: string) => {
-    const current = data.languages ?? [];
-    if (current.find((e) => e.name === name)) return;
-    update({ languages: [...current, { name, level: "fluent" }] });
+  useEffect(() => {
+    if (skipSyncRef.current) { skipSyncRef.current = false; return; }
+    const committed = rows
+      .filter((r) => r.name.trim() !== "")
+      .map((r) => ({
+        name: r.name.trim(),
+        level: (r.level || "fluent") as LanguageEntry["level"],
+      }));
+    update({ languages: committed });
+  }, [rows]);
+
+  const addRow = () => {
+    setRows((prev) => [...prev, { id: uid(), name: "", level: "" }]);
   };
 
-  const removeLanguage = (name: string) => {
-    update({ languages: (data.languages ?? []).filter((e) => e.name !== name) });
-  };
-
-  const setLevel = (name: string, level: LanguageEntry["level"]) => {
-    update({
-      languages: (data.languages ?? []).map((e) =>
-        e.name === name ? { ...e, level } : e
-      ),
+  const removeRow = (id: string) => {
+    setRows((prev) => {
+      const next = prev.filter((r) => r.id !== id);
+      return next.length === 0 ? [{ id: uid(), name: "", level: "" }] : next;
     });
   };
 
-  const confirmCustomLanguage = () => {
-    const trimmed = customText.trim();
-    if (trimmed) addLanguage(trimmed);
-    setCustomText("");
-    setAddingCustom(false);
+  const updateRowName = (id: string, name: string) => {
+    setRows((prev) => prev.map((r) => (r.id === id ? { ...r, name } : r)));
   };
 
-  const availableCommon = COMMON_LANGUAGES.filter(
-    (l) => !(data.languages ?? []).find((e) => e.name === l)
-  );
+  const updateRowLevel = (id: string, level: LanguageEntry["level"]) => {
+    setRows((prev) => prev.map((r) => (r.id === id ? { ...r, level } : r)));
+  };
+
+  const pickLanguage = (name: string) => {
+    if (langPickerRow) updateRowName(langPickerRow, name);
+    setLangPickerRow(null);
+    setCustomLangText("");
+  };
+
+  const pickLevel = (level: LanguageEntry["level"]) => {
+    if (levelPickerRow) updateRowLevel(levelPickerRow, level);
+    setLevelPickerRow(null);
+  };
+
+  const confirmCustomLang = () => {
+    const trimmed = customLangText.trim();
+    if (trimmed) pickLanguage(trimmed);
+    else { setCustomLangText(""); }
+  };
+
+  const currentLangPickerRow = rows.find((r) => r.id === langPickerRow);
+  const currentLevelPickerRow = rows.find((r) => r.id === levelPickerRow);
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
@@ -75,7 +118,7 @@ export default function Step1Screen() {
           </View>
 
           <View style={styles.fields}>
-            <View style={styles.row}>
+            <View style={styles.nameRow}>
               <View style={{ flex: 1 }}>
                 <TextField
                   label="Voornaam"
@@ -108,7 +151,7 @@ export default function Step1Screen() {
             />
 
             <View>
-              <Typography variant="caption" color="textSecondary" style={styles.selectorLabel}>
+              <Typography variant="caption" color="textSecondary" style={styles.fieldLabel}>
                 Voornaamwoorden (optioneel)
               </Typography>
               <View style={styles.chipRow}>
@@ -136,116 +179,112 @@ export default function Step1Screen() {
 
             {/* ── Talenkennis ── */}
             <View style={styles.langSection}>
-              <Typography variant="caption" color="textSecondary" style={styles.selectorLabel}>
-                Talenkennis
-              </Typography>
-
-              {/* Added languages */}
-              {(data.languages ?? []).length === 0 ? (
-                <View style={styles.emptyHint}>
-                  <Feather name="globe" size={16} color={DS.palette.text.secondary} />
-                  <Typography variant="caption" color="textSecondary">
-                    Voeg je eerste taal toe
-                  </Typography>
-                </View>
-              ) : (
-                <View style={styles.langList}>
-                  {(data.languages ?? []).map((entry, idx) => (
-                    <LanguageRow
-                      key={entry.name}
-                      entry={entry}
-                      isLast={idx === (data.languages ?? []).length - 1}
-                      onRemove={() => removeLanguage(entry.name)}
-                      onSetLevel={(lvl) => setLevel(entry.name, lvl)}
-                      activeColor={colors.secondary}
-                    />
-                  ))}
-                </View>
-              )}
-
-              {/* Quick-add chips */}
-              <View style={styles.addSection}>
-                <Typography variant="caption" color="textSecondary">
-                  Voeg een taal toe
+              <View style={styles.langHeaderRow}>
+                <Typography variant="caption" color="textSecondary" style={{ flex: 1 }}>
+                  Taal
                 </Typography>
-                <View style={styles.chipRow}>
-                  {availableCommon.map((l) => (
-                    <TouchableOpacity
-                      key={l}
-                      onPress={() => addLanguage(l)}
-                      style={[styles.chip, { borderColor: colors.secondary }]}
-                    >
-                      <Typography
-                        variant="caption"
-                        style={{ color: colors.secondary, fontFamily: DS.typography.fontFamily.medium }}
-                      >
-                        + {l}
-                      </Typography>
-                    </TouchableOpacity>
-                  ))}
-
-                  {addingCustom ? (
-                    <View style={styles.customInputRow}>
-                      <TextInput
-                        autoFocus
-                        value={customText}
-                        onChangeText={setCustomText}
-                        onSubmitEditing={confirmCustomLanguage}
-                        onBlur={() => { setCustomText(""); setAddingCustom(false); }}
-                        placeholder="Taal..."
-                        placeholderTextColor={DS.palette.text.secondary}
-                        style={[
-                          styles.customInput,
-                          { borderColor: colors.secondary, color: DS.palette.text.primary },
-                        ]}
-                        returnKeyType="done"
-                      />
-                      <TouchableOpacity
-                        onPressIn={confirmCustomLanguage}
-                        style={[styles.confirmBtn, { backgroundColor: colors.secondary }]}
-                      >
-                        <Feather name="check" size={12} color="#FFFFFF" />
-                      </TouchableOpacity>
-                    </View>
-                  ) : (
-                    <TouchableOpacity
-                      onPress={() => setAddingCustom(true)}
-                      style={[styles.chip, styles.addIconChip, { borderColor: DS.palette.border }]}
-                    >
-                      <Feather name="plus" size={13} color={DS.palette.text.secondary} />
-                    </TouchableOpacity>
-                  )}
-                </View>
+                <Typography variant="caption" color="textSecondary" style={styles.niveauLabel}>
+                  Niveau
+                </Typography>
               </View>
+
+              {rows.map((row) => (
+                <View key={row.id} style={styles.langRow}>
+                  {/* Language selector */}
+                  <TouchableOpacity
+                    style={[styles.selectorField, { flex: 11 }]}
+                    onPress={() => setLangPickerRow(row.id)}
+                    activeOpacity={0.7}
+                  >
+                    <Typography
+                      variant="body2"
+                      style={[
+                        styles.selectorText,
+                        !row.name && { color: DS.palette.text.secondary },
+                      ]}
+                      numberOfLines={1}
+                    >
+                      {row.name || "Selecteer taal"}
+                    </Typography>
+                    <Feather name="chevron-down" size={14} color={DS.palette.text.secondary} />
+                  </TouchableOpacity>
+
+                  {/* Level selector */}
+                  <TouchableOpacity
+                    style={[styles.selectorField, { flex: 8 }]}
+                    onPress={() => setLevelPickerRow(row.id)}
+                    activeOpacity={0.7}
+                  >
+                    <Typography
+                      variant="body2"
+                      style={[
+                        styles.selectorText,
+                        !row.level && { color: DS.palette.text.secondary },
+                      ]}
+                      numberOfLines={1}
+                    >
+                      {row.level
+                        ? LEVELS.find((l) => l.key === row.level)?.label ?? "—"
+                        : "Niveau"}
+                    </Typography>
+                    <Feather name="chevron-down" size={14} color={DS.palette.text.secondary} />
+                  </TouchableOpacity>
+
+                  {/* Remove */}
+                  <TouchableOpacity
+                    onPress={() => removeRow(row.id)}
+                    hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                    style={styles.removeBtn}
+                  >
+                    <Feather name="x" size={15} color={DS.palette.text.secondary} />
+                  </TouchableOpacity>
+                </View>
+              ))}
+
+              {/* Add button */}
+              <TouchableOpacity onPress={addRow} style={styles.addBtn} activeOpacity={0.7}>
+                <Feather name="plus" size={14} color={DS.palette.text.secondary} />
+                <Typography
+                  variant="caption"
+                  style={{ color: DS.palette.text.secondary }}
+                >
+                  Taal toevoegen
+                </Typography>
+              </TouchableOpacity>
             </View>
 
             {/* ── Opleidingsniveau ── */}
             <View>
-              <Typography variant="caption" color="textSecondary" style={styles.selectorLabel}>
+              <Typography variant="caption" color="textSecondary" style={styles.fieldLabel}>
                 Opleidingsniveau
               </Typography>
               <View style={styles.educationRow}>
                 {EDUCATION_LEVELS.map((level) => (
                   <TouchableOpacity
                     key={level}
-                    onPress={() => {
+                    onPress={() =>
                       update({
                         education: level,
                         wantsInternship: level === "Geen" ? false : data.wantsInternship,
-                      });
-                    }}
+                      })
+                    }
                     style={[
                       styles.educationBtn,
                       {
-                        borderColor: data.education === level ? colors.secondary : DS.palette.border,
-                        backgroundColor: data.education === level ? colors.accent : "transparent",
+                        borderColor:
+                          data.education === level ? colors.secondary : DS.palette.border,
+                        backgroundColor:
+                          data.education === level ? colors.accent : "transparent",
                       },
                     ]}
                   >
                     <Typography
                       variant="caption"
                       style={{
-                        color: data.education === level ? colors.secondary : DS.palette.text.secondary,
+                        color:
+                          data.education === level
+                            ? colors.secondary
+                            : DS.palette.text.secondary,
                         fontFamily: DS.typography.fontFamily.medium,
                         textAlign: "center",
                       }}
@@ -266,8 +305,12 @@ export default function Step1Screen() {
                     style={[
                       styles.checkbox,
                       {
-                        borderColor: data.wantsInternship ? colors.secondary : DS.palette.border,
-                        backgroundColor: data.wantsInternship ? colors.secondary : "transparent",
+                        borderColor: data.wantsInternship
+                          ? colors.secondary
+                          : DS.palette.border,
+                        backgroundColor: data.wantsInternship
+                          ? colors.secondary
+                          : "transparent",
                       },
                     ]}
                   >
@@ -275,7 +318,11 @@ export default function Step1Screen() {
                       <Typography style={styles.checkmark}>✓</Typography>
                     )}
                   </View>
-                  <Typography variant="caption" color="textSecondary" style={styles.checkboxLabel}>
+                  <Typography
+                    variant="caption"
+                    color="textSecondary"
+                    style={styles.checkboxLabel}
+                  >
                     Ik wil me aanmelden voor een stageplek.
                   </Typography>
                 </TouchableOpacity>
@@ -298,7 +345,9 @@ export default function Step1Screen() {
               variant="contained"
               color="primary"
               size="md"
-              onPress={() => router.push(data.wantsInternship ? "/stageinfo" : "/step2")}
+              onPress={() =>
+                router.push(data.wantsInternship ? "/stageinfo" : "/step2")
+              }
               style={styles.nextBtn}
             >
               Verder
@@ -308,70 +357,134 @@ export default function Step1Screen() {
 
         <View style={{ height: DS.spacing.xl }} />
       </KeyboardAwareScrollViewCompat>
-    </View>
-  );
-}
 
-function LanguageRow({
-  entry,
-  isLast,
-  onRemove,
-  onSetLevel,
-  activeColor,
-}: {
-  entry: LanguageEntry;
-  isLast: boolean;
-  onRemove: () => void;
-  onSetLevel: (level: LanguageEntry["level"]) => void;
-  activeColor: string;
-}) {
-  return (
-    <View
-      style={[
-        styles.langRow,
-        !isLast && { borderBottomWidth: 1, borderBottomColor: DS.palette.border },
-      ]}
-    >
-      <Typography
-        variant="body2"
-        style={{ flex: 1, color: DS.palette.text.primary, fontFamily: DS.typography.fontFamily.medium }}
+      {/* ── Language Picker Modal ── */}
+      <Modal
+        visible={langPickerRow !== null}
+        transparent
+        animationType="slide"
+        onRequestClose={() => { setLangPickerRow(null); setCustomLangText(""); }}
       >
-        {entry.name}
-      </Typography>
-
-      <View style={styles.levelPills}>
-        {LEVELS.map((l) => {
-          const isSelected = entry.level === l.key;
-          return (
+        <TouchableWithoutFeedback onPress={() => { setLangPickerRow(null); setCustomLangText(""); }}>
+          <View style={styles.modalOverlay} />
+        </TouchableWithoutFeedback>
+        <View style={styles.sheet}>
+          <View style={styles.sheetHandle} />
+          <View style={styles.sheetHeader}>
+            <Typography variant="h4">Taal selecteren</Typography>
             <TouchableOpacity
-              key={l.key}
-              onPress={() => onSetLevel(l.key)}
-              style={[
-                styles.levelPill,
-                {
-                  borderColor: isSelected ? activeColor : DS.palette.border,
-                  backgroundColor: isSelected ? activeColor : "transparent",
-                },
-              ]}
+              onPress={() => { setLangPickerRow(null); setCustomLangText(""); }}
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
             >
-              <Typography
-                variant="caption"
-                style={{
-                  color: isSelected ? "#FFFFFF" : DS.palette.text.secondary,
-                  fontFamily: DS.typography.fontFamily.medium,
-                  fontSize: 10,
-                }}
-              >
-                {l.label}
-              </Typography>
+              <Feather name="x" size={18} color={DS.palette.text.secondary} />
             </TouchableOpacity>
-          );
-        })}
-      </View>
+          </View>
 
-      <TouchableOpacity onPress={onRemove} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-        <Feather name="x" size={14} color={DS.palette.text.secondary} />
-      </TouchableOpacity>
+          <ScrollView keyboardShouldPersistTaps="handled">
+            {COMMON_LANGUAGES.map((lang, idx) => {
+              const isSelected = currentLangPickerRow?.name === lang;
+              return (
+                <TouchableOpacity
+                  key={lang}
+                  onPress={() => pickLanguage(lang)}
+                  style={[
+                    styles.sheetOption,
+                    idx < COMMON_LANGUAGES.length - 1 && styles.sheetOptionBorder,
+                  ]}
+                >
+                  <Typography
+                    variant="body1"
+                    style={{ color: isSelected ? colors.secondary : DS.palette.text.primary }}
+                  >
+                    {lang}
+                  </Typography>
+                  {isSelected && (
+                    <Feather name="check" size={16} color={colors.secondary} />
+                  )}
+                </TouchableOpacity>
+              );
+            })}
+
+            <View style={styles.sheetDivider} />
+
+            <View style={styles.customLangRow}>
+              <TextInput
+                value={customLangText}
+                onChangeText={setCustomLangText}
+                placeholder="Andere taal..."
+                placeholderTextColor={DS.palette.text.secondary}
+                style={[styles.customLangInput, { color: DS.palette.text.primary }]}
+                returnKeyType="done"
+                onSubmitEditing={confirmCustomLang}
+              />
+              {customLangText.trim().length > 0 && (
+                <TouchableOpacity
+                  onPress={confirmCustomLang}
+                  style={[styles.customConfirmBtn, { backgroundColor: colors.secondary }]}
+                >
+                  <Feather name="check" size={14} color="#FFFFFF" />
+                </TouchableOpacity>
+              )}
+            </View>
+          </ScrollView>
+        </View>
+      </Modal>
+
+      {/* ── Level Picker Modal ── */}
+      <Modal
+        visible={levelPickerRow !== null}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setLevelPickerRow(null)}
+      >
+        <TouchableWithoutFeedback onPress={() => setLevelPickerRow(null)}>
+          <View style={styles.modalOverlay} />
+        </TouchableWithoutFeedback>
+        <View style={styles.sheet}>
+          <View style={styles.sheetHandle} />
+          <View style={styles.sheetHeader}>
+            <Typography variant="h4">Niveau</Typography>
+            <TouchableOpacity
+              onPress={() => setLevelPickerRow(null)}
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+            >
+              <Feather name="x" size={18} color={DS.palette.text.secondary} />
+            </TouchableOpacity>
+          </View>
+
+          {LEVELS.map((lvl, idx) => {
+            const isSelected = currentLevelPickerRow?.level === lvl.key;
+            return (
+              <TouchableOpacity
+                key={lvl.key}
+                onPress={() => pickLevel(lvl.key)}
+                style={[
+                  styles.sheetOption,
+                  idx < LEVELS.length - 1 && styles.sheetOptionBorder,
+                ]}
+              >
+                <View style={{ flex: 1 }}>
+                  <Typography
+                    variant="body1"
+                    style={{
+                      color: isSelected ? colors.secondary : DS.palette.text.primary,
+                      fontFamily: DS.typography.fontFamily.medium,
+                    }}
+                  >
+                    {lvl.label}
+                  </Typography>
+                  <Typography variant="caption" color="textSecondary">
+                    {lvl.description}
+                  </Typography>
+                </View>
+                {isSelected && (
+                  <Feather name="check" size={16} color={colors.secondary} />
+                )}
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -427,11 +540,11 @@ const styles = StyleSheet.create({
   fields: {
     gap: DS.spacing.lg,
   },
-  row: {
+  nameRow: {
     flexDirection: "row",
     gap: DS.spacing.md,
   },
-  selectorLabel: {
+  fieldLabel: {
     marginBottom: DS.spacing.sm,
   },
   chipRow: {
@@ -446,71 +559,54 @@ const styles = StyleSheet.create({
     paddingHorizontal: DS.spacing.md,
     paddingVertical: DS.spacing.xs + 1,
   },
-  addIconChip: {
-    paddingHorizontal: DS.spacing.sm + 2,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  customInputRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: DS.spacing.xs,
-  },
-  customInput: {
-    borderWidth: 1,
-    borderRadius: DS.shape.radius.full,
-    paddingHorizontal: DS.spacing.md,
-    paddingVertical: DS.spacing.xs + 1,
-    fontSize: 12,
-    minWidth: 90,
-    maxWidth: 140,
-  },
-  confirmBtn: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    alignItems: "center",
-    justifyContent: "center",
-  },
+
+  // ── Language section ──
   langSection: {
-    gap: DS.spacing.md,
+    gap: DS.spacing.sm,
   },
-  emptyHint: {
+  langHeaderRow: {
     flexDirection: "row",
     alignItems: "center",
-    gap: DS.spacing.sm,
-    borderWidth: 1,
-    borderColor: DS.palette.border,
-    borderRadius: DS.shape.radius.sm,
-    padding: DS.spacing.md,
-    backgroundColor: DS.palette.background.input,
+    paddingRight: 28,
   },
-  langList: {
-    borderWidth: 1,
-    borderColor: DS.palette.border,
-    borderRadius: DS.shape.radius.sm,
-    overflow: "hidden",
+  niveauLabel: {
+    width: "42%",
   },
   langRow: {
     flexDirection: "row",
     alignItems: "center",
     gap: DS.spacing.sm,
+  },
+  selectorField: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    borderWidth: 1,
+    borderColor: DS.palette.border,
+    borderRadius: DS.shape.radius.sm,
     paddingHorizontal: DS.spacing.md,
     paddingVertical: DS.spacing.sm + 2,
+    backgroundColor: DS.palette.background.input,
   },
-  levelPills: {
+  selectorText: {
+    flex: 1,
+    fontSize: 13,
+    color: DS.palette.text.primary,
+    marginRight: DS.spacing.xs,
+  },
+  removeBtn: {
+    width: 20,
+    alignItems: "center",
+  },
+  addBtn: {
     flexDirection: "row",
+    alignItems: "center",
     gap: DS.spacing.xs,
+    paddingVertical: DS.spacing.sm,
+    alignSelf: "flex-start",
   },
-  levelPill: {
-    borderWidth: 1,
-    borderRadius: DS.shape.radius.full,
-    paddingHorizontal: DS.spacing.sm,
-    paddingVertical: 3,
-  },
-  addSection: {
-    gap: DS.spacing.sm,
-  },
+
+  // ── Education ──
   educationRow: {
     flexDirection: "row",
     gap: DS.spacing.sm,
@@ -551,10 +647,74 @@ const styles = StyleSheet.create({
     gap: DS.spacing.md,
     marginTop: DS.spacing.xs,
   },
-  backBtn: {
+  backBtn: { flex: 1 },
+  nextBtn: { flex: 2 },
+
+  // ── Modals ──
+  modalOverlay: {
     flex: 1,
+    backgroundColor: "rgba(0,0,0,0.35)",
   },
-  nextBtn: {
-    flex: 2,
+  sheet: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: "#FFFFFF",
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    paddingHorizontal: DS.spacing.lg,
+    paddingBottom: 40,
+    paddingTop: DS.spacing.sm,
+    maxHeight: "75%",
+  },
+  sheetHandle: {
+    width: 36,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: DS.palette.border,
+    alignSelf: "center",
+    marginBottom: DS.spacing.md,
+  },
+  sheetHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: DS.spacing.md,
+  },
+  sheetOption: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: DS.spacing.md,
+  },
+  sheetOptionBorder: {
+    borderBottomWidth: 1,
+    borderBottomColor: DS.palette.border,
+  },
+  sheetDivider: {
+    height: 1,
+    backgroundColor: DS.palette.border,
+    marginVertical: DS.spacing.sm,
+  },
+  customLangRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: DS.spacing.sm,
+    paddingVertical: DS.spacing.sm,
+  },
+  customLangInput: {
+    flex: 1,
+    fontSize: 14,
+    paddingVertical: DS.spacing.sm,
+    borderBottomWidth: 1,
+    borderBottomColor: DS.palette.border,
+  },
+  customConfirmBtn: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
