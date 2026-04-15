@@ -43,7 +43,7 @@ function initRows(entries: LanguageEntry[]): Row[] {
 export default function Step1Screen() {
   const router = useRouter();
   const colors = useColors();
-  const { data, update } = useOnboarding();
+  const { data, update, isHydrated } = useOnboarding();
 
   const [rows, setRows] = useState<Row[]>(() => initRows(data.languages ?? []));
   const [langPickerRow, setLangPickerRow] = useState<string | null>(null);
@@ -51,6 +51,12 @@ export default function Step1Screen() {
   const [customLangText, setCustomLangText] = useState("");
 
   useEffect(() => {
+    if (!isHydrated) return;
+    setRows(initRows(data.languages ?? []));
+  }, [isHydrated]);
+
+  useEffect(() => {
+    if (!isHydrated) return;
     const committed = rows
       .filter((r) => r.name.trim() !== "")
       .map((r) => ({
