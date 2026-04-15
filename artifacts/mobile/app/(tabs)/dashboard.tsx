@@ -199,12 +199,22 @@ const TASK_ITEMS = [
     status: "upcoming",
     buttonLabel: "Bekijken",
   },
+  {
+    key: "match",
+    label: "Matchen aan senior",
+    sublabel: "Onze medewerkers zoeken actief naar de beste match voor jou.",
+    status: "pending",
+    buttonLabel: null,
+    alwaysPending: true,
+  },
 ];
 
 function MatchingStatusCard() {
   const { allTasksDone } = useContext(DashboardModeContext);
   const tasks = allTasksDone
-    ? TASK_ITEMS.map((t) => ({ ...t, status: "done" as const }))
+    ? TASK_ITEMS.map((t) =>
+        (t as any).alwaysPending ? t : { ...t, status: "done" as const }
+      )
     : TASK_ITEMS;
 
   const doneCount = tasks.filter((t) => t.status === "done").length;
