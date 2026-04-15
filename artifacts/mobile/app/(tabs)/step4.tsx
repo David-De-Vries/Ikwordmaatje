@@ -29,9 +29,33 @@ const ACTIVITIES: Array<{
 ];
 
 const DEMENTIA_OPTIONS = [
-  { id: "geen", label: "Geen ervaring", description: "Ik heb nog geen ervaring met dementie" },
-  { id: "beetje", label: "Beetje ervaring", description: "Ik heb wel enige bekendheid met het onderwerp" },
-  { id: "veel", label: "Veel ervaring", description: "Ik heb persoonlijk of professioneel ervaring" },
+  {
+    id: "geen",
+    label: "Geen ervaring",
+    description: "Ik heb nog geen ervaring met dementie",
+    feedback: {
+      title: "Geen probleem, wij zijn er om te helpen!",
+      body: "We verwachten niet dat je alles gelijk kan. Tijdens jouw traject bij Careibu zullen onze coördinatoren je coachen en begeleiden zodat je nuttige skills leert die je verder helpen met je ontwikkeling.",
+    },
+  },
+  {
+    id: "beetje",
+    label: "Beetje ervaring",
+    description: "Ik heb wel enige bekendheid met het onderwerp",
+    feedback: {
+      title: "Fijn dat je al wat ervaring hebt!",
+      body: "Je ervaring is waardevol en zal helpen om een verbinding aan te gaan met een senior. We zullen je ondersteunen en kijken waar nog ruimte ligt om je verder op weg te helpen.",
+    },
+  },
+  {
+    id: "veel",
+    label: "Veel ervaring",
+    description: "Ik heb persoonlijk of professioneel ervaring",
+    feedback: {
+      title: "Je ervaring is enorm waardevol!",
+      body: "Super dat je je ervaring meeneemt en inzet voor een senior. We helpen je met het toepassen van je ervaring, en wie weet leer je nog wat nieuws van je coördinator of senior.",
+    },
+  },
 ];
 
 const SLIDER_LABELS = [
@@ -94,57 +118,49 @@ export default function Step4Screen() {
             <Typography variant="body2" color="textSecondary">
               Heb je eerder met dementie te maken gehad?
             </Typography>
-            {DEMENTIA_OPTIONS.map((opt) => (
-              <TouchableOpacity
-                key={opt.id}
-                onPress={() => update({ dementiaExperience: opt.id })}
-                style={[
-                  styles.optionRow,
-                  {
-                    borderColor:
-                      data.dementiaExperience === opt.id
-                        ? colors.secondary
-                        : DS.palette.border,
-                    backgroundColor:
-                      data.dementiaExperience === opt.id
-                        ? colors.accent
-                        : "#FFFFFF",
-                  },
-                ]}
-              >
-                <IconBadge
-                  iconName="heart"
-                  color={data.dementiaExperience === opt.id ? "teal" : "gray"}
-                  size="sm"
-                />
-                <View style={{ flex: 1, gap: 2 }}>
-                  <Typography variant="h6">{opt.label}</Typography>
-                  <Typography variant="caption" color="textSecondary">
-                    {opt.description}
-                  </Typography>
-                </View>
-                <View
-                  style={[
-                    styles.radio,
-                    {
-                      borderColor:
-                        data.dementiaExperience === opt.id
-                          ? colors.secondary
-                          : DS.palette.border,
-                    },
-                  ]}
-                >
-                  {data.dementiaExperience === opt.id && (
+            {DEMENTIA_OPTIONS.map((opt) => {
+              const isSelected = data.dementiaExperience === opt.id;
+              return (
+                <View key={opt.id} style={styles.dementiaGroup}>
+                  <TouchableOpacity
+                    onPress={() => update({ dementiaExperience: opt.id })}
+                    style={[
+                      styles.optionRow,
+                      {
+                        borderColor: isSelected ? colors.secondary : DS.palette.border,
+                        backgroundColor: isSelected ? colors.accent : "#FFFFFF",
+                      },
+                    ]}
+                  >
+                    <IconBadge
+                      iconName="heart"
+                      color={isSelected ? "teal" : "gray"}
+                      size="sm"
+                    />
+                    <View style={{ flex: 1, gap: 2 }}>
+                      <Typography variant="h6">{opt.label}</Typography>
+                      <Typography variant="caption" color="textSecondary">
+                        {opt.description}
+                      </Typography>
+                    </View>
                     <View
                       style={[
-                        styles.radioDot,
-                        { backgroundColor: colors.secondary },
+                        styles.radio,
+                        { borderColor: isSelected ? colors.secondary : DS.palette.border },
                       ]}
-                    />
+                    >
+                      {isSelected && (
+                        <View style={[styles.radioDot, { backgroundColor: colors.secondary }]} />
+                      )}
+                    </View>
+                  </TouchableOpacity>
+
+                  {isSelected && (
+                    <FeedbackCard title={opt.feedback.title} body={opt.feedback.body} />
                   )}
                 </View>
-              </TouchableOpacity>
-            ))}
+              );
+            })}
           </View>
 
           <View style={styles.divider} />
@@ -188,6 +204,22 @@ export default function Step4Screen() {
 
         <View style={{ height: DS.spacing.xl }} />
       </ScrollView>
+    </View>
+  );
+}
+
+function FeedbackCard({ title, body }: { title: string; body: string }) {
+  return (
+    <View style={styles.feedbackCard}>
+      <Feather name="heart" size={18} color="#2D4499" style={{ marginTop: 2 }} />
+      <View style={{ flex: 1, gap: 4 }}>
+        <Typography variant="h6" style={{ color: "#2D4499" }}>
+          {title}
+        </Typography>
+        <Typography variant="body2" style={{ color: "#2D4499", opacity: 0.85 }}>
+          {body}
+        </Typography>
+      </View>
     </View>
   );
 }
@@ -318,6 +350,19 @@ const styles = StyleSheet.create({
   divider: {
     height: 1,
     backgroundColor: DS.palette.border,
+  },
+  dementiaGroup: {
+    gap: DS.spacing.sm,
+  },
+  feedbackCard: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: DS.spacing.md,
+    backgroundColor: "#EEF2FB",
+    borderWidth: 1,
+    borderColor: "#C5D0EE",
+    borderRadius: DS.shape.radius.md,
+    padding: DS.spacing.md,
   },
   optionRow: {
     flexDirection: "row",
