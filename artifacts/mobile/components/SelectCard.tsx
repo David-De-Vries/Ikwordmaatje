@@ -110,7 +110,7 @@ export function SelectCard({
           {category ? (
             <Typography
               variant="caption"
-              style={{ color: colors.secondary, fontWeight: "600" }}
+              style={{ color: "#A01550", fontWeight: "600" }}
             >
               {category}
             </Typography>
