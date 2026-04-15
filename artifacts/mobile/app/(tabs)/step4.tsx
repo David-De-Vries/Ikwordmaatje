@@ -203,12 +203,11 @@ const styles = StyleSheet.create({
     gap: DS.spacing.lg,
   },
   grid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
+    flexDirection: "column",
     gap: DS.spacing.md,
   },
   gridItem: {
-    width: "47%",
+    width: "100%",
   },
   divider: {
     height: 1,

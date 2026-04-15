@@ -136,12 +136,11 @@ const styles = StyleSheet.create({
     gap: DS.spacing.sm,
   },
   grid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
+    flexDirection: "column",
     gap: DS.spacing.md,
   },
   gridItem: {
-    width: "47%",
+    width: "100%",
   },
   undecidedRow: {
     flexDirection: "row",
