@@ -259,10 +259,10 @@ export default function SeniorProfileScreen() {
     label: string;
     value: string;
   }[] = [
-    { icon: "user",           label: "Leeftijd",  value: `${senior.age} jaar` },
+    { icon: "calendar",       label: "Leeftijd",  value: `${senior.age} jaar` },
     { icon: "map-pin",        label: "Afstand",   value: `${senior.distanceKm.toFixed(1).replace(".", ",")} km van jou` },
     { icon: "map",            label: "Buurt",     value: senior.location },
-    { icon: "users",          label: "Geslacht",  value: senior.gender.charAt(0).toUpperCase() + senior.gender.slice(1) },
+    { icon: "user",            label: "Geslacht",  value: senior.gender },
     { icon: "message-circle", label: "Talen",     value: senior.languages.join(", ") },
   ];
 
