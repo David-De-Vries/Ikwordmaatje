@@ -88,6 +88,27 @@ export default function LauncherScreen() {
           </View>
           <Feather name="chevron-right" size={18} color={DS.palette.text.hint} />
         </TouchableOpacity>
+
+        <View style={styles.divider} />
+
+        <TouchableOpacity
+          style={[styles.btn, styles.btnSecondary]}
+          activeOpacity={0.85}
+          onPress={() => router.push("/dashboard-intake")}
+        >
+          <View style={[styles.btnIcon, { backgroundColor: "#E8D6F0" }]}>
+            <Feather name="calendar" size={20} color="#7B2D8B" />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Typography variant="subtitle1" style={{ color: DS.palette.text.primary }}>
+              Dashboard intake
+            </Typography>
+            <Typography variant="caption" color="textSecondary">
+              Na het inplannen van een afspraak
+            </Typography>
+          </View>
+          <Feather name="chevron-right" size={18} color={DS.palette.text.hint} />
+        </TouchableOpacity>
       </View>
     </View>
   );
