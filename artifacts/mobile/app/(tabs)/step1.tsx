@@ -20,6 +20,28 @@ import { useOnboarding } from "@/context/OnboardingContext";
 import { useColors } from "@/hooks/useColors";
 
 const COMMON_LANGUAGES = ["Nederlands", "Engels", "Arabisch", "Turks", "Frans"];
+
+const ALL_LANGUAGES = [
+  "Afrikaans", "Albanees", "Amhaars", "Arabisch", "Armeens",
+  "Azerbeidzjaans", "Bengaals", "Bosnisch", "Bulgaars",
+  "Catalaans", "Chinees (Mandarijn)", "Chinees (Kantonees)", "Kroatisch",
+  "Tsjechisch", "Deens", "Dari", "Nederlands", "Engels",
+  "Esperanto", "Ests", "Fins", "Frans", "Georgisch",
+  "Duits", "Grieks", "Gujarati", "Hausa", "Hebreeuws",
+  "Hindi", "Hongaars", "IJslands", "Igbo", "Indonesisch",
+  "Iers", "Italiaans", "Japans", "Javaans", "Kannada",
+  "Kazachs", "Khmer", "Koreaans", "Koerdisch", "Kirgizisch",
+  "Laotiaans", "Lets", "Litouws", "Luxemburgs", "Macedonisch",
+  "Malagassisch", "Maleis", "Malayalam", "Maltees", "Maori",
+  "Marathisch", "Mongools", "Nepalees", "Noors", "Oekraïens",
+  "Oezbeeks", "Pashto", "Perzisch", "Pools", "Portugees",
+  "Punjabi", "Roemeens", "Russisch", "Servisch", "Sinhalees",
+  "Slowaaks", "Sloveens", "Somalisch", "Spaans", "Swahili",
+  "Zweeds", "Tagalog", "Tamilisch", "Telugoe", "Thais",
+  "Tibetaans", "Turks", "Turkmeens", "Oerdoe", "Vietnamees",
+  "Welsh", "Wolof", "Xhosa", "Jiddisch", "Yoruba", "Zoeloe",
+].sort((a, b) => a.localeCompare(b, "nl"));
+
 const PRONOUNS = ["Hij/hem", "Zij/haar", "Die/diens", "Geen voorkeur"];
 const EDUCATION_LEVELS = ["MBO", "HBO", "WO", "Geen"];
 
@@ -48,7 +70,7 @@ export default function Step1Screen() {
   const [rows, setRows] = useState<Row[]>(() => initRows(data.languages ?? []));
   const [langPickerRow, setLangPickerRow] = useState<string | null>(null);
   const [levelPickerRow, setLevelPickerRow] = useState<string | null>(null);
-  const [customLangText, setCustomLangText] = useState("");
+  const [langSearch, setLangSearch] = useState("");
 
   useEffect(() => {
     if (!isHydrated) return;
@@ -88,18 +110,12 @@ export default function Step1Screen() {
   const pickLanguage = (name: string) => {
     if (langPickerRow) updateRowName(langPickerRow, name);
     setLangPickerRow(null);
-    setCustomLangText("");
+    setLangSearch("");
   };
 
   const pickLevel = (level: LanguageEntry["level"]) => {
     if (levelPickerRow) updateRowLevel(levelPickerRow, level);
     setLevelPickerRow(null);
-  };
-
-  const confirmCustomLang = () => {
-    const trimmed = customLangText.trim();
-    if (trimmed) pickLanguage(trimmed);
-    else { setCustomLangText(""); }
   };
 
   const currentLangPickerRow = rows.find((r) => r.id === langPickerRow);
@@ -367,9 +383,9 @@ export default function Step1Screen() {
         visible={langPickerRow !== null}
         transparent
         animationType="slide"
-        onRequestClose={() => { setLangPickerRow(null); setCustomLangText(""); }}
+        onRequestClose={() => { setLangPickerRow(null); setLangSearch(""); }}
       >
-        <TouchableWithoutFeedback onPress={() => { setLangPickerRow(null); setCustomLangText(""); }}>
+        <TouchableWithoutFeedback onPress={() => { setLangPickerRow(null); setLangSearch(""); }}>
           <View style={styles.modalOverlay} />
         </TouchableWithoutFeedback>
         <View style={styles.sheet}>
@@ -377,59 +393,109 @@ export default function Step1Screen() {
           <View style={styles.sheetHeader}>
             <Typography variant="h4">Taal selecteren</Typography>
             <TouchableOpacity
-              onPress={() => { setLangPickerRow(null); setCustomLangText(""); }}
+              onPress={() => { setLangPickerRow(null); setLangSearch(""); }}
               hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
             >
               <Feather name="x" size={18} color={DS.palette.text.secondary} />
             </TouchableOpacity>
           </View>
 
+          {/* Search bar */}
+          <View style={styles.langSearchRow}>
+            <Feather name="search" size={14} color={DS.palette.text.secondary} />
+            <TextInput
+              value={langSearch}
+              onChangeText={setLangSearch}
+              placeholder="Zoeken..."
+              placeholderTextColor={DS.palette.text.secondary}
+              style={[styles.langSearchInput, { color: DS.palette.text.primary }]}
+              autoCorrect={false}
+              clearButtonMode="while-editing"
+            />
+          </View>
+
           <ScrollView keyboardShouldPersistTaps="handled">
-            {COMMON_LANGUAGES.map((lang, idx) => {
-              const isSelected = currentLangPickerRow?.name === lang;
+            {(() => {
+              const q = langSearch.trim().toLowerCase();
+              const filtered = q
+                ? ALL_LANGUAGES.filter((l) => l.toLowerCase().includes(q))
+                : ALL_LANGUAGES;
+
+              const common = q ? [] : COMMON_LANGUAGES;
+              const rest = filtered.filter((l) => !COMMON_LANGUAGES.includes(l) || q);
+
               return (
-                <TouchableOpacity
-                  key={lang}
-                  onPress={() => pickLanguage(lang)}
-                  style={[
-                    styles.sheetOption,
-                    idx < COMMON_LANGUAGES.length - 1 && styles.sheetOptionBorder,
-                  ]}
-                >
-                  <Typography
-                    variant="body1"
-                    style={{ color: isSelected ? colors.secondary : DS.palette.text.primary }}
-                  >
-                    {lang}
-                  </Typography>
-                  {isSelected && (
-                    <Feather name="check" size={16} color={colors.secondary} />
+                <>
+                  {common.length > 0 && (
+                    <>
+                      <Typography
+                        variant="caption"
+                        color="textSecondary"
+                        style={styles.langGroupLabel}
+                      >
+                        Meest gekozen
+                      </Typography>
+                      {common.map((lang, idx) => {
+                        const isSelected = currentLangPickerRow?.name === lang;
+                        return (
+                          <TouchableOpacity
+                            key={lang}
+                            onPress={() => pickLanguage(lang)}
+                            style={[
+                              styles.sheetOption,
+                              idx < common.length - 1 && styles.sheetOptionBorder,
+                            ]}
+                          >
+                            <Typography
+                              variant="body1"
+                              style={{ color: isSelected ? colors.secondary : DS.palette.text.primary }}
+                            >
+                              {lang}
+                            </Typography>
+                            {isSelected && (
+                              <Feather name="check" size={16} color={colors.secondary} />
+                            )}
+                          </TouchableOpacity>
+                        );
+                      })}
+                      <View style={styles.sheetDivider} />
+                    </>
                   )}
-                </TouchableOpacity>
+
+                  {rest.map((lang, idx) => {
+                    const isSelected = currentLangPickerRow?.name === lang;
+                    return (
+                      <TouchableOpacity
+                        key={lang}
+                        onPress={() => pickLanguage(lang)}
+                        style={[
+                          styles.sheetOption,
+                          idx < rest.length - 1 && styles.sheetOptionBorder,
+                        ]}
+                      >
+                        <Typography
+                          variant="body1"
+                          style={{ color: isSelected ? colors.secondary : DS.palette.text.primary }}
+                        >
+                          {lang}
+                        </Typography>
+                        {isSelected && (
+                          <Feather name="check" size={16} color={colors.secondary} />
+                        )}
+                      </TouchableOpacity>
+                    );
+                  })}
+
+                  {filtered.length === 0 && (
+                    <View style={styles.noResults}>
+                      <Typography variant="caption" color="textSecondary">
+                        Geen talen gevonden
+                      </Typography>
+                    </View>
+                  )}
+                </>
               );
-            })}
-
-            <View style={styles.sheetDivider} />
-
-            <View style={styles.customLangRow}>
-              <TextInput
-                value={customLangText}
-                onChangeText={setCustomLangText}
-                placeholder="Andere taal..."
-                placeholderTextColor={DS.palette.text.secondary}
-                style={[styles.customLangInput, { color: DS.palette.text.primary }]}
-                returnKeyType="done"
-                onSubmitEditing={confirmCustomLang}
-              />
-              {customLangText.trim().length > 0 && (
-                <TouchableOpacity
-                  onPress={confirmCustomLang}
-                  style={[styles.customConfirmBtn, { backgroundColor: colors.secondary }]}
-                >
-                  <Feather name="check" size={14} color="#FFFFFF" />
-                </TouchableOpacity>
-              )}
-            </View>
+            })()}
           </ScrollView>
         </View>
       </Modal>
@@ -701,24 +767,28 @@ const styles = StyleSheet.create({
     backgroundColor: DS.palette.border,
     marginVertical: DS.spacing.sm,
   },
-  customLangRow: {
+  langSearchRow: {
     flexDirection: "row",
     alignItems: "center",
     gap: DS.spacing.sm,
+    borderWidth: 1,
+    borderColor: DS.palette.border,
+    borderRadius: DS.shape.radius.sm,
+    paddingHorizontal: DS.spacing.md,
     paddingVertical: DS.spacing.sm,
+    marginBottom: DS.spacing.md,
+    backgroundColor: DS.palette.background.input,
   },
-  customLangInput: {
+  langSearchInput: {
     flex: 1,
     fontSize: 14,
-    paddingVertical: DS.spacing.sm,
-    borderBottomWidth: 1,
-    borderBottomColor: DS.palette.border,
   },
-  customConfirmBtn: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+  langGroupLabel: {
+    marginBottom: DS.spacing.xs,
+    marginTop: DS.spacing.xs,
+  },
+  noResults: {
+    paddingVertical: DS.spacing.xl,
     alignItems: "center",
-    justifyContent: "center",
   },
 });
