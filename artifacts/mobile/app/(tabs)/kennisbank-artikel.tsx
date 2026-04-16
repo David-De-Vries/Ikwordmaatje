@@ -474,19 +474,16 @@ export default function KennisbankArtikelScreen() {
         </TouchableOpacity>
 
         <View style={styles.headerCenter}>
-          <View style={[styles.headerIconWrap, { backgroundColor: "rgba(255,255,255,0.2)" }]}>
-            <Feather name={article.icon} size={24} color="#FFFFFF" />
-          </View>
           <View style={styles.categoryBadge}>
             <Typography style={styles.categoryBadgeText}>
               {article.category}
             </Typography>
           </View>
-          <Typography variant="h4" style={styles.headerTitle}>
+          <Typography variant="h5" style={styles.headerTitle}>
             {article.title}
           </Typography>
           <View style={styles.readTimeRow}>
-            <Feather name="clock" size={12} color="rgba(255,255,255,0.75)" />
+            <Feather name="clock" size={11} color="rgba(255,255,255,0.75)" />
             <Typography style={styles.readTimeText}>
               {article.readTime} leestijd
             </Typography>
@@ -565,7 +562,7 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: "#8CBFBB",
     paddingHorizontal: DS.spacing.lg,
-    paddingBottom: DS.spacing.xl,
+    paddingBottom: DS.spacing.lg,
     flexDirection: "row",
     alignItems: "flex-start",
   },
@@ -576,15 +573,7 @@ const styles = StyleSheet.create({
   headerCenter: {
     flex: 1,
     alignItems: "center",
-    gap: DS.spacing.xs,
-  },
-  headerIconWrap: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: DS.spacing.xxs,
+    gap: 4,
   },
   categoryBadge: {
     backgroundColor: "rgba(255,255,255,0.25)",
