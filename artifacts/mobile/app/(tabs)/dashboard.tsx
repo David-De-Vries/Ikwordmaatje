@@ -321,9 +321,122 @@ function MatchingStatusCard() {
 // Section 1b — Match Card
 // ─────────────────────────────────────────────────────────────────────────────
 
+const MOCK_MATCH = {
+  initials: "MV",
+  name: "Maria van den Berg",
+  age: 78,
+  address: "Keizersgracht 482",
+  city: "Amsterdam",
+  distance: "1,4 km",
+  days: ["Ma", "Wo", "Vr"],
+  activities: [
+    { icon: "coffee" as const, label: "Koffiedrinken" },
+    { icon: "book" as const, label: "Lezen" },
+    { icon: "music" as const, label: "Muziek" },
+  ],
+};
+
 function MatchCard() {
   const router = useRouter();
-  const { allTasksDone } = useContext(DashboardModeContext);
+  const { allTasksDone, hideTaskList } = useContext(DashboardModeContext);
+
+  if (hideTaskList) {
+    const m = MOCK_MATCH;
+    return (
+      <Card elevation={2} padding="md" style={{ gap: DS.spacing.lg }}>
+        {/* Header */}
+        <View style={styles.cardHeader}>
+          <View style={[styles.iconBadge, { backgroundColor: "#FAE0EC" }]}>
+            <Feather name="user-check" size={20} color={DS.palette.primary.main} />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Typography variant="h5">Jouw match</Typography>
+            <Typography variant="caption" color="textSecondary">
+              Actief gekoppeld
+            </Typography>
+          </View>
+          <View style={styles.matchActivePill}>
+            <View style={[styles.pillDot, { backgroundColor: DS.palette.success.main }]} />
+            <Typography variant="caption" style={{ color: DS.palette.success.dark }}>
+              Actief
+            </Typography>
+          </View>
+        </View>
+
+        {/* Profile row */}
+        <View style={styles.matchProfileRow}>
+          <View style={styles.matchAvatar}>
+            <Typography variant="h5" style={{ color: "#FFFFFF" }}>
+              {m.initials}
+            </Typography>
+          </View>
+          <View style={{ flex: 1, gap: DS.spacing.xxs }}>
+            <Typography variant="subtitle1" style={{ fontWeight: "700" }}>
+              {m.name}
+            </Typography>
+            <Typography variant="caption" color="textSecondary">
+              {m.age} jaar
+            </Typography>
+            <View style={styles.matchAddressRow}>
+              <Feather name="map-pin" size={12} color={DS.palette.text.hint} />
+              <Typography variant="caption" color="textSecondary">
+                {m.address}, {m.city}
+              </Typography>
+            </View>
+            <View style={styles.matchAddressRow}>
+              <Feather name="navigation" size={12} color={DS.palette.text.hint} />
+              <Typography variant="caption" color="textSecondary">
+                {m.distance} van jou
+              </Typography>
+            </View>
+          </View>
+        </View>
+
+        {/* Divider */}
+        <View style={{ height: 1, backgroundColor: DS.palette.border }} />
+
+        {/* Availability */}
+        <View style={{ gap: DS.spacing.sm }}>
+          <View style={styles.matchAddressRow}>
+            <Feather name="calendar" size={13} color={DS.palette.text.secondary} />
+            <Typography variant="caption" style={{ color: DS.palette.text.secondary, fontWeight: "600" }}>
+              Beschikbaarheid
+            </Typography>
+          </View>
+          <View style={styles.matchChipRow}>
+            {m.days.map((d) => (
+              <View key={d} style={styles.matchDayChip}>
+                <Typography variant="caption" style={{ color: "#3A9490", fontWeight: "600" }}>
+                  {d}
+                </Typography>
+              </View>
+            ))}
+          </View>
+        </View>
+
+        {/* Activities */}
+        <View style={{ gap: DS.spacing.sm }}>
+          <View style={styles.matchAddressRow}>
+            <Feather name="heart" size={13} color={DS.palette.text.secondary} />
+            <Typography variant="caption" style={{ color: DS.palette.text.secondary, fontWeight: "600" }}>
+              Interesses
+            </Typography>
+          </View>
+          <View style={styles.matchChipRow}>
+            {m.activities.map((a) => (
+              <View key={a.label} style={styles.matchActivityChip}>
+                <Feather name={a.icon} size={12} color="#3A9490" />
+                <Typography variant="caption" style={{ color: "#3A9490" }}>
+                  {a.label}
+                </Typography>
+              </View>
+            ))}
+          </View>
+        </View>
+      </Card>
+    );
+  }
+
   return (
     <Card elevation={2} padding="md" style={{ gap: DS.spacing.lg }}>
       <View style={styles.cardHeader}>
@@ -1515,5 +1628,54 @@ const styles = StyleSheet.create({
     borderRadius: 42,
     alignItems: "center",
     justifyContent: "center",
+  },
+  // Match card — populated state
+  matchActivePill: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: DS.spacing.xs,
+    backgroundColor: DS.palette.success.bg,
+    paddingHorizontal: DS.spacing.sm,
+    paddingVertical: DS.spacing.xxs,
+    borderRadius: DS.shape.radius.full,
+  },
+  matchProfileRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: DS.spacing.md,
+  },
+  matchAvatar: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: DS.palette.primary.main,
+    alignItems: "center",
+    justifyContent: "center",
+    flexShrink: 0,
+  },
+  matchAddressRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: DS.spacing.xs,
+  },
+  matchChipRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: DS.spacing.sm,
+  },
+  matchDayChip: {
+    backgroundColor: "#EEF7F6",
+    paddingHorizontal: DS.spacing.md,
+    paddingVertical: DS.spacing.xs,
+    borderRadius: DS.shape.radius.full,
+  },
+  matchActivityChip: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: DS.spacing.xs,
+    backgroundColor: "#EEF7F6",
+    paddingHorizontal: DS.spacing.sm,
+    paddingVertical: DS.spacing.xs,
+    borderRadius: DS.shape.radius.full,
   },
 });
