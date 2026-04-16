@@ -349,7 +349,7 @@ function MatchCard() {
           variant="body2"
           color="textSecondary"
           align="center"
-          style={{ maxWidth: 200 }}
+          style={{ maxWidth: 260 }}
         >
           {"Zodra we een passende senior voor jou hebben gevonden, zie je hier alle informatie over jouw match."}
         </Typography>
