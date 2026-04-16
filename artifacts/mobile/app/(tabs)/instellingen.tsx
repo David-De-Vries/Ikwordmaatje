@@ -83,7 +83,7 @@ function ToggleRow({
   onToggle: (v: boolean) => void;
   disabled?: boolean;
 }) {
-  return (
+  const row = (
     <SettingRow
       icon={icon}
       label={label}
@@ -105,6 +105,11 @@ function ToggleRow({
       }
     />
   );
+
+  if (disabled) {
+    return <View style={{ opacity: 0.55 }}>{row}</View>;
+  }
+  return row;
 }
 
 function ChevronRow({
@@ -275,13 +280,6 @@ export default function InstellingenScreen() {
           />
         </Section>
 
-        {/* App version */}
-        <Typography
-          variant="caption"
-          style={styles.versionText}
-        >
-          Careibu v1.0.0
-        </Typography>
       </ScrollView>
     </View>
   );
@@ -341,10 +339,5 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: DS.palette.border,
     marginHorizontal: DS.spacing.md,
-  },
-  versionText: {
-    textAlign: "center",
-    color: DS.palette.text.hint,
-    marginTop: DS.spacing.sm,
   },
 });
