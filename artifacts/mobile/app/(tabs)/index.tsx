@@ -143,7 +143,7 @@ export default function LauncherScreen() {
           </View>
           <View style={{ flex: 1 }}>
             <Typography variant="subtitle1" style={{ color: DS.palette.text.primary }}>
-              Dashboard Active
+              Dashboard Active Match
             </Typography>
             <Typography variant="caption" color="textSecondary">
               Actief gematcht, geen takenlijst
