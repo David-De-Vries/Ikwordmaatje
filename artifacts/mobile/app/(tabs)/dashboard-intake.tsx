@@ -1177,7 +1177,7 @@ export default function DashboardIntakeScreen() {
           { icon: "home" as const,         label: "Dashboard" },
           { icon: "heart" as const,        label: "Matches" },
           { icon: "book-open" as const,    label: "Logboeken" },
-          { icon: "settings" as const,     label: "Instellingen" },
+          { icon: "settings" as const,     label: "Instellingen", route: "/instellingen" as Href },
           { icon: "users" as const,        label: "Senioren",  route: "/seniors-list" as Href },
           { icon: "help-circle" as const,  label: "Vragen" },
           { icon: "globe" as const,        label: "Website" },

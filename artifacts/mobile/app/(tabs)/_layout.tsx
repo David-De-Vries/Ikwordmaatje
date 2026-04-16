@@ -35,6 +35,7 @@ export default function OnboardingLayout() {
       <Stack.Screen name="match-profile" />
       <Stack.Screen name="kennisbank-artikel" />
       <Stack.Screen name="kennisbank-overzicht" />
+      <Stack.Screen name="instellingen" />
     </Stack>
   );
 }
