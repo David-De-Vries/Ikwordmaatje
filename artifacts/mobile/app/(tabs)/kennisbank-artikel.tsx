@@ -573,7 +573,7 @@ const styles = StyleSheet.create({
   headerCenter: {
     flex: 1,
     alignItems: "center",
-    gap: 4,
+    gap: DS.spacing.xs,
   },
   categoryBadge: {
     backgroundColor: "rgba(255,255,255,0.25)",
