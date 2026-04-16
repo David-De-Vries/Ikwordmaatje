@@ -1064,7 +1064,17 @@ export default function DashboardScreen() {
           </WizardSection>
         )}
 
-        <MatchCard />
+        {hideTaskList ? (
+          <WizardSection
+            sectionIndex={1}
+            wizardStep={wizardStep}
+            onLayout={captureLayout(1)}
+          >
+            <MatchCard />
+          </WizardSection>
+        ) : (
+          <MatchCard />
+        )}
 
         <WizardSection
           sectionIndex={2}
