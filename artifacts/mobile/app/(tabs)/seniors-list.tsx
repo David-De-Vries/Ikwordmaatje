@@ -2,6 +2,7 @@ import { Feather, Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
+  Modal,
   Platform,
   ScrollView,
   StyleSheet,
@@ -274,8 +275,16 @@ export default function SeniorsListScreen() {
   const topPad = Platform.OS === "web" ? Math.max(insets.top, 67) : insets.top;
   const [viewMode, setViewMode] = useState<ViewMode>("list");
   const [bookmarked, setBookmarked] = useState<Set<string>>(new Set());
+  const [showModal, setShowModal] = useState(false);
+  const [dontShowAgain, setDontShowAgain] = useState(false);
+  const [modalCheckbox, setModalCheckbox] = useState(false);
 
   const toggleBookmark = (id: string) => {
+    const isCurrentlyBookmarked = bookmarked.has(id);
+    if (!isCurrentlyBookmarked && !dontShowAgain) {
+      setModalCheckbox(false);
+      setShowModal(true);
+    }
     setBookmarked((prev) => {
       const next = new Set(prev);
       if (next.has(id)) {
@@ -285,6 +294,11 @@ export default function SeniorsListScreen() {
       }
       return next;
     });
+  };
+
+  const handleClose = () => {
+    if (modalCheckbox) setDontShowAgain(true);
+    setShowModal(false);
   };
 
   return (
@@ -385,6 +399,46 @@ export default function SeniorsListScreen() {
           </Typography>
         </View>
       )}
+
+      {/* ── Save confirmation modal ──────────────────────────────────── */}
+      <Modal
+        visible={showModal}
+        transparent
+        animationType="fade"
+        onRequestClose={handleClose}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalCard}>
+            <Typography variant="h5" style={styles.modalHeading}>
+              Profiel opgeslagen
+            </Typography>
+            <Typography variant="body2" color="textSecondary" style={styles.modalBody}>
+              Dit profiel is opgeslagen aan jouw lijst. Later wordt gekeken of je gematcht kan worden aan deze senior.
+            </Typography>
+            <TouchableOpacity
+              style={styles.checkboxRow}
+              activeOpacity={0.7}
+              onPress={() => setModalCheckbox((v) => !v)}
+            >
+              <Ionicons
+                name={modalCheckbox ? "checkbox" : "square-outline"}
+                size={20}
+                color={modalCheckbox ? DS.palette.primary.main : DS.palette.text.hint}
+              />
+              <Typography variant="body2" style={styles.checkboxLabel}>
+                Dit bericht niet meer laten zien.
+              </Typography>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.modalBtn}
+              activeOpacity={0.85}
+              onPress={handleClose}
+            >
+              <Typography style={styles.modalBtnLabel}>Sluiten</Typography>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -566,5 +620,53 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginBottom: DS.spacing.sm,
+  },
+  // Modal
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: DS.spacing.xl,
+  },
+  modalCard: {
+    width: "100%",
+    backgroundColor: "#FFFFFF",
+    borderRadius: DS.shape.radius.lg,
+    padding: DS.spacing.xl,
+    gap: DS.spacing.md,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.15,
+    shadowRadius: 24,
+    elevation: 16,
+  },
+  modalHeading: {
+    color: DS.palette.text.primary,
+  },
+  modalBody: {
+    lineHeight: 22,
+  },
+  checkboxRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: DS.spacing.sm,
+    marginTop: DS.spacing.xs,
+  },
+  checkboxLabel: {
+    flex: 1,
+    color: DS.palette.text.secondary,
+  },
+  modalBtn: {
+    backgroundColor: DS.palette.primary.main,
+    borderRadius: DS.shape.radius.md,
+    paddingVertical: DS.spacing.md,
+    alignItems: "center",
+    marginTop: DS.spacing.xs,
+  },
+  modalBtnLabel: {
+    color: "#FFFFFF",
+    fontWeight: "700",
+    fontSize: 15,
   },
 });
