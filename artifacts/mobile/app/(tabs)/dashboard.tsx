@@ -346,7 +346,7 @@ function MatchCard() {
       <Card elevation={2} padding="md" style={{ gap: DS.spacing.lg }}>
         {/* Header */}
         <View style={styles.cardHeader}>
-          <View style={[styles.iconBadge, { backgroundColor: "#FAE0EC" }]}>
+          <View style={[styles.iconBadge, { backgroundColor: DS.iconBadge.crimson.bg }]}>
             <Feather name="user-check" size={20} color={DS.palette.primary.main} />
           </View>
           <View style={{ flex: 1 }}>
@@ -366,7 +366,7 @@ function MatchCard() {
         {/* Profile row */}
         <View style={styles.matchProfileRow}>
           <View style={styles.matchAvatar}>
-            <Typography variant="h5" style={{ color: "#FFFFFF" }}>
+            <Typography variant="h5" style={{ color: DS.palette.text.inverse }}>
               {m.initials}
             </Typography>
           </View>
