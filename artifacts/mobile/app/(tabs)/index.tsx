@@ -151,6 +151,27 @@ export default function LauncherScreen() {
           </View>
           <Feather name="chevron-right" size={18} color={DS.palette.text.hint} />
         </TouchableOpacity>
+
+        <View style={styles.divider} />
+
+        <TouchableOpacity
+          style={[styles.btn, styles.btnSecondary]}
+          activeOpacity={0.85}
+          onPress={() => router.push("/dashboard-kennisbank")}
+        >
+          <View style={[styles.btnIcon, { backgroundColor: "#D6E4F5" }]}>
+            <Feather name="book-open" size={20} color="#1A5EA8" />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Typography variant="subtitle1" style={{ color: DS.palette.text.primary }}>
+              Dashboard Kennisbank
+            </Typography>
+            <Typography variant="caption" color="textSecondary">
+              Informatie & tips voor vrijwilligers
+            </Typography>
+          </View>
+          <Feather name="chevron-right" size={18} color={DS.palette.text.hint} />
+        </TouchableOpacity>
       </View>
     </View>
   );
