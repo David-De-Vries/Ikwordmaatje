@@ -461,7 +461,7 @@ export default function SeniorProfileScreen() {
               <Ionicons
                 name={modalCheckbox ? "checkbox" : "square-outline"}
                 size={20}
-                color={modalCheckbox ? "#A01550" : DS.palette.text.hint}
+                color={modalCheckbox ? DS.palette.primary.main : DS.palette.text.hint}
               />
               <Typography variant="body2" style={styles.checkboxLabel}>
                 Dit bericht niet meer laten zien.
@@ -699,7 +699,7 @@ const styles = StyleSheet.create({
     color: DS.palette.text.secondary,
   },
   modalBtn: {
-    backgroundColor: "#A01550",
+    backgroundColor: DS.palette.primary.main,
     borderRadius: DS.shape.radius.md,
     paddingVertical: DS.spacing.md,
     alignItems: "center",
