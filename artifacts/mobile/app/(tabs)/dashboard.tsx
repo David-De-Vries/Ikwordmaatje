@@ -1189,6 +1189,17 @@ export default function DashboardScreen() {
           <MatchCard />
         )}
 
+        {/* Info modules — directly under match card in active mode */}
+        {hideTaskList && (
+          <WizardSection
+            sectionIndex={3}
+            wizardStep={wizardStep}
+            onLayout={captureLayout(3)}
+          >
+            <InfoModulesCard />
+          </WizardSection>
+        )}
+
         <WizardSection
           sectionIndex={2}
           wizardStep={wizardStep}
@@ -1197,13 +1208,16 @@ export default function DashboardScreen() {
           <DiaryCard />
         </WizardSection>
 
-        <WizardSection
-          sectionIndex={3}
-          wizardStep={wizardStep}
-          onLayout={captureLayout(3)}
-        >
-          <InfoModulesCard />
-        </WizardSection>
+        {/* Info modules — normal position for all other dashboard modes */}
+        {!hideTaskList && (
+          <WizardSection
+            sectionIndex={3}
+            wizardStep={wizardStep}
+            onLayout={captureLayout(3)}
+          >
+            <InfoModulesCard />
+          </WizardSection>
+        )}
       </ScrollView>
 
       {/* Bottom-sheet wizard (steps 1–3) */}
