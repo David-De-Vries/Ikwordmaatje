@@ -285,7 +285,7 @@ export default function SeniorProfileScreen() {
           <View style={styles.avatar}>
             <Typography style={styles.avatarInitials}>{senior.initials}</Typography>
           </View>
-          <Typography variant="h4" style={{ color: "#FFFFFF", marginTop: DS.spacing.sm }}>
+          <Typography variant="h4" style={{ color: "#FFFFFF", marginTop: DS.spacing.xs }}>
             {senior.name}
           </Typography>
           <Typography variant="caption" style={{ color: "rgba(255,255,255,0.75)", marginTop: 2 }}>
@@ -430,7 +430,7 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: "#8CBFBB",
     paddingHorizontal: DS.spacing.lg,
-    paddingBottom: DS.spacing.xl,
+    paddingBottom: DS.spacing.md,
     flexDirection: "row",
     alignItems: "flex-start",
   },
@@ -447,17 +447,17 @@ const styles = StyleSheet.create({
     paddingTop: DS.spacing.xs,
   },
   avatar: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     backgroundColor: "#D6ECEA",
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 3,
+    borderWidth: 2,
     borderColor: "rgba(255,255,255,0.4)",
   },
   avatarInitials: {
-    fontSize: 24,
+    fontSize: 17,
     fontWeight: "700",
     color: "#3A9490",
   },
