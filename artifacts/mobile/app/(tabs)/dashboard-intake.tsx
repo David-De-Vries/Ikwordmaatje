@@ -18,7 +18,7 @@
  *   step -1 → Dismissed
  */
 import { Feather } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { Href, useRouter } from "expo-router";
 import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import {
   LayoutChangeEvent,
@@ -1172,14 +1172,14 @@ export default function DashboardIntakeScreen() {
           { icon: "heart" as const,        label: "Matches" },
           { icon: "book-open" as const,    label: "Logboeken" },
           { icon: "settings" as const,     label: "Instellingen" },
-          { icon: "users" as const,        label: "Senioren",  route: "/seniors-list" },
+          { icon: "users" as const,        label: "Senioren",  route: "/seniors-list" as Href },
           { icon: "help-circle" as const,  label: "Vragen" },
           { icon: "globe" as const,        label: "Website" },
         ].map(({ icon, label, route }) => (
           <TouchableOpacity
             key={label}
             style={styles.drawerItem}
-            onPress={() => { closeMenu(); if (route) router.push(route as any); }}
+            onPress={() => { closeMenu(); if (route) router.push(route); }}
           >
             <View style={styles.drawerIconWrap}>
               <Feather name={icon} size={18} color="#8CBFBB" />
