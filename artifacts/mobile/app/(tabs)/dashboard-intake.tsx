@@ -1168,15 +1168,18 @@ export default function DashboardIntakeScreen() {
 
         {/* Nav items */}
         {[
-          { icon: "home" as const,      label: "Dashboard" },
-          { icon: "heart" as const,     label: "Matches" },
-          { icon: "book-open" as const, label: "Logboeken" },
-          { icon: "settings" as const,  label: "Instellingen" },
-        ].map(({ icon, label }) => (
+          { icon: "home" as const,         label: "Dashboard" },
+          { icon: "heart" as const,        label: "Matches" },
+          { icon: "book-open" as const,    label: "Logboeken" },
+          { icon: "settings" as const,     label: "Instellingen" },
+          { icon: "users" as const,        label: "Senioren",  route: "/seniors-list" },
+          { icon: "help-circle" as const,  label: "Vragen" },
+          { icon: "globe" as const,        label: "Website" },
+        ].map(({ icon, label, route }) => (
           <TouchableOpacity
             key={label}
             style={styles.drawerItem}
-            onPress={closeMenu}
+            onPress={() => { closeMenu(); if (route) router.push(route as any); }}
           >
             <View style={styles.drawerIconWrap}>
               <Feather name={icon} size={18} color="#8CBFBB" />
