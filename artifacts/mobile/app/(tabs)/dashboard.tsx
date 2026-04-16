@@ -346,9 +346,6 @@ function MatchCard() {
       <Card elevation={2} padding="md" style={{ gap: DS.spacing.lg }}>
         {/* Header */}
         <View style={styles.cardHeader}>
-          <View style={[styles.iconBadge, { backgroundColor: DS.iconBadge.crimson.bg }]}>
-            <Feather name="user-check" size={20} color={DS.palette.primary.main} />
-          </View>
           <View style={{ flex: 1 }}>
             <Typography variant="h5">Jouw match</Typography>
             <Typography variant="caption" color="textSecondary">
@@ -481,12 +478,15 @@ function MatchCard() {
 // ─────────────────────────────────────────────────────────────────────────────
 
 function DiaryCard() {
+  const { hideTaskList } = useContext(DashboardModeContext);
   return (
     <Card elevation={2} padding="md" style={{ gap: DS.spacing.lg }}>
       <View style={styles.cardHeader}>
-        <View style={[styles.iconBadge, { backgroundColor: "#FAE0EC" }]}>
-          <Feather name="book-open" size={20} color={DS.palette.primary.main} />
-        </View>
+        {!hideTaskList && (
+          <View style={[styles.iconBadge, { backgroundColor: "#FAE0EC" }]}>
+            <Feather name="book-open" size={20} color={DS.palette.primary.main} />
+          </View>
+        )}
         <View>
           <Typography variant="h5">Logboeken</Typography>
           <Typography variant="caption" color="textSecondary">
@@ -554,12 +554,15 @@ const INFO_MODULES = [
 ];
 
 function InfoModulesCard() {
+  const { hideTaskList } = useContext(DashboardModeContext);
   return (
     <Card elevation={2} padding="md" style={{ gap: DS.spacing.lg }}>
       <View style={styles.cardHeader}>
-        <View style={[styles.iconBadge, { backgroundColor: DS.palette.info.bg }]}>
-          <Feather name="layers" size={20} color={DS.palette.info.main} />
-        </View>
+        {!hideTaskList && (
+          <View style={[styles.iconBadge, { backgroundColor: DS.palette.info.bg }]}>
+            <Feather name="layers" size={20} color={DS.palette.info.main} />
+          </View>
+        )}
         <View style={{ flex: 1 }}>
           <Typography variant="h5">Informatie & tips</Typography>
           <Typography variant="caption" color="textSecondary">
