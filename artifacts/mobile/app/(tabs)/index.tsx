@@ -80,7 +80,7 @@ export default function LauncherScreen() {
           </View>
           <View style={{ flex: 1 }}>
             <Typography variant="subtitle1" style={{ color: DS.palette.text.primary }}>
-              Dashboard complete
+              Dashboard Complete Tasklist
             </Typography>
             <Typography variant="caption" color="textSecondary">
               Alle taken voltooid
