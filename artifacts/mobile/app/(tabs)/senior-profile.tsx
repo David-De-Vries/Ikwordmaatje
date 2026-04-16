@@ -2,6 +2,7 @@ import { Feather, Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
+  Modal,
   Platform,
   ScrollView,
   StyleSheet,
@@ -246,6 +247,22 @@ export default function SeniorProfileScreen() {
   const firstName = senior.name.split(" ")[0];
 
   const [saved, setSaved] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [dontShowAgain, setDontShowAgain] = useState(false);
+  const [modalCheckbox, setModalCheckbox] = useState(false);
+
+  const handleSave = () => {
+    if (!saved && !dontShowAgain) {
+      setModalCheckbox(false);
+      setShowModal(true);
+    }
+    setSaved((v) => !v);
+  };
+
+  const handleClose = () => {
+    if (modalCheckbox) setDontShowAgain(true);
+    setShowModal(false);
+  };
 
   const healthRows: { label: string; key: keyof SeniorDetail["health"] }[] = [
     { label: "Mobiliteit",       key: "mobility" },
@@ -297,7 +314,7 @@ export default function SeniorProfileScreen() {
         <TouchableOpacity
           style={[styles.bookmarkBtn, saved && styles.bookmarkBtnActive]}
           activeOpacity={0.8}
-          onPress={() => setSaved((v) => !v)}
+          onPress={handleSave}
           hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
         >
           <Ionicons
@@ -403,7 +420,7 @@ export default function SeniorProfileScreen() {
         <TouchableOpacity
           style={[styles.saveBtn, saved && styles.saveBtnActive]}
           activeOpacity={0.85}
-          onPress={() => setSaved((v) => !v)}
+          onPress={handleSave}
         >
           <Ionicons
             name={saved ? "bookmark" : "bookmark-outline"}
@@ -415,6 +432,53 @@ export default function SeniorProfileScreen() {
           </Typography>
         </TouchableOpacity>
       </View>
+
+      {/* ── Save confirmation modal ──────────────────────────────────────── */}
+      <Modal
+        visible={showModal}
+        transparent
+        animationType="fade"
+        onRequestClose={handleClose}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalCard}>
+            {/* Heading */}
+            <Typography variant="h5" style={styles.modalHeading}>
+              Profiel opgeslagen
+            </Typography>
+
+            {/* Subheading */}
+            <Typography variant="body2" color="textSecondary" style={styles.modalBody}>
+              Dit profiel is opgeslagen aan jouw lijst. Later wordt gekeken of je gematcht kan worden aan deze senior.
+            </Typography>
+
+            {/* Checkbox row */}
+            <TouchableOpacity
+              style={styles.checkboxRow}
+              activeOpacity={0.7}
+              onPress={() => setModalCheckbox((v) => !v)}
+            >
+              <Ionicons
+                name={modalCheckbox ? "checkbox" : "square-outline"}
+                size={20}
+                color={modalCheckbox ? "#A01550" : DS.palette.text.hint}
+              />
+              <Typography variant="body2" style={styles.checkboxLabel}>
+                Dit bericht niet meer laten zien.
+              </Typography>
+            </TouchableOpacity>
+
+            {/* Sluiten button */}
+            <TouchableOpacity
+              style={styles.modalBtn}
+              activeOpacity={0.85}
+              onPress={handleClose}
+            >
+              <Typography style={styles.modalBtnLabel}>Sluiten</Typography>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -596,5 +660,54 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "600",
     color: "#3A9490",
+  },
+
+  // Modal
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: DS.spacing.xl,
+  },
+  modalCard: {
+    width: "100%",
+    backgroundColor: "#FFFFFF",
+    borderRadius: DS.shape.radius.lg,
+    padding: DS.spacing.xl,
+    gap: DS.spacing.md,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.15,
+    shadowRadius: 24,
+    elevation: 16,
+  },
+  modalHeading: {
+    color: DS.palette.text.primary,
+  },
+  modalBody: {
+    lineHeight: 22,
+  },
+  checkboxRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: DS.spacing.sm,
+    marginTop: DS.spacing.xs,
+  },
+  checkboxLabel: {
+    flex: 1,
+    color: DS.palette.text.secondary,
+  },
+  modalBtn: {
+    backgroundColor: "#A01550",
+    borderRadius: DS.shape.radius.md,
+    paddingVertical: DS.spacing.md,
+    alignItems: "center",
+    marginTop: DS.spacing.xs,
+  },
+  modalBtnLabel: {
+    color: "#FFFFFF",
+    fontWeight: "700",
+    fontSize: 15,
   },
 });
