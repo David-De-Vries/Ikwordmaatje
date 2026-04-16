@@ -1,5 +1,5 @@
 import { Feather } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { Href, useRouter } from "expo-router";
 import React from "react";
 import {
   Platform,
@@ -36,6 +36,10 @@ const CATEGORIES: { label: string; ids: string[] }[] = [
     label: "Praktisch plannen",
     ids: ["plannen"],
   },
+  {
+    label: "Gezondheid & welzijn",
+    ids: ["gezondheid", "welzijn"],
+  },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -64,6 +68,9 @@ function ArticleRow({
         <View style={{ flex: 1, gap: DS.spacing.xxs }}>
           <Typography variant="subtitle1" style={{ fontWeight: "600", fontSize: 14 }}>
             {article.title}
+          </Typography>
+          <Typography variant="caption" color="textSecondary" style={{ lineHeight: 17 }}>
+            {article.snippet}
           </Typography>
           <View style={styles.rowMeta}>
             <Feather name="clock" size={11} color={DS.palette.text.hint} />
@@ -159,7 +166,7 @@ export default function KennisbankOverzichtScreen() {
                     article={article}
                     onPress={() =>
                       router.push(
-                        `/kennisbank-artikel?id=${article.id}` as any
+                        `/kennisbank-artikel?id=${article.id}` as Href
                       )
                     }
                     isLast={i === articles.length - 1}

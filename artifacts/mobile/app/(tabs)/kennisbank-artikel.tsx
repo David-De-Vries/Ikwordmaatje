@@ -32,6 +32,7 @@ export interface Article {
   color: string;
   bg: string;
   title: string;
+  snippet: string;
   readTime: string;
   intro: string;
   tips: TipBlock[];
@@ -46,6 +47,7 @@ export const ARTICLES: Record<string, Article> = {
     color: "#3A9490",
     bg: "#EEF7F6",
     title: "Je eerste bezoek voorbereiden",
+    snippet: "Zo bereid jij je eerste bezoek optimaal voor.",
     readTime: "4 min",
     intro:
       "Het eerste bezoek is spannend — zowel voor jou als voor de senior. Goede voorbereiding helpt je om ontspannen en vol vertrouwen op pad te gaan.",
@@ -82,6 +84,7 @@ export const ARTICLES: Record<string, Article> = {
     color: "#3A9490",
     bg: "#E8F4F3",
     title: "Tips voor je eerste gesprek",
+    snippet: "Praktische tips voor een goed en ontspannen gesprek.",
     readTime: "3 min",
     intro:
       "Een goed gesprek begint met oprechte aandacht. Je hoeft geen therapeut te zijn — gewoon aanwezig zijn en luisteren is al heel waardevol.",
@@ -118,6 +121,7 @@ export const ARTICLES: Record<string, Article> = {
     color: "#3A9490",
     bg: "#EEF7F6",
     title: "Wat is een VOG en waarom?",
+    snippet: "Alles wat je moet weten over de VOG-aanvraag.",
     readTime: "2 min",
     intro:
       "Voor vrijwilligerswerk bij Careibu heb je een Verklaring Omtrent Gedrag (VOG) nodig. Dit officiële document laat zien dat je gedrag in het verleden geen bezwaar vormt voor je rol als vrijwilliger.",
@@ -154,6 +158,7 @@ export const ARTICLES: Record<string, Article> = {
     color: "#A01550",
     bg: "#FAE0EC",
     title: "Vertrouwen opbouwen met je senior",
+    snippet: "Hoe bouw je stap voor stap een vertrouwensband op?",
     readTime: "4 min",
     intro:
       "Vertrouwen groeit niet in één dag. Maar met de juiste houding leg je al bij het eerste bezoek een goede basis voor een warme, duurzame relatie.",
@@ -190,6 +195,7 @@ export const ARTICLES: Record<string, Article> = {
     color: "#C97B00",
     bg: "#FFF0D9",
     title: "Grenzen aangeven als vrijwilliger",
+    snippet: "Leer hoe je je grenzen gezond aangeeft als vrijwilliger.",
     readTime: "3 min",
     intro:
       "Als vrijwilliger is het belangrijk dat je je eigen grenzen kent en aangeeft. Dit is geen zwakte — het is juist gezond en noodzakelijk om het vrijwilligerswerk vol te houden.",
@@ -226,6 +232,7 @@ export const ARTICLES: Record<string, Article> = {
     color: "#A01550",
     bg: "#FAE0EC",
     title: "Omgaan met moeilijke momenten",
+    snippet: "Zo ga je om met zware of emotionele bezoeken.",
     readTime: "5 min",
     intro:
       "Soms heb je een zwaarder bezoek. De senior is somber, er is iets moeilijks gebeurd, of het gesprek loopt moeizaam. Dit is normaal en hoort bij vrijwilligerswerk.",
@@ -262,6 +269,7 @@ export const ARTICLES: Record<string, Article> = {
     color: "#7B39A0",
     bg: "#F0E6F5",
     title: "Eenzaamheid herkennen & bespreekbaar maken",
+    snippet: "Signalen herkennen en het gesprek op gang brengen.",
     readTime: "6 min",
     intro:
       "Veel senioren kampen met eenzaamheid. Als vrijwilliger kun jij een groot verschil maken — maar het helpt als je weet waar je op moet letten en hoe je het gesprek aangaat.",
@@ -298,6 +306,7 @@ export const ARTICLES: Record<string, Article> = {
     color: "#1A5EA8",
     bg: "#D6E4F5",
     title: "Je bezoek plannen",
+    snippet: "Hoe plan je je bezoeken betrouwbaar en praktisch?",
     readTime: "2 min",
     intro:
       "Een goed geplande afspraak is het halve werk. Met de juiste voorbereiding verloopt elk bezoek soepel en prettig voor jullie allebei.",
@@ -325,6 +334,80 @@ export const ARTICLES: Record<string, Article> = {
     ],
     callout:
       "Regelmaat en betrouwbaarheid zijn de sleutels tot een fijne, duurzame samenwerking.",
+  },
+
+  gezondheid: {
+    id: "gezondheid",
+    category: "Gezondheid & welzijn",
+    icon: "activity",
+    color: "#2E7D6A",
+    bg: "#E0F5EF",
+    title: "Medicijnen en gezondheid: wat is jouw rol?",
+    snippet: "Wat is jouw rol als vrijwilliger bij gezondheidsvragen?",
+    readTime: "3 min",
+    intro:
+      "Als vrijwilliger heb je een ondersteunende rol — geen medische. Toch is het goed om te weten hoe je omgaat met gezondheidssituaties en wanneer je moet doorverwijzen.",
+    tips: [
+      {
+        icon: "info",
+        title: "Geen medisch advies geven",
+        body: "Geef nooit advies over medicijnen of behandelingen. Verwijs altijd door naar de huisarts of mantelzorger.",
+      },
+      {
+        icon: "eye",
+        title: "Let op veranderingen",
+        body: "Als je merkt dat de senior er anders uitziet, minder eet of minder mobiel is, noteer dit dan voor je begeleider.",
+      },
+      {
+        icon: "phone-call",
+        title: "Weet wanneer je belt",
+        body: "Bij acuut gevaar bel je meteen 112. Bij zorgen over welzijn neem je contact op met Careibu.",
+      },
+      {
+        icon: "clipboard",
+        title: "Houd je logboek bij",
+        body: "Schrijf gezondheidssignalen op in je logboek. Dit helpt bij continuïteit en bij eventuele overdracht aan professionals.",
+      },
+    ],
+    callout:
+      "Jij bent de ogen en oren — maar geen arts. Vertrouw op je gevoel en schakel tijdig hulp in.",
+  },
+
+  welzijn: {
+    id: "welzijn",
+    category: "Gezondheid & welzijn",
+    icon: "thermometer",
+    color: "#2E7D6A",
+    bg: "#E0F5EF",
+    title: "Wanneer vraag je om extra hulp?",
+    snippet: "Wanneer is het tijd om extra hulp in te schakelen?",
+    readTime: "2 min",
+    intro:
+      "Als vrijwilliger zie je de senior regelmatig en merk je soms dingen op die anderen missen. Weet wanneer je actie moet ondernemen.",
+    tips: [
+      {
+        icon: "alert-triangle",
+        title: "Vertrouw op je gevoel",
+        body: "Als iets niet goed voelt, is dat een teken. Wacht niet te lang met het bespreken van zorgen.",
+      },
+      {
+        icon: "users",
+        title: "Schakel Careibu in",
+        body: "Neem bij zorgen altijd contact op met je Careibu-begeleider. Zij coördineren verdere hulp.",
+      },
+      {
+        icon: "phone",
+        title: "Weet de noodcontacten",
+        body: "Zorg dat je de contactgegevens van de mantelzorger en Careibu altijd bij de hand hebt.",
+      },
+      {
+        icon: "check-circle",
+        title: "Documenteer wat je ziet",
+        body: "Houd bij wat je opvalt. Een goede beschrijving helpt professionals om snel te handelen.",
+      },
+    ],
+    callout:
+      "Vroeg signaleren redt levens. Aarzel niet om hulp in te schakelen als je twijfelt.",
   },
 };
 
