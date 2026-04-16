@@ -476,13 +476,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 3,
-    backgroundColor: "#EEF7F6",
+    backgroundColor: "rgba(160, 21, 80, 0.3)",
     borderRadius: DS.shape.radius.full,
     paddingHorizontal: DS.spacing.sm,
     paddingVertical: DS.spacing.xxs,
   },
   overflowChip: {
-    backgroundColor: "#D6ECEA",
+    backgroundColor: "rgba(160, 21, 80, 0.2)",
   },
   chipLabel: {
     fontSize: 11,
