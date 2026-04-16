@@ -325,7 +325,7 @@ function MatchingStatusCard({ intakeDateLabel }: { intakeDateLabel: string }) {
                 ) : (
                   <View style={styles.taskBtnRow}>
                     <TouchableOpacity
-                      style={styles.taskPill}
+                      style={[styles.taskPill, task.key === "vog" && { backgroundColor: "#A01550" }]}
                       activeOpacity={0.8}
                       onPress={() => task.key === "seniors" ? router.push("/seniors-list") : undefined}
                     >
