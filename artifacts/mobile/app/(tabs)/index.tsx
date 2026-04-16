@@ -146,7 +146,7 @@ export default function LauncherScreen() {
               Dashboard Active
             </Typography>
             <Typography variant="caption" color="textSecondary">
-              Actief gematcht, geen takenclijst
+              Actief gematcht, geen takenlijst
             </Typography>
           </View>
           <Feather name="chevron-right" size={18} color={DS.palette.text.hint} />
