@@ -283,6 +283,47 @@ function MatchingStatusCard({ intakeDateLabel }: { intakeDateLabel: string }) {
         {tasks.map((task, i) => {
           const isDone = task.status === "done";
           const isPending = task.status === "pending";
+          /* ── Special row: scheduled intro meeting ── */
+          if (task.key === "intro" && isDone) {
+            return (
+              <View key={task.key}>
+                <View style={styles.taskRow}>
+                  <View style={{ flex: 1 }}>
+                    <Typography
+                      variant="subtitle1"
+                      numberOfLines={1}
+                      style={{
+                        fontSize: 14,
+                        fontWeight: "600",
+                        color: DS.palette.text.primary,
+                      }}
+                    >
+                      {task.label}
+                    </Typography>
+                    <View style={styles.introDateRow}>
+                      <Feather name="calendar" size={12} color={DS.palette.text.secondary} />
+                      <Typography
+                        variant="caption"
+                        style={{ color: DS.palette.text.secondary, fontWeight: "600" }}
+                      >
+                        {intakeDateLabel}
+                      </Typography>
+                    </View>
+                  </View>
+                  <TouchableOpacity
+                    style={styles.introLinkBtn}
+                    activeOpacity={0.8}
+                    onPress={() => {}}
+                  >
+                    <Feather name="external-link" size={12} color="#FFFFFF" />
+                    <Typography style={styles.introLinkBtnLabel}>Deelnemen</Typography>
+                  </TouchableOpacity>
+                </View>
+                {i < tasks.length - 1 && <View style={styles.taskDivider} />}
+              </View>
+            );
+          }
+
           return (
             <View key={task.key}>
               <View style={styles.taskRow}>
@@ -1330,6 +1371,26 @@ const styles = StyleSheet.create({
   taskDivider: {
     height: 1,
     backgroundColor: DS.palette.border,
+  },
+  introDateRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    marginTop: 3,
+  },
+  introLinkBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    backgroundColor: "#3A9490",
+    borderRadius: DS.shape.radius.full,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+  },
+  introLinkBtnLabel: {
+    color: "#FFFFFF",
+    fontSize: 12,
+    fontWeight: "700",
   },
   taskPill: {
     backgroundColor: "#3A9490",
