@@ -336,6 +336,43 @@ export const ARTICLES: Record<string, Article> = {
       "Regelmaat en betrouwbaarheid zijn de sleutels tot een fijne, duurzame samenwerking.",
   },
 
+  activiteiten: {
+    id: "activiteiten",
+    category: "Praktisch plannen",
+    icon: "map",
+    color: "#1A5EA8",
+    bg: "#D6E4F5",
+    title: "Leuke activiteiten voor je bezoek",
+    snippet: "Inspiratie voor gevarieerde en plezierige bezoeken.",
+    readTime: "3 min",
+    intro:
+      "Een bezoek hoeft niet altijd hetzelfde te zijn. Met wat variatie blijft het leuk voor jullie allebei en geeft het de senior iets om naar uit te kijken.",
+    tips: [
+      {
+        icon: "coffee",
+        title: "Samen een kopje koffie",
+        body: "Soms is het simpelste het fijnste. Een goed gesprek over een kopje koffie of thee is voor veel senioren al waardevol.",
+      },
+      {
+        icon: "book",
+        title: "Voorlezen of een boek bespreken",
+        body: "Als de senior moeite heeft met lezen, kun je voorlezen uit een boek, krant of tijdschrift dat ze interessant vinden.",
+      },
+      {
+        icon: "sun",
+        title: "Een wandeling buiten",
+        body: "Frisse lucht doet wonderen. Een korte wandeling in de buurt kan de stemming flink opkrikken.",
+      },
+      {
+        icon: "grid",
+        title: "Spellen of puzzels",
+        body: "Kaartspellen, schaken of samen een puzzel leggen — luchtige activiteiten die verbinding brengen en de geest scherp houden.",
+      },
+    ],
+    callout:
+      "Variatie en plezier houden de motivatie hoog — voor jou én voor de senior.",
+  },
+
   gezondheid: {
     id: "gezondheid",
     category: "Gezondheid & welzijn",

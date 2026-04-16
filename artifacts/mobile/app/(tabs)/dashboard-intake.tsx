@@ -470,6 +470,7 @@ const INFO_MODULES = [
 ];
 
 function InfoModulesCard() {
+  const router = useRouter();
   return (
     <Card elevation={2} padding="md" style={{ gap: DS.spacing.lg }}>
       <View style={styles.cardHeader}>
@@ -482,7 +483,10 @@ function InfoModulesCard() {
             Voor jouw Maatje-project
           </Typography>
         </View>
-        <TouchableOpacity hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+        <TouchableOpacity
+          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          onPress={() => router.push("/kennisbank-overzicht" as Href)}
+        >
           <Typography
             variant="caption"
             style={{ color: DS.palette.primary.main }}
@@ -506,6 +510,7 @@ function InfoModulesCard() {
             key={mod.id}
             activeOpacity={0.82}
             style={[styles.moduleCard, { backgroundColor: mod.bg }]}
+            onPress={() => router.push(`/kennisbank-artikel?id=${mod.id}` as Href)}
           >
             <View style={[styles.moduleIconBox, { backgroundColor: "#FFFFFFBB" }]}>
               <Feather name={mod.icon} size={18} color={mod.color} />

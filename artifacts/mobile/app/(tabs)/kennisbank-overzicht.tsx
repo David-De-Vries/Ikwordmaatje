@@ -34,7 +34,7 @@ const CATEGORIES: { label: string; ids: string[] }[] = [
   },
   {
     label: "Praktisch plannen",
-    ids: ["plannen"],
+    ids: ["plannen", "activiteiten"],
   },
   {
     label: "Gezondheid & welzijn",
