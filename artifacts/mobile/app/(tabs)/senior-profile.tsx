@@ -343,7 +343,22 @@ export default function SeniorProfileScreen() {
           ))}
         </Card>
 
-        {/* Card 3 — Interesses */}
+        {/* Card 3 — Beschikbaarheid */}
+        <Card elevation={2} padding="md" style={{ gap: DS.spacing.sm }}>
+          <Typography variant="h5">Beschikbaarheid</Typography>
+          <View style={styles.availRow}>
+            <Typography variant="caption" color="textSecondary" style={{ marginRight: DS.spacing.xxs }}>
+              Beschikbaar:
+            </Typography>
+            {senior.availability.map((day) => (
+              <View key={day} style={styles.dayChip}>
+                <Typography style={styles.dayLabel}>{day}</Typography>
+              </View>
+            ))}
+          </View>
+        </Card>
+
+        {/* Card 4 — Interesses */}
         <Card elevation={2} padding="md" style={{ gap: DS.spacing.sm }}>
           <Typography variant="h5">Interesses</Typography>
           <View style={styles.chipsWrap}>
@@ -359,7 +374,7 @@ export default function SeniorProfileScreen() {
           </View>
         </Card>
 
-        {/* Card 4 — Welzijnsindicatoren */}
+        {/* Card 5 — Welzijnsindicatoren */}
         <Card elevation={2} padding="md" style={{ gap: DS.spacing.sm }}>
           <View>
             <Typography variant="h5">Welzijnsindicatoren</Typography>
@@ -375,21 +390,6 @@ export default function SeniorProfileScreen() {
               <HealthDots score={senior.health[row.key]} />
             </View>
           ))}
-        </Card>
-
-        {/* Card 5 — Beschikbaarheid */}
-        <Card elevation={2} padding="md" style={{ gap: DS.spacing.sm }}>
-          <Typography variant="h5">Beschikbaarheid</Typography>
-          <View style={styles.availRow}>
-            <Typography variant="caption" color="textSecondary" style={{ marginRight: DS.spacing.xxs }}>
-              Beschikbaar:
-            </Typography>
-            {senior.availability.map((day) => (
-              <View key={day} style={styles.dayChip}>
-                <Typography style={styles.dayLabel}>{day}</Typography>
-              </View>
-            ))}
-          </View>
         </Card>
       </ScrollView>
 
