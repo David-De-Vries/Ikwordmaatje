@@ -360,8 +360,12 @@ function MatchCard() {
           </View>
         </View>
 
-        {/* Profile row */}
-        <View style={styles.matchProfileRow}>
+        {/* Profile row — tappable, navigates to full match profile */}
+        <TouchableOpacity
+          activeOpacity={0.75}
+          onPress={() => router.push("/match-profile" as Href)}
+          style={styles.matchProfileRow}
+        >
           <View style={styles.matchAvatar}>
             <Typography variant="h5" style={{ color: DS.palette.text.inverse }}>
               {m.initials}
@@ -387,7 +391,8 @@ function MatchCard() {
               </Typography>
             </View>
           </View>
-        </View>
+          <Feather name="chevron-right" size={18} color={DS.palette.text.hint} />
+        </TouchableOpacity>
 
         {/* Divider */}
         <View style={{ height: 1, backgroundColor: DS.palette.border }} />

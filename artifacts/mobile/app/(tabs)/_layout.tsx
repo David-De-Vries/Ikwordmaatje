@@ -31,6 +31,7 @@ export default function OnboardingLayout() {
       <Stack.Screen name="dashboard-active" />
       <Stack.Screen name="seniors-list" />
       <Stack.Screen name="senior-profile" />
+      <Stack.Screen name="match-profile" />
     </Stack>
   );
 }
