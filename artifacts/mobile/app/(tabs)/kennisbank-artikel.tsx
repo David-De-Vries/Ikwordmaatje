@@ -522,7 +522,7 @@ export default function KennisbankArtikelScreen() {
           <View style={styles.articleSection}>
             <Typography variant="h5">Praktische tips</Typography>
             {article.tips.map((tip, i) => (
-              <View key={i} style={{ marginTop: DS.spacing.md }}>
+              <View key={i} style={{ marginTop: i === 0 ? DS.spacing.sm : DS.spacing.md }}>
                 <Typography variant="subtitle1" style={{ fontWeight: "700" }}>
                   {tip.title}
                 </Typography>
@@ -610,14 +610,10 @@ const styles = StyleSheet.create({
     padding: DS.spacing.lg,
   },
   articleContainer: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: DS.palette.background.paper,
     borderRadius: DS.shape.radius.md,
     overflow: "hidden",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
-    elevation: 2,
+    ...DS.shadows.elevation2,
   },
   articleSection: {
     padding: DS.spacing.lg,
