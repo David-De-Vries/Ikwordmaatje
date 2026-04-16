@@ -296,7 +296,7 @@ function MatchingStatusCard() {
                 ) : (
                   <View style={styles.taskBtnRow}>
                     <TouchableOpacity
-                      style={[styles.taskPill, task.key === "vog" && { backgroundColor: "#A01550" }]}
+                      style={styles.taskPill}
                       activeOpacity={0.8}
                       onPress={() => task.key === "seniors" ? router.push("/seniors-list") : undefined}
                     >
