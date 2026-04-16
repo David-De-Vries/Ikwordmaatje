@@ -42,7 +42,7 @@ import { DS } from "@/constants/design-system";
 import { useOnboarding } from "@/context/OnboardingContext";
 import { useColors } from "@/hooks/useColors";
 
-export const DashboardModeContext = React.createContext({ allTasksDone: false });
+export const DashboardModeContext = React.createContext({ allTasksDone: false, hideTaskList: false });
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Wizard step data
@@ -904,6 +904,7 @@ export default function DashboardScreen() {
   const insets = useSafeAreaInsets();
   const colors = useColors();
   const { data } = useOnboarding();
+  const { hideTaskList } = useContext(DashboardModeContext);
 
   const scrollRef = useRef<ScrollView>(null);
   const sectionOffsets = useRef<Record<number, number>>({});
@@ -1053,13 +1054,15 @@ export default function DashboardScreen() {
         ]}
         showsVerticalScrollIndicator={false}
       >
-        <WizardSection
-          sectionIndex={1}
-          wizardStep={wizardStep}
-          onLayout={captureLayout(1)}
-        >
-          <MatchingStatusCard />
-        </WizardSection>
+        {!hideTaskList && (
+          <WizardSection
+            sectionIndex={1}
+            wizardStep={wizardStep}
+            onLayout={captureLayout(1)}
+          >
+            <MatchingStatusCard />
+          </WizardSection>
+        )}
 
         <MatchCard />
 

@@ -130,6 +130,27 @@ export default function LauncherScreen() {
           </View>
           <Feather name="chevron-right" size={18} color={DS.palette.text.hint} />
         </TouchableOpacity>
+
+        <View style={styles.divider} />
+
+        <TouchableOpacity
+          style={[styles.btn, styles.btnSecondary]}
+          activeOpacity={0.85}
+          onPress={() => router.push("/dashboard-active")}
+        >
+          <View style={[styles.btnIcon, { backgroundColor: "#FFF0D9" }]}>
+            <Feather name="activity" size={20} color="#C97B00" />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Typography variant="subtitle1" style={{ color: DS.palette.text.primary }}>
+              Dashboard Active
+            </Typography>
+            <Typography variant="caption" color="textSecondary">
+              Actief gematcht, geen takenclijst
+            </Typography>
+          </View>
+          <Feather name="chevron-right" size={18} color={DS.palette.text.hint} />
+        </TouchableOpacity>
       </View>
     </View>
   );
