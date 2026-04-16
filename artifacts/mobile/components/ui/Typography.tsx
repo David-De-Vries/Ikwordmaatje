@@ -8,7 +8,7 @@
  *   <Typography variant="body2" color="secondary">Subtitle text</Typography>
  */
 import React from "react";
-import { Text, TextStyle } from "react-native";
+import { StyleProp, Text, TextStyle } from "react-native";
 
 import { DS } from "@/constants/design-system";
 import { useColors } from "@/hooks/useColors";
@@ -43,7 +43,7 @@ interface TypographyProps {
   color?: ColorProp;
   align?: "left" | "center" | "right" | "justify";
   numberOfLines?: number;
-  style?: TextStyle;
+  style?: StyleProp<TextStyle>;
   children?: React.ReactNode;
   testID?: string;
 }

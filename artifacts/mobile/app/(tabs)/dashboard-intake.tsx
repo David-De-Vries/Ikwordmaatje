@@ -930,6 +930,7 @@ function WizardDoneOverlay({
 // ─────────────────────────────────────────────────────────────────────────────
 
 export default function DashboardIntakeScreen() {
+  const router = useRouter();
   const insets = useSafeAreaInsets();
   const colors = useColors();
   const { data } = useOnboarding();

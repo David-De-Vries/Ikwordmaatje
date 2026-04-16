@@ -164,13 +164,11 @@ export default function SignupScreen() {
             <Typography variant="body2" color="textSecondary">
               Al een account?{" "}
             </Typography>
-            <Typography
-              variant="body2"
-              style={{ color: colors.primary }}
-              onPress={() => {}}
-            >
-              Inloggen
-            </Typography>
+            <TouchableOpacity activeOpacity={0.7} onPress={() => {}}>
+              <Typography variant="body2" style={{ color: colors.primary }}>
+                Inloggen
+              </Typography>
+            </TouchableOpacity>
           </View>
         </Card>
 

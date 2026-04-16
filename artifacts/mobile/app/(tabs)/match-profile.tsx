@@ -227,7 +227,7 @@ export default function MatchProfileScreen() {
 // Styles
 // ─────────────────────────────────────────────────────────────────────────────
 
-const HEADER_COLOR = DS.palette.bg;
+const HEADER_COLOR = "#8CBFBB";
 
 const styles = StyleSheet.create({
   root: {
@@ -378,7 +378,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: DS.spacing.xs,
     backgroundColor: "#3A9490",
-    borderRadius: DS.radii.md,
+    borderRadius: DS.shape.radius.md,
     paddingVertical: DS.spacing.md,
   },
   planBtnLabel: {

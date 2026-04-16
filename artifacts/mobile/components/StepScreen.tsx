@@ -2,7 +2,6 @@ import React from "react";
 import { View, StyleSheet, Platform } from "react-native";
 import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Feather } from "@expo/vector-icons";
 import { DS } from "@/constants/design-system";
 import { ProgressHeader } from "@/components/ProgressHeader";
 import { KeyboardAwareScrollViewCompat } from "@/components/KeyboardAwareScrollViewCompat";
@@ -44,7 +43,7 @@ export function StepScreen({
   onBack,
 }: StepScreenProps) {
   const insets = useSafeAreaInsets();
-  const botPad = Math.max(insets.bottom, Platform.OS === "web" ? 34 : 0) + DS.spacing[3];
+  const botPad = Math.max(insets.bottom, Platform.OS === "web" ? 34 : 0) + DS.spacing.sm;
 
   const handleBack = onBack ?? (() => router.back());
 
@@ -57,7 +56,7 @@ export function StepScreen({
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        <View style={[styles.card, DS.shadows.lg]}>
+        <View style={[styles.card, DS.shadows.elevation2]}>
           {children}
         </View>
       </KeyboardAwareScrollViewCompat>
@@ -66,9 +65,9 @@ export function StepScreen({
         {showBack && (
           <Button
             variant="outlined"
-            color="neutral"
+            color="default"
             onPress={handleBack}
-            startIcon={<Feather name="arrow-left" size={14} color={DS.palette.text.secondary} />}
+            startIconName="arrow-left"
             style={styles.backBtn}
           >
             Terug
@@ -92,24 +91,24 @@ export function StepScreen({
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: DS.palette.background.default,
+    backgroundColor: DS.palette.background.page,
   },
   scroll: { flex: 1 },
   content: {
-    padding: DS.spacing[4],
-    paddingBottom: DS.spacing[3],
+    padding: DS.spacing.md,
+    paddingBottom: DS.spacing.sm,
   },
   card: {
     backgroundColor: DS.palette.background.paper,
-    borderRadius: DS.shape.borderRadius.xl,
-    padding: DS.spacing[4],
-    gap: DS.spacing[4],
+    borderRadius: DS.shape.radius.xl,
+    padding: DS.spacing.md,
+    gap: DS.spacing.md,
   },
   nav: {
     flexDirection: "row",
-    paddingHorizontal: DS.spacing[4],
-    paddingTop: DS.spacing[3],
-    gap: DS.spacing[3],
+    paddingHorizontal: DS.spacing.md,
+    paddingTop: DS.spacing.sm,
+    gap: DS.spacing.sm,
     backgroundColor: "transparent",
   },
   backBtn:  { minWidth: 100 },
