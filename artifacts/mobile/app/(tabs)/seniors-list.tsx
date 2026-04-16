@@ -482,7 +482,7 @@ const styles = StyleSheet.create({
     paddingVertical: DS.spacing.xxs,
   },
   overflowChip: {
-    backgroundColor: "#D6ECEA",
+    backgroundColor: "#EEF7F6",
   },
   chipLabel: {
     fontSize: 11,
