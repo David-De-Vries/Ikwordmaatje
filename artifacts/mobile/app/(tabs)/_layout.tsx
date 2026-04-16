@@ -33,6 +33,8 @@ export default function OnboardingLayout() {
       <Stack.Screen name="seniors-list" />
       <Stack.Screen name="senior-profile" />
       <Stack.Screen name="match-profile" />
+      <Stack.Screen name="kennisbank-artikel" />
+      <Stack.Screen name="kennisbank-overzicht" />
     </Stack>
   );
 }
