@@ -283,7 +283,6 @@ function MatchingStatusCard({ intakeDateLabel }: { intakeDateLabel: string }) {
         {tasks.map((task, i) => {
           const isDone = task.status === "done";
           const isPending = task.status === "pending";
-          /* ── Special row: scheduled intro meeting ── */
           if (task.key === "intro" && isDone) {
             return (
               <View key={task.key}>
