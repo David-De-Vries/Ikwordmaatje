@@ -413,7 +413,7 @@ export default function SeniorsListScreen() {
               Profiel opgeslagen
             </Typography>
             <Typography variant="body2" color="textSecondary" style={styles.modalBody}>
-              Dit profiel is opgeslagen aan jouw lijst. Later wordt gekeken of je gematcht kan worden aan deze senior.
+              De profiel die je opslaat worden door Careibu in overweging genomen tijdens het match process.{"\n\n"}Voor het matchen helpt het om meerdere profielen op te slaan in je lijst.
             </Typography>
             <TouchableOpacity
               style={styles.checkboxRow}
