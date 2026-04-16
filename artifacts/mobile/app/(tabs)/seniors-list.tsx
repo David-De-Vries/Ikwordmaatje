@@ -155,14 +155,37 @@ const SENIORS: SeniorProfile[] = [
 
 const MAX_VISIBLE_ACTIVITIES = 3;
 
+// ── Avatar palette — cycles per card ──────────────────────────────────────────
+const AVATAR_PALETTE = [
+  DS.iconBadge.teal,
+  DS.iconBadge.orange,
+  DS.iconBadge.navy,
+  DS.iconBadge.green,
+  DS.iconBadge.purple,
+];
+
+// ── Per-activity chip colors ───────────────────────────────────────────────────
+const ACTIVITY_COLORS: Record<ActivityId, { bg: string; icon: string }> = {
+  buiten:   DS.iconBadge.teal,
+  kletsen:  DS.iconBadge.orange,
+  muziek:   DS.iconBadge.purple,
+  lezen:    DS.iconBadge.navy,
+  sport:    DS.iconBadge.green,
+  eten:     DS.iconBadge.orange,
+  digitaal: DS.iconBadge.navy,
+  creatief: DS.iconBadge.purple,
+};
+
 interface ProfileCardProps {
   senior: SeniorProfile;
+  index: number;
   bookmarked: boolean;
   onToggleBookmark: () => void;
 }
 
-function ProfileCard({ senior, bookmarked, onToggleBookmark }: ProfileCardProps) {
+function ProfileCard({ senior, index, bookmarked, onToggleBookmark }: ProfileCardProps) {
   const router = useRouter();
+  const avatarColor = AVATAR_PALETTE[index % AVATAR_PALETTE.length];
   const visibleActivities = senior.activities.slice(0, MAX_VISIBLE_ACTIVITIES);
   const overflowCount = senior.activities.length - MAX_VISIBLE_ACTIVITIES;
 
@@ -170,8 +193,8 @@ function ProfileCard({ senior, bookmarked, onToggleBookmark }: ProfileCardProps)
     <Card elevation={2} padding="md">
       {/* Top row: avatar · name/meta · bookmark */}
       <View style={styles.cardRow}>
-        <View style={styles.avatar}>
-          <Typography style={styles.avatarInitials}>{senior.initials}</Typography>
+        <View style={[styles.avatar, { backgroundColor: avatarColor.bg }]}>
+          <Typography style={[styles.avatarInitials, { color: avatarColor.icon }]}>{senior.initials}</Typography>
         </View>
 
         <View style={styles.info}>
@@ -210,10 +233,11 @@ function ProfileCard({ senior, bookmarked, onToggleBookmark }: ProfileCardProps)
         </Typography>
         {visibleActivities.map((actId) => {
           const meta = ACTIVITY_META[actId];
+          const chip = ACTIVITY_COLORS[actId];
           return (
-            <View key={actId} style={styles.activityChip}>
-              <Feather name={meta.icon} size={10} color="#3A9490" />
-              <Typography style={styles.chipLabel}>{meta.label}</Typography>
+            <View key={actId} style={[styles.activityChip, { backgroundColor: chip.bg }]}>
+              <Feather name={meta.icon} size={10} color={chip.icon} />
+              <Typography style={[styles.chipLabel, { color: chip.icon }]}>{meta.label}</Typography>
             </View>
           );
         })}
@@ -240,11 +264,13 @@ function ProfileCard({ senior, bookmarked, onToggleBookmark }: ProfileCardProps)
       <View style={styles.cardDivider} />
       <TouchableOpacity
         style={styles.ctaRow}
-        activeOpacity={0.7}
+        activeOpacity={0.8}
         onPress={() => router.push(`/senior-profile?id=${senior.id}`)}
       >
-        <Typography style={styles.ctaText}>Bekijk profiel</Typography>
-        <Feather name="arrow-right" size={13} color="#3A9490" />
+        <View style={styles.ctaPill}>
+          <Typography style={styles.ctaText}>Bekijk profiel</Typography>
+          <Feather name="arrow-right" size={12} color="#FFFFFF" />
+        </View>
       </TouchableOpacity>
     </Card>
   );
@@ -351,10 +377,11 @@ export default function SeniorsListScreen() {
           ]}
           showsVerticalScrollIndicator={false}
         >
-          {SENIORS.map((senior) => (
+          {SENIORS.map((senior, i) => (
             <ProfileCard
               key={senior.id}
               senior={senior}
+              index={i}
               bookmarked={bookmarked.has(senior.id)}
               onToggleBookmark={() => toggleBookmark(senior.id)}
             />
@@ -499,7 +526,7 @@ const styles = StyleSheet.create({
     marginRight: DS.spacing.xxs,
   },
   dayChip: {
-    backgroundColor: "#EEF7F6",
+    backgroundColor: "#FAE0EC",
     borderRadius: DS.shape.radius.full,
     paddingHorizontal: DS.spacing.sm,
     paddingVertical: DS.spacing.xxs,
@@ -507,7 +534,7 @@ const styles = StyleSheet.create({
   dayLabel: {
     fontSize: 11,
     fontWeight: "600",
-    color: "#3A9490",
+    color: "#A01550",
   },
   cardDivider: {
     height: 1,
@@ -515,14 +542,20 @@ const styles = StyleSheet.create({
     marginTop: DS.spacing.md,
   },
   ctaRow: {
-    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    gap: DS.spacing.xs,
     paddingTop: DS.spacing.sm,
   },
+  ctaPill: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: DS.spacing.xs,
+    backgroundColor: "#3A9490",
+    borderRadius: DS.shape.radius.full,
+    paddingHorizontal: DS.spacing.lg,
+    paddingVertical: DS.spacing.sm,
+  },
   ctaText: {
-    color: "#3A9490",
+    color: "#FFFFFF",
     fontWeight: "600",
     fontSize: 13,
   },
