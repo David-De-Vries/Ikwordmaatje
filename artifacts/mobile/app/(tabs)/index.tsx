@@ -101,7 +101,7 @@ export default function LauncherScreen() {
           </View>
           <View style={{ flex: 1 }}>
             <Typography variant="subtitle1" style={{ color: DS.palette.text.primary }}>
-              Dashboard intake
+              Dashboard Intake Planned
             </Typography>
             <Typography variant="caption" color="textSecondary">
               Na het inplannen van een afspraak
