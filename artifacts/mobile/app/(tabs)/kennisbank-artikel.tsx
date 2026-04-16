@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { Card, Typography } from "@/components/ui";
+import { Typography } from "@/components/ui";
 import { DS } from "@/constants/design-system";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -502,48 +502,55 @@ export default function KennisbankArtikelScreen() {
         ]}
         showsVerticalScrollIndicator={false}
       >
-        {/* Card 1 — Intro */}
-        <Card elevation={2} padding="md" style={{ gap: DS.spacing.sm }}>
-          <Typography variant="h5">Inleiding</Typography>
-          <Typography variant="body2" color="textSecondary" style={{ lineHeight: 22 }}>
-            {article.intro}
-          </Typography>
-        </Card>
+        {/* Unified article container */}
+        <View style={styles.articleContainer}>
+          {/* Inleiding */}
+          <View style={styles.articleSection}>
+            <Typography variant="h5">Inleiding</Typography>
+            <Typography
+              variant="body2"
+              color="textSecondary"
+              style={{ lineHeight: 22, marginTop: DS.spacing.sm }}
+            >
+              {article.intro}
+            </Typography>
+          </View>
 
-        {/* Card 2 — Tips */}
-        <Card elevation={2} padding="md" style={{ gap: DS.spacing.md }}>
-          <Typography variant="h5">Praktische tips</Typography>
-          {article.tips.map((tip, i) => (
-            <View key={i} style={styles.tipRow}>
-              <View style={[styles.tipIconWrap, { backgroundColor: article.bg }]}>
-                <Feather name={tip.icon} size={16} color={article.color} />
-              </View>
-              <View style={{ flex: 1, gap: DS.spacing.xxs }}>
-                <Typography variant="subtitle1" style={{ fontWeight: "700", fontSize: 14 }}>
+          <View style={styles.sectionDivider} />
+
+          {/* Praktische tips */}
+          <View style={styles.articleSection}>
+            <Typography variant="h5">Praktische tips</Typography>
+            {article.tips.map((tip, i) => (
+              <View key={i} style={{ marginTop: DS.spacing.md }}>
+                <Typography variant="subtitle1" style={{ fontWeight: "700" }}>
                   {tip.title}
                 </Typography>
-                <Typography variant="body2" color="textSecondary" style={{ lineHeight: 20 }}>
+                <Typography
+                  variant="body2"
+                  color="textSecondary"
+                  style={{ lineHeight: 20, marginTop: DS.spacing.sm }}
+                >
                   {tip.body}
                 </Typography>
               </View>
-            </View>
-          ))}
-        </Card>
+            ))}
+          </View>
 
-        {/* Card 3 — Callout */}
-        <View style={[styles.calloutCard, { backgroundColor: article.bg }]}>
-          <View style={styles.calloutRow}>
-            <Feather name="bookmark" size={18} color={article.color} />
+          <View style={styles.sectionDivider} />
+
+          {/* Onthoud callout */}
+          <View style={[styles.calloutStrip, { backgroundColor: article.bg }]}>
             <Typography variant="h5" style={{ color: article.color }}>
               Onthoud
             </Typography>
+            <Typography
+              variant="body2"
+              style={{ color: article.color, lineHeight: 22, marginTop: DS.spacing.sm, opacity: 0.9 }}
+            >
+              {article.callout}
+            </Typography>
           </View>
-          <Typography
-            variant="body2"
-            style={{ color: article.color, lineHeight: 22, opacity: 0.9 }}
-          >
-            {article.callout}
-          </Typography>
         </View>
       </ScrollView>
     </View>
@@ -601,30 +608,25 @@ const styles = StyleSheet.create({
   },
   body: {
     padding: DS.spacing.lg,
-    gap: DS.spacing.md,
   },
-  tipRow: {
-    flexDirection: "row",
-    gap: DS.spacing.md,
-    alignItems: "flex-start",
-  },
-  tipIconWrap: {
-    width: 40,
-    height: 40,
-    borderRadius: DS.shape.radius.sm,
-    alignItems: "center",
-    justifyContent: "center",
-    flexShrink: 0,
-    marginTop: 2,
-  },
-  calloutCard: {
+  articleContainer: {
+    backgroundColor: "#FFFFFF",
     borderRadius: DS.shape.radius.md,
-    padding: DS.spacing.lg,
-    gap: DS.spacing.sm,
+    overflow: "hidden",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 2,
   },
-  calloutRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: DS.spacing.xs,
+  articleSection: {
+    padding: DS.spacing.lg,
+  },
+  sectionDivider: {
+    height: 1,
+    backgroundColor: DS.palette.border,
+  },
+  calloutStrip: {
+    padding: DS.spacing.lg,
   },
 });
