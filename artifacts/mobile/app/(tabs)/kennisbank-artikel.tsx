@@ -545,6 +545,12 @@ export default function KennisbankArtikelScreen() {
             <Typography style={styles.readTimeText}>
               {article.readTime} leestijd
             </Typography>
+            {article.hasVideo && (
+              <View style={styles.videoChip}>
+                <Feather name="video" size={10} color="#FFFFFF" />
+                <Typography style={styles.videoChipText}>Video</Typography>
+              </View>
+            )}
           </View>
         </View>
 
@@ -663,6 +669,21 @@ const styles = StyleSheet.create({
   readTimeText: {
     color: "rgba(255,255,255,0.75)",
     fontSize: 12,
+  },
+  videoChip: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 3,
+    backgroundColor: "rgba(255,255,255,0.22)",
+    borderRadius: DS.shape.radius.full,
+    paddingHorizontal: DS.spacing.sm,
+    paddingVertical: 2,
+    marginLeft: DS.spacing.xs,
+  },
+  videoChipText: {
+    color: "#FFFFFF",
+    fontSize: 11,
+    fontWeight: "600",
   },
   body: {
     padding: DS.spacing.lg,
