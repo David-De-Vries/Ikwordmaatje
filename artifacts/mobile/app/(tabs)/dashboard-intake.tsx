@@ -1242,6 +1242,8 @@ export default function DashboardIntakeScreen() {
             </TouchableOpacity>
           ))}
 
+          <View style={styles.drawerDivider} />
+
           {[
             { icon: "settings" as const,     label: "Instellingen", route: "/instellingen" as Href },
             { icon: "help-circle" as const,  label: "Vragen" },
