@@ -594,20 +594,6 @@ export default function KennisbankArtikelScreen() {
             </TouchableOpacity>
           </View>
 
-          <View style={styles.sectionDivider} />
-
-          {/* Onthoud callout */}
-          <View style={[styles.calloutStrip, { backgroundColor: article.bg }]}>
-            <Typography variant="h5" style={{ color: article.color }}>
-              Onthoud
-            </Typography>
-            <Typography
-              variant="body2"
-              style={{ color: article.color, lineHeight: 22, marginTop: DS.spacing.sm, opacity: 0.9 }}
-            >
-              {article.callout}
-            </Typography>
-          </View>
         </View>
       </ScrollView>
 
@@ -676,9 +662,6 @@ const styles = StyleSheet.create({
   sectionDivider: {
     height: 1,
     backgroundColor: DS.palette.border,
-  },
-  calloutStrip: {
-    padding: DS.spacing.lg,
   },
   videoThumb: {
     alignItems: "flex-start",
