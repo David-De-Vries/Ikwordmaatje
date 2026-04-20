@@ -1264,7 +1264,6 @@ export default function DashboardIntakeScreen() {
         </View>
 
         {/* Uitloggen — pinned to bottom */}
-        <View style={styles.drawerDivider} />
         <TouchableOpacity style={styles.drawerItem} onPress={closeMenu}>
           <View style={styles.drawerIconWrap}>
             <Feather name="log-out" size={18} color={DS.palette.text.hint} />
