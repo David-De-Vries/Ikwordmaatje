@@ -1341,7 +1341,7 @@ export default function DashboardScreen() {
         </View>
 
         {/* Uitloggen — pinned to bottom */}
-        <TouchableOpacity style={styles.drawerItem} onPress={closeMenu}>
+        <TouchableOpacity style={[styles.drawerItem, { paddingTop: 44, paddingBottom: 44 }]} onPress={closeMenu}>
           <View style={styles.drawerIconWrap}>
             <Feather name="log-out" size={18} color={DS.palette.text.hint} />
           </View>
@@ -1431,8 +1431,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: DS.spacing.md,
     paddingHorizontal: DS.spacing.xl,
-    paddingTop: 44,
-    paddingBottom: 44,
+    paddingVertical: DS.spacing.md,
   },
   drawerIconWrap: {
     width: 36,
