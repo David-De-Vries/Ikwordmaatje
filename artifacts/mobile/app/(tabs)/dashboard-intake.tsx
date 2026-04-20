@@ -497,6 +497,7 @@ const INFO_MODULES = [
     title: "Omgaan met moeilijke momenten",
     snippet: "Soms gaat het minder goed. Dit helpt.",
     readTime: "5 min",
+    hasVideo: true,
   },
   {
     id: "plannen",
@@ -564,15 +565,21 @@ function InfoModulesCard() {
             <Typography variant="caption" color="textSecondary">
               {mod.snippet}
             </Typography>
-            <View style={styles.readTimeRow}>
-              <Feather name="clock" size={10} color={DS.palette.text.hint} />
-              <Typography
-                variant="caption"
-                style={{ color: DS.palette.text.hint }}
-              >
-                {mod.readTime}
-              </Typography>
-            </View>
+            {mod.hasVideo ? (
+              <View style={styles.videoChipRow}>
+                <Feather name="video" size={10} color={mod.color} />
+                <Typography variant="caption" style={{ color: mod.color, fontWeight: "600" }}>
+                  Video
+                </Typography>
+              </View>
+            ) : (
+              <View style={styles.readTimeRow}>
+                <Feather name="clock" size={10} color={DS.palette.text.hint} />
+                <Typography variant="caption" style={{ color: DS.palette.text.hint }}>
+                  {mod.readTime}
+                </Typography>
+              </View>
+            )}
           </TouchableOpacity>
         ))}
       </ScrollView>
@@ -1469,6 +1476,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   readTimeRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: DS.spacing.xs,
+  },
+  videoChipRow: {
     flexDirection: "row",
     alignItems: "center",
     gap: DS.spacing.xs,
