@@ -73,7 +73,7 @@ function ArticleRow({
             {article.snippet}
           </Typography>
           {article.hasVideo ? (
-            <View style={[styles.videoChip, { borderColor: article.color }]}>
+            <View style={styles.videoChip}>
               <Feather name="video" size={10} color={article.color} />
               <Typography style={[styles.videoChipText, { color: article.color }]}>Video</Typography>
             </View>
@@ -266,11 +266,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 3,
     alignSelf: "flex-start",
-    borderRadius: DS.shape.radius.full,
-    paddingHorizontal: DS.spacing.sm,
-    paddingVertical: 2,
-    borderWidth: 1,
-    borderColor: "currentColor",
   },
   videoChipText: {
     fontSize: 11,
