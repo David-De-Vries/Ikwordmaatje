@@ -1219,55 +1219,57 @@ export default function DashboardIntakeScreen() {
           </View>
         </View>
 
-        {/* Nav items */}
-        {[
-          { icon: "home" as const,      label: "Home" },
-          { icon: "users" as const,     label: "Senioren",     route: "/seniors-list" as Href },
-          { icon: "book-open" as const, label: "Logboeken" },
-          { icon: "heart" as const,     label: "Matches" },
-          { icon: "globe" as const,     label: "Website" },
-        ].map(({ icon, label, route }) => (
-          <TouchableOpacity
-            key={label}
-            style={styles.drawerItem}
-            onPress={() => { closeMenu(); if (route) router.push(route); }}
-          >
-            <View style={styles.drawerIconWrap}>
-              <Feather name={icon} size={18} color="#8CBFBB" />
-            </View>
-            <Typography variant="body1" style={{ color: DS.palette.text.primary }}>
-              {label}
-            </Typography>
-          </TouchableOpacity>
-        ))}
+        {/* Nav items — scrollable middle section */}
+        <View style={{ flex: 1 }}>
+          {[
+            { icon: "home" as const,      label: "Home" },
+            { icon: "users" as const,     label: "Senioren",     route: "/seniors-list" as Href },
+            { icon: "book-open" as const, label: "Logboeken" },
+            { icon: "heart" as const,     label: "Matches" },
+            { icon: "globe" as const,     label: "Website" },
+          ].map(({ icon, label, route }) => (
+            <TouchableOpacity
+              key={label}
+              style={styles.drawerItem}
+              onPress={() => { closeMenu(); if (route) router.push(route); }}
+            >
+              <View style={styles.drawerIconWrap}>
+                <Feather name={icon} size={18} color="#8CBFBB" />
+              </View>
+              <Typography variant="body1" style={{ color: DS.palette.text.primary }}>
+                {label}
+              </Typography>
+            </TouchableOpacity>
+          ))}
 
+          <View style={styles.drawerDivider} />
+
+          {[
+            { icon: "settings" as const,     label: "Instellingen", route: "/instellingen" as Href },
+            { icon: "help-circle" as const,  label: "Vragen" },
+          ].map(({ icon, label, route }) => (
+            <TouchableOpacity
+              key={label}
+              style={styles.drawerItem}
+              onPress={() => { closeMenu(); if (route) router.push(route); }}
+            >
+              <View style={styles.drawerIconWrap}>
+                <Feather name={icon} size={18} color="#8CBFBB" />
+              </View>
+              <Typography variant="body1" style={{ color: DS.palette.text.primary }}>
+                {label}
+              </Typography>
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        {/* Uitloggen — pinned to bottom */}
         <View style={styles.drawerDivider} />
-
-        {[
-          { icon: "settings" as const,     label: "Instellingen", route: "/instellingen" as Href },
-          { icon: "help-circle" as const,  label: "Vragen" },
-        ].map(({ icon, label, route }) => (
-          <TouchableOpacity
-            key={label}
-            style={styles.drawerItem}
-            onPress={() => { closeMenu(); if (route) router.push(route); }}
-          >
-            <View style={styles.drawerIconWrap}>
-              <Feather name={icon} size={18} color="#8CBFBB" />
-            </View>
-            <Typography variant="body1" style={{ color: DS.palette.text.primary }}>
-              {label}
-            </Typography>
-          </TouchableOpacity>
-        ))}
-
-        <View style={styles.drawerDivider} />
-
         <TouchableOpacity style={styles.drawerItem} onPress={closeMenu}>
           <View style={styles.drawerIconWrap}>
-            <Feather name="log-out" size={18} color={DS.palette.primary.main} />
+            <Feather name="log-out" size={18} color={DS.palette.text.hint} />
           </View>
-          <Typography variant="body1" style={{ color: DS.palette.primary.main }}>
+          <Typography variant="body1" style={{ color: DS.palette.text.hint }}>
             Uitloggen
           </Typography>
         </TouchableOpacity>
