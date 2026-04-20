@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import {
   Modal,
   Platform,
-  SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -466,12 +465,14 @@ interface ArticleVideoModalProps {
 function ArticleVideoModal({ article, playing, onTogglePlay, onClose }: ArticleVideoModalProps) {
   const { height: screenHeight, width: screenWidth } = useWindowDimensions();
   const playerHeight = Math.round(screenHeight * 0.52);
+  const modalInsets = useSafeAreaInsets();
+  const topPad = Platform.OS === "web" ? Math.max(modalInsets.top, 67) : modalInsets.top;
 
   return (
     <Modal visible animationType="slide" presentationStyle="fullScreen" onRequestClose={onClose}>
       <StatusBar barStyle="light-content" backgroundColor="#1A1A1A" />
-      <SafeAreaView style={videoModalStyles.root}>
-        <View style={videoModalStyles.topBar}>
+      <View style={videoModalStyles.root}>
+        <View style={[videoModalStyles.topBar, { paddingTop: topPad + DS.spacing.md }]}>
           <Typography variant="h6" style={{ color: "#FFFFFF", flex: 1 }} numberOfLines={1}>
             {article.title}
           </Typography>
@@ -499,7 +500,7 @@ function ArticleVideoModal({ article, playing, onTogglePlay, onClose }: ArticleV
             {article.intro}
           </Typography>
         </ScrollView>
-      </SafeAreaView>
+      </View>
     </Modal>
   );
 }
