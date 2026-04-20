@@ -1296,15 +1296,13 @@ export default function DashboardScreen() {
           </View>
         </View>
 
-        {/* Nav items */}
+        {/* Nav items — group 1 */}
         {[
-          { icon: "home" as const,         label: "Dashboard" },
-          { icon: "heart" as const,        label: "Matches" },
-          { icon: "book-open" as const,    label: "Logboeken" },
-          { icon: "settings" as const,     label: "Instellingen", route: "/instellingen" as Href },
-          { icon: "users" as const,        label: "Senioren",  route: "/seniors-list" as Href },
-          { icon: "help-circle" as const,  label: "Vragen" },
-          { icon: "globe" as const,        label: "Website" },
+          { icon: "home" as const,      label: "Home" },
+          { icon: "users" as const,     label: "Senioren",     route: "/seniors-list" as Href },
+          { icon: "book-open" as const, label: "Logboeken" },
+          { icon: "heart" as const,     label: "Matches" },
+          { icon: "globe" as const,     label: "Website" },
         ].map(({ icon, label, route }) => (
           <TouchableOpacity
             key={label}
@@ -1319,6 +1317,39 @@ export default function DashboardScreen() {
             </Typography>
           </TouchableOpacity>
         ))}
+
+        <View style={styles.drawerDivider} />
+
+        {/* Nav items — group 2 */}
+        {[
+          { icon: "settings" as const,     label: "Instellingen", route: "/instellingen" as Href },
+          { icon: "help-circle" as const,  label: "Vragen" },
+        ].map(({ icon, label, route }) => (
+          <TouchableOpacity
+            key={label}
+            style={styles.drawerItem}
+            onPress={() => { closeMenu(); if (route) router.push(route); }}
+          >
+            <View style={styles.drawerIconWrap}>
+              <Feather name={icon} size={18} color="#8CBFBB" />
+            </View>
+            <Typography variant="body1" style={{ color: DS.palette.text.primary }}>
+              {label}
+            </Typography>
+          </TouchableOpacity>
+        ))}
+
+        <View style={styles.drawerDivider} />
+
+        {/* Uitloggen */}
+        <TouchableOpacity style={styles.drawerItem} onPress={closeMenu}>
+          <View style={styles.drawerIconWrap}>
+            <Feather name="log-out" size={18} color={DS.palette.primary.main} />
+          </View>
+          <Typography variant="body1" style={{ color: DS.palette.primary.main }}>
+            Uitloggen
+          </Typography>
+        </TouchableOpacity>
       </Animated.View>
     </Animated.View>
   );
@@ -1388,6 +1419,12 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255,255,255,0.25)",
     alignItems: "center",
     justifyContent: "center",
+  },
+  drawerDivider: {
+    height: 1,
+    backgroundColor: DS.palette.border,
+    marginHorizontal: DS.spacing.lg,
+    marginVertical: DS.spacing.sm,
   },
   drawerItem: {
     flexDirection: "row",
