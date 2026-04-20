@@ -1424,7 +1424,8 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: DS.palette.border,
     marginHorizontal: DS.spacing.lg,
-    marginVertical: DS.spacing.sm,
+    marginTop: 24,
+    marginBottom: 24,
   },
   drawerItem: {
     flexDirection: "row",
