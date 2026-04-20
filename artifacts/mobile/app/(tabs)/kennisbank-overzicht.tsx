@@ -5,7 +5,6 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -130,17 +129,6 @@ export default function KennisbankOverzichtScreen() {
           <View style={styles.backBtn} />
         </View>
 
-        {/* Search bar — visual only */}
-        <View style={styles.searchBar}>
-          <Feather name="search" size={16} color={DS.palette.text.hint} />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Zoek artikelen..."
-            placeholderTextColor={DS.palette.text.hint}
-            editable={false}
-            pointerEvents="none"
-          />
-        </View>
       </View>
 
       {/* ── Scrollable body ─────────────────────────────────────────────── */}
@@ -213,21 +201,6 @@ const styles = StyleSheet.create({
   headerCenter: {
     flex: 1,
     alignItems: "center",
-  },
-  searchBar: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: DS.spacing.sm,
-    backgroundColor: "#FFFFFF",
-    borderRadius: DS.shape.radius.full,
-    paddingHorizontal: DS.spacing.md,
-    paddingVertical: DS.spacing.sm,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 14,
-    color: DS.palette.text.primary,
-    padding: 0,
   },
   body: {
     padding: DS.spacing.lg,
