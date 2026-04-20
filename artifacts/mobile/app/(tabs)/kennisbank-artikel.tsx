@@ -474,11 +474,6 @@ export default function KennisbankArtikelScreen() {
         </TouchableOpacity>
 
         <View style={styles.headerCenter}>
-          <View style={styles.categoryBadge}>
-            <Typography style={styles.categoryBadgeText}>
-              {article.category}
-            </Typography>
-          </View>
           <Typography variant="h5" style={styles.headerTitle}>
             {article.title}
           </Typography>
@@ -581,17 +576,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     gap: DS.spacing.xs,
-  },
-  categoryBadge: {
-    backgroundColor: "rgba(255,255,255,0.25)",
-    borderRadius: 20,
-    paddingHorizontal: DS.spacing.sm,
-    paddingVertical: 3,
-  },
-  categoryBadgeText: {
-    color: "#FFFFFF",
-    fontSize: 11,
-    fontWeight: "600",
   },
   headerTitle: {
     color: "#FFFFFF",
