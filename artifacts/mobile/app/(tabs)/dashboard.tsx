@@ -1431,7 +1431,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: DS.spacing.md,
     paddingHorizontal: DS.spacing.xl,
-    paddingVertical: DS.spacing.md,
+    paddingTop: 44,
+    paddingBottom: 44,
   },
   drawerIconWrap: {
     width: 36,
