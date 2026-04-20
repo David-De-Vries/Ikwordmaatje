@@ -540,18 +540,19 @@ export default function KennisbankArtikelScreen() {
           <Typography variant="h5" style={styles.headerTitle}>
             {article.title}
           </Typography>
-          <View style={styles.readTimeRow}>
-            <Feather name="clock" size={11} color="rgba(255,255,255,0.75)" />
-            <Typography style={styles.readTimeText}>
-              {article.readTime} leestijd
-            </Typography>
-            {article.hasVideo && (
-              <View style={styles.videoChip}>
-                <Feather name="video" size={10} color="#FFFFFF" />
-                <Typography style={styles.videoChipText}>Video</Typography>
-              </View>
-            )}
-          </View>
+          {article.hasVideo ? (
+            <View style={styles.videoChip}>
+              <Feather name="video" size={10} color="#FFFFFF" />
+              <Typography style={styles.videoChipText}>Video</Typography>
+            </View>
+          ) : (
+            <View style={styles.readTimeRow}>
+              <Feather name="clock" size={11} color="rgba(255,255,255,0.75)" />
+              <Typography style={styles.readTimeText}>
+                {article.readTime} leestijd
+              </Typography>
+            </View>
+          )}
         </View>
 
         <View style={styles.backBtn} />
