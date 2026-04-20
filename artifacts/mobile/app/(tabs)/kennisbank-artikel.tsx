@@ -40,6 +40,7 @@ export interface Article {
   intro: string;
   tips: TipBlock[];
   callout: string;
+  hasVideo?: boolean;
 }
 
 export const ARTICLES: Record<string, Article> = {
@@ -163,6 +164,7 @@ export const ARTICLES: Record<string, Article> = {
     title: "Vertrouwen opbouwen met je senior",
     snippet: "Hoe bouw je stap voor stap een vertrouwensband op?",
     readTime: "4 min",
+    hasVideo: true,
     intro:
       "Vertrouwen groeit niet in één dag. Maar met de juiste houding leg je al bij het eerste bezoek een goede basis voor een warme, duurzame relatie.",
     tips: [
@@ -573,26 +575,43 @@ export default function KennisbankArtikelScreen() {
 
           <View style={styles.sectionDivider} />
 
-          {/* Video */}
-          <View style={styles.articleSection}>
-            <TouchableOpacity
-              onPress={() => { setVideoOpen(true); setPlaying(false); }}
-              activeOpacity={0.85}
-              style={styles.videoThumb}
-            >
-              <View style={[styles.videoThumbInner, { backgroundColor: article.bg }]}>
-                <View style={styles.playCircle}>
-                  <Feather name="play" size={20} color={article.color} />
-                </View>
-              </View>
-              <Typography
-                variant="caption"
-                style={{ color: article.color, marginTop: DS.spacing.xs, fontWeight: "600" }}
+          {article.hasVideo ? (
+            <View style={styles.articleSection}>
+              <TouchableOpacity
+                onPress={() => { setVideoOpen(true); setPlaying(false); }}
+                activeOpacity={0.85}
+                style={styles.videoThumb}
               >
-                Bekijk de introductievideo
-              </Typography>
-            </TouchableOpacity>
-          </View>
+                <View style={[styles.videoThumbInner, { backgroundColor: article.bg }]}>
+                  <View style={styles.playCircle}>
+                    <Feather name="play" size={20} color={article.color} />
+                  </View>
+                </View>
+                <Typography
+                  variant="caption"
+                  style={{ color: article.color, marginTop: DS.spacing.xs, fontWeight: "600" }}
+                >
+                  Bekijk de introductievideo
+                </Typography>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <View style={styles.articleSection}>
+              {article.tips.map((tip, i) => (
+                <View key={i} style={[styles.tipRow, i > 0 && { marginTop: DS.spacing.md }]}>
+                  <View style={[styles.tipIcon, { backgroundColor: article.color }]}>
+                    <Feather name={tip.icon} size={16} color="#FFFFFF" />
+                  </View>
+                  <View style={styles.tipText}>
+                    <Typography variant="h6">{tip.title}</Typography>
+                    <Typography variant="body2" color="textSecondary" style={{ lineHeight: 20, marginTop: DS.spacing.xxs }}>
+                      {tip.body}
+                    </Typography>
+                  </View>
+                </View>
+              ))}
+            </View>
+          )}
 
         </View>
       </ScrollView>
@@ -662,6 +681,22 @@ const styles = StyleSheet.create({
   sectionDivider: {
     height: 1,
     backgroundColor: DS.palette.border,
+  },
+  tipRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: DS.spacing.md,
+  },
+  tipIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: DS.shape.radius.sm,
+    alignItems: "center",
+    justifyContent: "center",
+    flexShrink: 0,
+  },
+  tipText: {
+    flex: 1,
   },
   videoThumb: {
     alignItems: "flex-start",
