@@ -166,7 +166,7 @@ export default function InstellingenScreen() {
   const [pushEnabled, setPushEnabled] = useState(true);
   const [emailEnabled, setEmailEnabled] = useState(true);
   const [profileVisible, setProfileVisible] = useState(true);
-  const [darkMode, setDarkMode] = useState(false);
+
 
   return (
     <View style={styles.root}>
@@ -239,28 +239,7 @@ export default function InstellingenScreen() {
           />
         </Section>
 
-        {/* Section 4 — App-voorkeuren */}
-        <Section label="App-voorkeuren">
-          <ToggleRow
-            icon="moon"
-            label="Donkere modus"
-            value={darkMode}
-            onToggle={setDarkMode}
-            disabled
-          />
-          <RowDivider />
-          <SettingRow
-            icon="globe"
-            label="Taal"
-            right={
-              <Typography variant="caption" color="textSecondary">
-                Nederlands
-              </Typography>
-            }
-          />
-        </Section>
-
-        {/* Section 5 — Account */}
+        {/* Section 4 — Account */}
         <Section label="Account">
           <SettingRow
             icon="log-out"
