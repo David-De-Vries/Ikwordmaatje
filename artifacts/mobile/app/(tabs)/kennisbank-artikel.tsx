@@ -1,12 +1,16 @@
 import { Feather } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React from "react";
+import React, { useState } from "react";
 import {
+  Modal,
   Platform,
+  SafeAreaView,
   ScrollView,
+  StatusBar,
   StyleSheet,
   TouchableOpacity,
   View,
+  useWindowDimensions,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -449,6 +453,58 @@ export const ARTICLES: Record<string, Article> = {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Article video modal
+// ─────────────────────────────────────────────────────────────────────────────
+
+interface ArticleVideoModalProps {
+  article: Article;
+  playing: boolean;
+  onTogglePlay: () => void;
+  onClose: () => void;
+}
+
+function ArticleVideoModal({ article, playing, onTogglePlay, onClose }: ArticleVideoModalProps) {
+  const { height: screenHeight, width: screenWidth } = useWindowDimensions();
+  const playerHeight = Math.round(screenHeight * 0.52);
+
+  return (
+    <Modal visible animationType="slide" presentationStyle="fullScreen" onRequestClose={onClose}>
+      <StatusBar barStyle="light-content" backgroundColor="#1A1A1A" />
+      <SafeAreaView style={videoModalStyles.root}>
+        <View style={videoModalStyles.topBar}>
+          <Typography variant="h6" style={{ color: "#FFFFFF", flex: 1 }} numberOfLines={1}>
+            {article.title}
+          </Typography>
+          <TouchableOpacity onPress={onClose} hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}>
+            <Feather name="x" size={24} color="#FFFFFF" />
+          </TouchableOpacity>
+        </View>
+
+        <View style={[videoModalStyles.player, { backgroundColor: article.bg, height: playerHeight, width: screenWidth }]}>
+          <TouchableOpacity onPress={onTogglePlay} style={videoModalStyles.playBtn} activeOpacity={0.85}>
+            <Feather name={playing ? "pause" : "play"} size={32} color={article.color} />
+          </TouchableOpacity>
+          {playing && (
+            <View style={videoModalStyles.progressBar}>
+              <View style={[videoModalStyles.progressFill, { backgroundColor: article.color }]} />
+            </View>
+          )}
+        </View>
+
+        <ScrollView style={videoModalStyles.info} contentContainerStyle={videoModalStyles.infoContent}>
+          <Typography variant="h4" style={{ color: "#FFFFFF" }}>
+            {article.title}
+          </Typography>
+          <Typography variant="body2" style={{ color: "rgba(255,255,255,0.75)", lineHeight: 22 }}>
+            {article.intro}
+          </Typography>
+        </ScrollView>
+      </SafeAreaView>
+    </Modal>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Screen
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -459,6 +515,9 @@ export default function KennisbankArtikelScreen() {
   const topPad = Platform.OS === "web" ? Math.max(insets.top, 67) : insets.top;
 
   const article = ARTICLES[id ?? "gesprek"] ?? ARTICLES["gesprek"];
+
+  const [videoOpen, setVideoOpen] = useState(false);
+  const [playing, setPlaying] = useState(false);
 
   return (
     <View style={styles.root}>
@@ -513,23 +572,25 @@ export default function KennisbankArtikelScreen() {
 
           <View style={styles.sectionDivider} />
 
-          {/* Praktische tips */}
+          {/* Video */}
           <View style={styles.articleSection}>
-            <Typography variant="h5">Praktische tips</Typography>
-            {article.tips.map((tip, i) => (
-              <View key={i} style={{ marginTop: i === 0 ? DS.spacing.sm : DS.spacing.md }}>
-                <Typography variant="subtitle1" style={{ fontWeight: "700" }}>
-                  {tip.title}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="textSecondary"
-                  style={{ lineHeight: 20, marginTop: DS.spacing.sm }}
-                >
-                  {tip.body}
-                </Typography>
+            <TouchableOpacity
+              onPress={() => { setVideoOpen(true); setPlaying(false); }}
+              activeOpacity={0.85}
+              style={styles.videoThumb}
+            >
+              <View style={[styles.videoThumbInner, { backgroundColor: article.bg }]}>
+                <View style={styles.playCircle}>
+                  <Feather name="play" size={20} color={article.color} />
+                </View>
               </View>
-            ))}
+              <Typography
+                variant="caption"
+                style={{ color: article.color, marginTop: DS.spacing.xs, fontWeight: "600" }}
+              >
+                Bekijk de introductievideo
+              </Typography>
+            </TouchableOpacity>
           </View>
 
           <View style={styles.sectionDivider} />
@@ -548,6 +609,15 @@ export default function KennisbankArtikelScreen() {
           </View>
         </View>
       </ScrollView>
+
+      {videoOpen && (
+        <ArticleVideoModal
+          article={article}
+          playing={playing}
+          onTogglePlay={() => setPlaying((p) => !p)}
+          onClose={() => { setVideoOpen(false); setPlaying(false); }}
+        />
+      )}
     </View>
   );
 }
@@ -608,5 +678,73 @@ const styles = StyleSheet.create({
   },
   calloutStrip: {
     padding: DS.spacing.lg,
+  },
+  videoThumb: {
+    alignItems: "flex-start",
+    width: "100%",
+  },
+  videoThumbInner: {
+    width: "100%",
+    aspectRatio: 16 / 9,
+    borderRadius: DS.shape.radius.md,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  playCircle: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    backgroundColor: "rgba(255,255,255,0.92)",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingLeft: 4,
+  },
+});
+
+const videoModalStyles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: "#1A1A1A",
+  },
+  topBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: DS.spacing.lg,
+    paddingVertical: DS.spacing.md,
+    gap: DS.spacing.md,
+  },
+  player: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  playBtn: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    backgroundColor: "rgba(255,255,255,0.92)",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingLeft: 4,
+  },
+  progressBar: {
+    position: "absolute",
+    bottom: 16,
+    left: 20,
+    right: 20,
+    height: 3,
+    backgroundColor: "rgba(255,255,255,0.35)",
+    borderRadius: 2,
+  },
+  progressFill: {
+    width: "30%",
+    height: "100%",
+    borderRadius: 2,
+  },
+  info: {
+    flex: 1,
+  },
+  infoContent: {
+    padding: DS.spacing.lg,
+    gap: DS.spacing.md,
   },
 });
