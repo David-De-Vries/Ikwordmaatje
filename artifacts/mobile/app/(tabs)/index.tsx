@@ -6,18 +6,20 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Typography } from "@/components/ui";
 import { DS } from "@/constants/design-system";
+import { useOnboardingMode } from "@/context/OnboardingModeContext";
 import { useTestMode } from "@/context/TestModeContext";
 
 export default function LauncherScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { isTestMode } = useTestMode();
+  const { isOnboardingMode } = useOnboardingMode();
 
   React.useEffect(() => {
-    if (isTestMode) {
+    if (isTestMode || isOnboardingMode) {
       router.replace("/signup");
     }
-  }, [isTestMode]);
+  }, [isTestMode, isOnboardingMode]);
 
   return (
     <View style={[styles.root, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
