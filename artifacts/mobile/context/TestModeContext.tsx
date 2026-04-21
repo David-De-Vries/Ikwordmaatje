@@ -1,11 +1,15 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { Platform } from "react-native";
 
 interface TestModeContextValue {
   isTestMode: boolean;
+  activateTestMode: () => void;
 }
 
-const TestModeContext = createContext<TestModeContextValue>({ isTestMode: false });
+const TestModeContext = createContext<TestModeContextValue>({
+  isTestMode: false,
+  activateTestMode: () => {},
+});
 
 export function TestModeProvider({ children }: { children: React.ReactNode }) {
   const [isTestMode, setIsTestMode] = useState(false);
@@ -23,8 +27,12 @@ export function TestModeProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  const activateTestMode = useCallback(() => {
+    setIsTestMode(true);
+  }, []);
+
   return (
-    <TestModeContext.Provider value={{ isTestMode }}>
+    <TestModeContext.Provider value={{ isTestMode, activateTestMode }}>
       {children}
     </TestModeContext.Provider>
   );

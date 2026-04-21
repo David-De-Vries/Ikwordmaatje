@@ -15,7 +15,7 @@
  *   step -1 → Dismissed
  */
 import { Feather } from "@expo/vector-icons";
-import { Href, useRouter } from "expo-router";
+import { Href } from "expo-router";
 import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import {
   LayoutChangeEvent,
@@ -40,8 +40,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Button, Card, Typography } from "@/components/ui";
 import { DS } from "@/constants/design-system";
 import { useOnboarding } from "@/context/OnboardingContext";
-import { useTestMode } from "@/context/TestModeContext";
 import { useColors } from "@/hooks/useColors";
+import { useTestNav } from "@/hooks/useTestNav";
 
 export const DashboardModeContext = React.createContext({ allTasksDone: false, hideTaskList: false });
 
@@ -211,8 +211,7 @@ const TASK_ITEMS = [
 ];
 
 function MatchingStatusCard() {
-  const router = useRouter();
-  const { isTestMode } = useTestMode();
+  const { push } = useTestNav();
   const { allTasksDone } = useContext(DashboardModeContext);
   const tasks = allTasksDone
     ? TASK_ITEMS.map((t) =>
@@ -300,7 +299,7 @@ function MatchingStatusCard() {
                     <TouchableOpacity
                       style={styles.taskPill}
                       activeOpacity={0.8}
-                      onPress={() => task.key === "seniors" && !isTestMode ? router.push("/seniors-list") : undefined}
+                      onPress={() => task.key === "seniors" ? push("/seniors-list") : undefined}
                     >
                       <Typography style={{ color: "#FFFFFF", fontWeight: "700", fontSize: 13 }}>
                         {task.buttonLabel}
@@ -339,8 +338,7 @@ const MOCK_MATCH = {
 };
 
 function MatchCard() {
-  const router = useRouter();
-  const { isTestMode } = useTestMode();
+  const { push } = useTestNav();
   const { allTasksDone, hideTaskList } = useContext(DashboardModeContext);
 
   if (hideTaskList) {
@@ -366,7 +364,7 @@ function MatchCard() {
         {/* Profile row — tappable, navigates to full match profile */}
         <TouchableOpacity
           activeOpacity={0.75}
-          onPress={() => !isTestMode && router.push("/match-profile" as Href)}
+          onPress={() => push("/match-profile" as Href)}
           style={styles.matchProfileRow}
         >
           <View style={styles.matchAvatar}>
@@ -473,7 +471,7 @@ function MatchCard() {
         </Typography>
       </View>
 
-      <TouchableOpacity style={styles.viewSeniorsBtn} activeOpacity={0.85} onPress={() => !isTestMode && router.push("/seniors-list")}>
+      <TouchableOpacity style={styles.viewSeniorsBtn} activeOpacity={0.85} onPress={() => push("/seniors-list")}>
         <Typography style={{ color: "#FFFFFF", fontWeight: "600", fontSize: 14, textAlign: "center" }}>
           Bekijk senioren bij jou in de buurt
         </Typography>
@@ -563,8 +561,7 @@ const INFO_MODULES = [
 ];
 
 function InfoModulesCard() {
-  const router = useRouter();
-  const { isTestMode } = useTestMode();
+  const { push } = useTestNav();
   const { hideTaskList } = useContext(DashboardModeContext);
   return (
     <Card elevation={2} padding="md" style={{ gap: DS.spacing.lg }}>
@@ -582,7 +579,7 @@ function InfoModulesCard() {
         </View>
         <TouchableOpacity
           hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-          onPress={() => !isTestMode && router.push("/kennisbank-overzicht" as Href)}
+          onPress={() => push("/kennisbank-overzicht" as Href)}
         >
           <Typography
             variant="caption"
@@ -607,7 +604,7 @@ function InfoModulesCard() {
             key={mod.id}
             activeOpacity={0.82}
             style={[styles.moduleCard, { backgroundColor: mod.bg }]}
-            onPress={() => !isTestMode && router.push(`/kennisbank-artikel?id=${mod.id}` as Href)}
+            onPress={() => push(`/kennisbank-artikel?id=${mod.id}` as Href)}
           >
             <View style={[styles.moduleIconBox, { backgroundColor: "#FFFFFFBB" }]}>
               <Feather name={mod.icon} size={18} color={mod.color} />
@@ -1038,8 +1035,7 @@ function WizardDoneOverlay({
 // ─────────────────────────────────────────────────────────────────────────────
 
 export default function DashboardScreen() {
-  const router = useRouter();
-  const { isTestMode } = useTestMode();
+  const { push: testPush } = useTestNav();
   const insets = useSafeAreaInsets();
   const colors = useColors();
   const { data } = useOnboarding();
@@ -1313,7 +1309,7 @@ export default function DashboardScreen() {
             <TouchableOpacity
               key={label}
               style={styles.drawerItem}
-              onPress={() => { closeMenu(); if (route && !isTestMode) router.push(route); }}
+              onPress={() => { closeMenu(); if (route) testPush(route); }}
             >
               <View style={styles.drawerIconWrap}>
                 <Feather name={icon} size={18} color="#8CBFBB" />
@@ -1333,7 +1329,7 @@ export default function DashboardScreen() {
             <TouchableOpacity
               key={label}
               style={styles.drawerItem}
-              onPress={() => { closeMenu(); if (route && !isTestMode) router.push(route); }}
+              onPress={() => { closeMenu(); if (route) testPush(route); }}
             >
               <View style={styles.drawerIconWrap}>
                 <Feather name={icon} size={18} color="#8CBFBB" />
