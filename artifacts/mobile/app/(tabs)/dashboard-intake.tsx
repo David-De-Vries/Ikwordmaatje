@@ -1063,7 +1063,7 @@ function OnboardingEndScreen({ visible }: { visible: boolean }) {
           }}
         >
           <Typography variant="body2" color="textSecondary" align="center">
-            Je kunt dit venster nu sluiten of de test opnieuw starten door de pagina te vernieuwen.
+            Je kunt dit venster nu sluiten.
           </Typography>
         </View>
       </Animated.View>
