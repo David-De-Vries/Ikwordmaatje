@@ -69,7 +69,7 @@ const STEPS = [
 export default function Step3Journey({ onNext, onBack }: Props) {
   return (
     <StepLayout step={3} label="Jouw Tijd Bij Careibu">
-      <div className="p-8">
+      <div className="p-4 sm:p-8">
         <h2 className="text-2xl font-bold text-gray-800 mb-1">Jouw Tijd Bij Careibu</h2>
         <p className="text-sm text-gray-500 mb-7">
           Dit kan je verwachten in de komende periode

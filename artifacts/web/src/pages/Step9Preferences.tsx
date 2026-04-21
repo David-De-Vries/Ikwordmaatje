@@ -15,7 +15,7 @@ export default function Step9Preferences({ onNext, onBack }: Props) {
   const Toggle = ({ val, onChange }: { val: boolean; onChange: () => void }) => (
     <button
       onClick={onChange}
-      className={`relative w-10 h-6 rounded-full transition-colors ${val ? "bg-[#A01550]" : "bg-gray-200"}`}
+      className={`relative w-10 h-6 rounded-full transition-colors flex-shrink-0 ${val ? "bg-[#A01550]" : "bg-gray-200"}`}
     >
       <div
         className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${val ? "translate-x-4" : ""}`}
@@ -25,7 +25,7 @@ export default function Step9Preferences({ onNext, onBack }: Props) {
 
   return (
     <StepLayout step={9} label="Meldingen & voorkeuren">
-      <div className="p-8">
+      <div className="p-4 sm:p-8">
         <h2 className="text-xl font-semibold text-gray-800 mb-1">Meldingen & voorkeuren</h2>
         <p className="text-sm text-gray-500 mb-5">
           Hoe wil je op de hoogte blijven van je matches en afspraken?
@@ -40,7 +40,7 @@ export default function Step9Preferences({ onNext, onBack }: Props) {
                 { key: "whatsapp" as const, label: "WhatsApp", icon: "💬" },
                 { key: "app" as const, label: "App-melding", icon: "🔔" },
               ].map(item => (
-                <div key={item.key} className="flex items-center justify-between">
+                <div key={item.key} className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2">
                     <span>{item.icon}</span>
                     <span className="text-sm text-gray-700">{item.label}</span>
@@ -59,15 +59,15 @@ export default function Step9Preferences({ onNext, onBack }: Props) {
           <div className="p-4 rounded-xl border border-gray-200">
             <div className="text-sm font-semibold text-gray-800 mb-3">Overige instellingen</div>
             <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <div>
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
                   <div className="text-sm text-gray-700">Voortgangsupdates</div>
                   <div className="text-xs text-gray-400">Wekelijks overzicht van je activiteiten</div>
                 </div>
                 <Toggle val={updates} onChange={() => setUpdates(u => !u)} />
               </div>
-              <div className="flex items-center justify-between">
-                <div>
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
                   <div className="text-sm text-gray-700">Nieuwsbrief</div>
                   <div className="text-xs text-gray-400">Careibu nieuws en inspiratie</div>
                 </div>

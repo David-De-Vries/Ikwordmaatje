@@ -72,7 +72,7 @@ export default function StepInternship({ onNext, onBack }: Props) {
 
   return (
     <StepLayout step={2} totalSteps={11} label="Jouw stage">
-      <div className="p-8">
+      <div className="p-4 sm:p-8">
         <div className="mb-5">
           <h2 className="text-xl font-semibold text-gray-800">Jouw stage bij Careibu</h2>
           <p className="text-sm text-gray-500">Vertel ons iets over je stageplek.</p>
@@ -129,7 +129,7 @@ export default function StepInternship({ onNext, onBack }: Props) {
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Gewenste stageperiode
             </label>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <div className="text-xs text-gray-500 mb-1.5">Van</div>
                 <div className="flex gap-2">

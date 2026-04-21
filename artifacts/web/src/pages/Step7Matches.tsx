@@ -44,7 +44,7 @@ export default function Step7Matches({ onNext, onBack }: Props) {
 
   return (
     <StepLayout step={7} label="Jouw matches">
-      <div className="p-8">
+      <div className="p-4 sm:p-8">
         <h2 className="text-xl font-semibold text-gray-800 mb-1">Jouw matches</h2>
         <p className="text-sm text-gray-500 mb-5">
           We hebben de beste senioren voor je gevonden. Kies iemand voor een kennismaking.
@@ -61,7 +61,7 @@ export default function Step7Matches({ onNext, onBack }: Props) {
                   : "border-gray-200 bg-white hover:border-gray-300"
               }`}
             >
-              <div className="flex gap-4">
+              <div className="flex gap-3">
                 <div
                   className="w-12 h-12 rounded-full flex items-center justify-center text-xl flex-shrink-0"
                   style={{ backgroundColor: m.bg }}
@@ -70,8 +70,8 @@ export default function Step7Matches({ onNext, onBack }: Props) {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between mb-1">
-                    <div>
-                      <div className="text-sm font-semibold text-gray-800">{m.name}</div>
+                    <div className="min-w-0">
+                      <div className="text-sm font-semibold text-gray-800 truncate">{m.name}</div>
                       <div className="text-xs text-gray-500">{m.age} jaar · {m.city} · {m.distance}</div>
                     </div>
                     <div className="text-right flex-shrink-0 ml-2">

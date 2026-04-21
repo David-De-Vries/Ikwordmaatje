@@ -19,8 +19,8 @@ export default function SignupPage({ onNext, onSkipToDashboard }: Props) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4" style={{ backgroundColor: "#8CBFBB" }}>
-      <div className="bg-white rounded-2xl shadow-xl w-full p-8" style={{ maxWidth: 480 }}>
+    <div className="min-h-screen flex items-start sm:items-center justify-center px-0 sm:px-4" style={{ backgroundColor: "#8CBFBB" }}>
+      <div className="bg-white rounded-none sm:rounded-2xl shadow-none sm:shadow-xl w-full p-4 sm:p-8" style={{ maxWidth: 480 }}>
         <div className="text-center mb-6">
           <div className="text-4xl font-bold text-[#A01550] tracking-tight mb-1">careibu</div>
           <p className="text-gray-400 text-sm">Vrijwilligers platform voor senioren</p>

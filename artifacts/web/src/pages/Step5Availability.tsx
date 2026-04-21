@@ -39,7 +39,7 @@ export default function Step5Availability({ onNext, onBack }: Props) {
 
   return (
     <StepLayout step={5} label="Beschikbaarheid & locatie">
-      <div className="p-8">
+      <div className="p-4 sm:p-8">
         <h2 className="text-xl font-semibold text-gray-800 mb-1">Wanneer ben je beschikbaar?</h2>
         <p className="text-sm text-gray-500 mb-5">
           Kies de dagdelen waarop jij beschikbaar bent om een senior te bezoeken.
@@ -117,7 +117,7 @@ export default function Step5Availability({ onNext, onBack }: Props) {
           </div>
           <button
             onClick={() => setUnknown(u => !u)}
-            className={`relative w-11 h-6 rounded-full transition-colors duration-200 focus:outline-none ${
+            className={`relative w-11 h-6 rounded-full transition-colors duration-200 focus:outline-none flex-shrink-0 ${
               unknown ? "bg-[#A01550]" : "bg-gray-200"
             }`}
           >
@@ -181,7 +181,7 @@ export default function Step5Availability({ onNext, onBack }: Props) {
           </button>
           <button
             onClick={handleNext}
-            className="flex-2 py-3 px-8 rounded-lg bg-[#A01550] text-white text-sm font-semibold hover:bg-[#87113f] transition"
+            className="flex-1 py-3 rounded-lg bg-[#A01550] text-white text-sm font-semibold hover:bg-[#87113f] transition"
           >
             Volgende
           </button>

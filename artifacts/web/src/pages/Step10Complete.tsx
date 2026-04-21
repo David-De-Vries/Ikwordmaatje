@@ -9,7 +9,7 @@ export default function Step10Complete({ onNext }: Props) {
 
   return (
     <StepLayout step={10} label="Welkom bij Careibu!">
-      <div className="p-10 text-center">
+      <div className="p-6 sm:p-10 text-center">
         <div className="w-20 h-20 rounded-full bg-[#FFF0F5] border-4 border-[#A01550] flex items-center justify-center mx-auto mb-6 shadow-lg">
           <span className="text-4xl">🎉</span>
         </div>
@@ -21,7 +21,7 @@ export default function Step10Complete({ onNext }: Props) {
           Jouw profiel is klaar. Je maakt nu deel uit van een bijzondere gemeenschap van vrijwilligers die het verschil maken voor senioren.
         </p>
 
-        <div className="grid grid-cols-3 gap-3 mb-8">
+        <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-8">
           {[
             { icon: "🤝", label: "Match gevonden" },
             { icon: "📅", label: "Afspraak gepland" },
@@ -29,10 +29,10 @@ export default function Step10Complete({ onNext }: Props) {
           ].map(item => (
             <div
               key={item.label}
-              className="p-4 rounded-xl bg-gray-50 border border-gray-200"
+              className="p-3 sm:p-4 rounded-xl bg-gray-50 border border-gray-200"
             >
               <div className="text-2xl mb-2">{item.icon}</div>
-              <div className="text-xs font-medium text-gray-700">{item.label}</div>
+              <div className="text-xs font-medium text-gray-700 leading-tight">{item.label}</div>
             </div>
           ))}
         </div>
