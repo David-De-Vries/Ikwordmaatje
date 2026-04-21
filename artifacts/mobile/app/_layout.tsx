@@ -15,6 +15,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { OnboardingProvider } from "@/context/OnboardingContext";
+import { TestModeProvider } from "@/context/TestModeContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -50,9 +51,11 @@ export default function RootLayout() {
         <QueryClientProvider client={queryClient}>
           <GestureHandlerRootView>
             <KeyboardProvider>
-              <OnboardingProvider>
-                <RootLayoutNav />
-              </OnboardingProvider>
+              <TestModeProvider>
+                <OnboardingProvider>
+                  <RootLayoutNav />
+                </OnboardingProvider>
+              </TestModeProvider>
             </KeyboardProvider>
           </GestureHandlerRootView>
         </QueryClientProvider>
