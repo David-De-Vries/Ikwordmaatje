@@ -1,5 +1,5 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { Platform } from "react-native";
+import { Linking, Platform } from "react-native";
 
 interface TestModeContextValue {
   isTestMode: boolean;
@@ -10,6 +10,17 @@ const TestModeContext = createContext<TestModeContextValue>({
   isTestMode: false,
   activateTestMode: () => {},
 });
+
+function hasTestParam(url: string): boolean {
+  try {
+    const questionMark = url.indexOf("?");
+    if (questionMark === -1) return false;
+    const params = new URLSearchParams(url.slice(questionMark));
+    return params.get("test") === "1";
+  } catch {
+    return false;
+  }
+}
 
 export function TestModeProvider({ children }: { children: React.ReactNode }) {
   const [isTestMode, setIsTestMode] = useState(false);
@@ -24,6 +35,12 @@ export function TestModeProvider({ children }: { children: React.ReactNode }) {
       } catch {
         // ignore
       }
+    } else {
+      Linking.getInitialURL().then((url) => {
+        if (url && hasTestParam(url)) {
+          setIsTestMode(true);
+        }
+      });
     }
   }, []);
 
