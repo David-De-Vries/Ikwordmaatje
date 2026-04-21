@@ -25,7 +25,7 @@ export default function Step9Preferences({ onNext, onBack }: Props) {
 
   return (
     <StepLayout step={9} label="Meldingen & voorkeuren">
-      <div className="p-4 sm:p-8">
+      <div className="p-4">
         <h2 className="text-xl font-semibold text-gray-800 mb-1">Meldingen & voorkeuren</h2>
         <p className="text-sm text-gray-500 mb-5">
           Hoe wil je op de hoogte blijven van je matches en afspraken?

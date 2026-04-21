@@ -20,14 +20,14 @@ export default function Step2Projects({ onNext, onBack }: Props) {
   };
 
   return (
-    <StepLayout step={2} label="Jouw project" wide>
-      <div className="p-4 sm:p-8">
+    <StepLayout step={2} label="Jouw project">
+      <div className="p-4">
         <h2 className="text-xl font-semibold text-gray-800 mb-1">Kies jouw project</h2>
         <p className="text-sm text-gray-500 mb-6">
           Welk Careibu project spreekt jou het meeste aan? Je kunt er altijd van wisselen.
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+        <div className="grid grid-cols-2 gap-3 mb-6">
           {PROJECTS.map(p => (
             <button
               key={p.id}

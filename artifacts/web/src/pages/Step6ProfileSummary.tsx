@@ -24,7 +24,7 @@ export default function Step6ProfileSummary({ onNext, onBack }: Props) {
 
   return (
     <StepLayout step={6} label="Profieloverzicht">
-      <div className="p-4 sm:p-8">
+      <div className="p-4">
         <div className="text-center mb-6">
           <div className="w-16 h-16 rounded-full bg-[#FFF0F5] border-2 border-[#A01550] flex items-center justify-center mx-auto mb-3">
             <span className="text-2xl">
@@ -40,7 +40,7 @@ export default function Step6ProfileSummary({ onNext, onBack }: Props) {
         <div className="space-y-2 mb-6">
           {rows.map(r => (
             <div key={r.label} className="flex items-start py-2 border-b border-gray-100 last:border-0">
-              <span className="text-xs text-gray-500 w-28 sm:w-36 flex-shrink-0 pt-0.5">{r.label}</span>
+              <span className="text-xs text-gray-500 w-28 flex-shrink-0 pt-0.5">{r.label}</span>
               <span className="text-sm text-gray-800 font-medium flex-1 break-words">{r.value}</span>
             </div>
           ))}

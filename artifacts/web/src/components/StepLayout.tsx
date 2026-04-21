@@ -13,16 +13,12 @@ export default function StepLayout({
   totalSteps = 10,
   label,
   children,
-  wide = false,
 }: StepLayoutProps) {
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#8CBFBB" }}>
-      <ProgressBar step={step} totalSteps={totalSteps} label={label} />
-      <div className="flex-1 flex items-start sm:items-center justify-center px-0 sm:px-4 py-0 sm:py-10">
-        <div
-          className="bg-white rounded-none sm:rounded-2xl shadow-none sm:shadow-xl w-full"
-          style={{ maxWidth: wide ? 720 : 560 }}
-        >
+    <div className="min-h-screen flex justify-center" style={{ backgroundColor: "#8CBFBB" }}>
+      <div className="flex flex-col w-full bg-white" style={{ maxWidth: 480 }}>
+        <ProgressBar step={step} totalSteps={totalSteps} label={label} />
+        <div className="flex-1">
           {children}
         </div>
       </div>

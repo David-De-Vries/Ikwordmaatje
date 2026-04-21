@@ -18,7 +18,7 @@ export default function Step8Scheduling({ onNext, onBack }: Props) {
 
   return (
     <StepLayout step={8} label="Plan een kennismaking">
-      <div className="p-4 sm:p-8">
+      <div className="p-4">
         <h2 className="text-xl font-semibold text-gray-800 mb-1">Plan een kennismaking</h2>
         <p className="text-sm text-gray-500 mb-5">
           Kies een datum en tijd voor jullie eerste kennismaking.

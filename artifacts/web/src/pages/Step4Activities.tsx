@@ -16,7 +16,7 @@ const ACTIVITIES = [
   { id: "tuinieren", label: "Tuinieren", emoji: "🌿" },
   { id: "boodschappen", label: "Boodschappen", emoji: "🛒" },
   { id: "film", label: "Films kijken", emoji: "🎬" },
-  { id: "gezelschap", label: "Gewoon gezelschap", emoji: "☕" },
+  { id: "gezelschap", label: "Gezelschap", emoji: "☕" },
 ];
 
 export default function Step4Activities({ onNext, onBack }: Props) {
@@ -35,13 +35,13 @@ export default function Step4Activities({ onNext, onBack }: Props) {
 
   return (
     <StepLayout step={4} label="Activiteiten & ervaring">
-      <div className="p-4 sm:p-8">
+      <div className="p-4">
         <h2 className="text-xl font-semibold text-gray-800 mb-1">Activiteiten & ervaring</h2>
         <p className="text-sm text-gray-500 mb-5">
           Welke activiteiten doe je graag? Selecteer alles wat van toepassing is.
         </p>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-6">
+        <div className="grid grid-cols-2 gap-2 mb-6">
           {ACTIVITIES.map(a => (
             <button
               key={a.id}

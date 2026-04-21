@@ -44,7 +44,7 @@ export default function Step7Matches({ onNext, onBack }: Props) {
 
   return (
     <StepLayout step={7} label="Jouw matches">
-      <div className="p-4 sm:p-8">
+      <div className="p-4">
         <h2 className="text-xl font-semibold text-gray-800 mb-1">Jouw matches</h2>
         <p className="text-sm text-gray-500 mb-5">
           We hebben de beste senioren voor je gevonden. Kies iemand voor een kennismaking.

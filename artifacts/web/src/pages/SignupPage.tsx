@@ -19,9 +19,9 @@ export default function SignupPage({ onNext, onSkipToDashboard }: Props) {
   };
 
   return (
-    <div className="min-h-screen flex items-start sm:items-center justify-center px-0 sm:px-4" style={{ backgroundColor: "#8CBFBB" }}>
-      <div className="bg-white rounded-none sm:rounded-2xl shadow-none sm:shadow-xl w-full p-4 sm:p-8" style={{ maxWidth: 480 }}>
-        <div className="text-center mb-6">
+    <div className="min-h-screen flex justify-center" style={{ backgroundColor: "#8CBFBB" }}>
+      <div className="w-full bg-white flex flex-col p-4" style={{ maxWidth: 480 }}>
+        <div className="text-center mb-6 pt-6">
           <div className="text-4xl font-bold text-[#A01550] tracking-tight mb-1">careibu</div>
           <p className="text-gray-400 text-sm">Vrijwilligers platform voor senioren</p>
         </div>
@@ -89,7 +89,7 @@ export default function SignupPage({ onNext, onSkipToDashboard }: Props) {
           </button>
         </div>
 
-        <p className="mt-4 text-center text-xs text-gray-400">
+        <p className="text-center text-xs text-gray-400">
           Heb je al een account?{" "}
           <button className="text-[#A01550] font-medium hover:underline">Inloggen</button>
         </p>

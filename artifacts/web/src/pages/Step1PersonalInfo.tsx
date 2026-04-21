@@ -26,11 +26,11 @@ export default function Step1PersonalInfo({ onNext, onBack }: Props) {
 
   return (
     <StepLayout step={1} label="Over jou">
-      <div className="p-4 sm:p-8">
+      <div className="p-4">
         <h2 className="text-xl font-semibold text-gray-800 mb-1">Over jou</h2>
         <p className="text-sm text-gray-500 mb-6">Vertel ons iets over jezelf zodat senioren je beter kunnen leren kennen.</p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+        <div className="grid grid-cols-2 gap-4 mb-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Voornaam</label>
             <input
