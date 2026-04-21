@@ -13,6 +13,12 @@ export default function LauncherScreen() {
   const insets = useSafeAreaInsets();
   const { isTestMode } = useTestMode();
 
+  React.useEffect(() => {
+    if (isTestMode) {
+      router.replace("/signup");
+    }
+  }, [isTestMode]);
+
   return (
     <View style={[styles.root, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
       {/* Header */}
