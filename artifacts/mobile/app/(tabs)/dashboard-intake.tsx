@@ -1086,8 +1086,14 @@ export default function DashboardIntakeScreen() {
 
   const scrollRef = useRef<ScrollView>(null);
   const sectionOffsets = useRef<Record<number, number>>({});
-  const [wizardStep, setWizardStep] = useState(isOnboardingMode ? 0 : -1);
+  const [wizardStep, setWizardStep] = useState(-1);
   const [showEndScreen, setShowEndScreen] = useState(false);
+
+  useEffect(() => {
+    if (isOnboardingMode && wizardStep === -1) {
+      setWizardStep(0);
+    }
+  }, [isOnboardingMode]);
 
   const topPad =
     Platform.OS === "web" ? Math.max(insets.top, 67) : insets.top;

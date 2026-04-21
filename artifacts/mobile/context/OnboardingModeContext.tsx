@@ -9,17 +9,6 @@ const OnboardingModeContext = createContext<OnboardingModeContextValue>({
   isOnboardingMode: false,
 });
 
-function hasOnboardingParam(url: string): boolean {
-  try {
-    const q = url.indexOf("?");
-    if (q === -1) return false;
-    const params = new URLSearchParams(url.slice(q));
-    return params.get("flow") === "onboarding";
-  } catch {
-    return false;
-  }
-}
-
 export function OnboardingModeProvider({ children }: { children: React.ReactNode }) {
   const [isOnboardingMode, setIsOnboardingMode] = useState(false);
 
