@@ -422,16 +422,16 @@ export default function DashboardPage() {
       </div>
 
       {/* Mobile bottom nav */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around px-2 py-2 z-20">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around px-1 py-2 z-20">
         {NAV.map(({ id, icon: Icon, label }) => (
           <button
             key={id}
             onClick={() => setActiveTab(id)}
-            className="flex flex-col items-center py-1 px-2 rounded-lg transition"
+            className="flex flex-col items-center py-1 px-1 rounded-lg transition min-w-0"
             style={{ color: activeTab === id ? "#A01550" : "#9CA3AF" }}
           >
             <Icon size={18} strokeWidth={2} />
-            <span className="text-xs mt-0.5">{label}</span>
+            <span className="text-[10px] mt-0.5 leading-none truncate w-full text-center">{label}</span>
           </button>
         ))}
       </nav>
