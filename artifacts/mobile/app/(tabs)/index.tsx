@@ -11,7 +11,7 @@ import { useTestMode } from "@/context/TestModeContext";
 export default function LauncherScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { activateTestMode, isTestMode } = useTestMode();
+  const { isTestMode } = useTestMode();
 
   return (
     <View style={[styles.root, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
@@ -30,30 +30,8 @@ export default function LauncherScreen() {
 
       {/* Buttons */}
       <View style={styles.card}>
-        {/* Test mode entry */}
-        <TouchableOpacity
-          style={[styles.btn, styles.btnTest]}
-          activeOpacity={0.85}
-          onPress={() => { activateTestMode(); router.push("/signup"); }}
-        >
-          <View style={[styles.btnIcon, { backgroundColor: "#A0155022" }]}>
-            <Feather name="play-circle" size={20} color="#A01550" />
-          </View>
-          <View style={{ flex: 1 }}>
-            <Typography variant="subtitle1" style={{ color: DS.palette.text.primary }}>
-              Start gebruikerstest
-            </Typography>
-            <Typography variant="caption" color="textSecondary">
-              Gesloten flow voor gebruikersonderzoek
-            </Typography>
-          </View>
-          <Feather name="chevron-right" size={18} color={DS.palette.text.hint} />
-        </TouchableOpacity>
-
         {!isTestMode && (
           <>
-            <View style={styles.divider} />
-
             <TouchableOpacity
               style={[styles.btn, styles.btnPrimary]}
               activeOpacity={0.85}
@@ -239,9 +217,6 @@ const styles = StyleSheet.create({
   },
   btnPrimary: {},
   btnSecondary: {},
-  btnTest: {
-    backgroundColor: "#FFF5F8",
-  },
   btnIcon: {
     width: 44,
     height: 44,
