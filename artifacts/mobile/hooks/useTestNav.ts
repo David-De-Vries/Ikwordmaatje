@@ -26,8 +26,12 @@ export function useTestNav() {
   const { isTestMode } = useTestMode();
 
   const push = (path: Href) => {
-    const basePath = typeof path === "string" ? path.split("?")[0] : "/";
-    if (isTestMode && !ALLOWED_IN_TEST_MODE.has(basePath)) return;
+    if (isTestMode) {
+      const basePath = typeof path === "string" ? path.split("?")[0] : "/";
+      if (!ALLOWED_IN_TEST_MODE.has(basePath)) {
+        return;
+      }
+    }
     router.push(path);
   };
 

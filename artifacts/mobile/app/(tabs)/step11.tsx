@@ -6,7 +6,6 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Banner, Button, Card, Chip, Typography } from "@/components/ui";
 import { DS } from "@/constants/design-system";
 import { useOnboarding } from "@/context/OnboardingContext";
-import { useOnboardingMode } from "@/context/OnboardingModeContext";
 import { useTestMode } from "@/context/TestModeContext";
 import { useColors } from "@/hooks/useColors";
 
@@ -38,14 +37,13 @@ export default function Step11Screen() {
   const insets = useSafeAreaInsets();
   const { data, reset } = useOnboarding();
   const { isTestMode } = useTestMode();
-  const { isOnboardingMode } = useOnboardingMode();
 
   const topPad = Platform.OS === "web"
     ? Math.max(insets.top, 67)
     : insets.top;
 
   const handleSave = () => {
-    router.replace(isTestMode || isOnboardingMode ? "/dashboard-intake" : "/dashboard");
+    router.replace(isTestMode ? "/dashboard-intake" : "/dashboard");
   };
 
   return (

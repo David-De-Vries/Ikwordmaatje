@@ -43,9 +43,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Button, Card, Typography } from "@/components/ui";
 import { DS } from "@/constants/design-system";
 import { useOnboarding } from "@/context/OnboardingContext";
-import { useOnboardingMode } from "@/context/OnboardingModeContext";
 import { useColors } from "@/hooks/useColors";
-import { useOnboardingNav } from "@/hooks/useOnboardingNav";
 import { useTestNav } from "@/hooks/useTestNav";
 
 export const DashboardModeContext = React.createContext({ allTasksDone: false });
@@ -241,7 +239,7 @@ function makeTaskItems(intakeDateLabel: string) {
 }
 
 function MatchingStatusCard({ intakeDateLabel }: { intakeDateLabel: string }) {
-  const { push } = useOnboardingNav();
+  const { push } = useTestNav();
   const { allTasksDone } = useContext(DashboardModeContext);
   const TASK_ITEMS = makeTaskItems(intakeDateLabel);
   const tasks = allTasksDone
@@ -394,7 +392,7 @@ function MatchingStatusCard({ intakeDateLabel }: { intakeDateLabel: string }) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 function MatchCard() {
-  const { push } = useOnboardingNav();
+  const { push } = useTestNav();
   const { allTasksDone } = useContext(DashboardModeContext);
   return (
     <Card elevation={2} padding="md" style={{ gap: DS.spacing.lg }}>
@@ -514,7 +512,7 @@ const INFO_MODULES = [
 ];
 
 function InfoModulesCard() {
-  const { push } = useOnboardingNav();
+  const { push } = useTestNav();
   return (
     <Card elevation={2} padding="md" style={{ gap: DS.spacing.lg }}>
       <View style={styles.cardHeader}>
@@ -981,103 +979,11 @@ function WizardDoneOverlay({
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Onboarding End Screen — shown instead of wizard dismiss when in onboarding mode
-// ─────────────────────────────────────────────────────────────────────────────
-
-function OnboardingEndScreen({ visible }: { visible: boolean }) {
-  const opacity = useSharedValue(0);
-  const cardSlide = useSharedValue(80);
-
-  useEffect(() => {
-    if (visible) {
-      opacity.value = withTiming(1, { duration: 350 });
-      cardSlide.value = withSpring(0, { damping: 20, stiffness: 160 });
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visible]);
-
-  const overlayStyle = useAnimatedStyle(() => ({ opacity: opacity.value }));
-  const cardStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: cardSlide.value }],
-  }));
-
-  if (!visible) return null;
-
-  return (
-    <Animated.View
-      style={[
-        StyleSheet.absoluteFillObject,
-        {
-          backgroundColor: "rgba(20, 50, 46, 0.93)",
-          alignItems: "center",
-          justifyContent: "center",
-          zIndex: 9999,
-        },
-        overlayStyle,
-      ]}
-    >
-      <Animated.View
-        style={[
-          {
-            backgroundColor: "#FFFFFF",
-            borderRadius: 24,
-            margin: 24,
-            width: "88%",
-            maxWidth: 360,
-            overflow: "hidden",
-            gap: DS.spacing.xl,
-            paddingTop: DS.spacing.xxxl,
-            paddingBottom: DS.spacing.xxxxl,
-          },
-          cardStyle,
-        ]}
-      >
-        <View style={{ alignItems: "center", gap: DS.spacing.sm, paddingHorizontal: DS.spacing.xl }}>
-          <View
-            style={{
-              width: 72,
-              height: 72,
-              borderRadius: 36,
-              backgroundColor: "#D6ECEA",
-              alignItems: "center",
-              justifyContent: "center",
-              marginBottom: DS.spacing.sm,
-            }}
-          >
-            <Feather name="check-circle" size={36} color="#3A9490" />
-          </View>
-          <Typography variant="h2" align="center">
-            Bedankt!
-          </Typography>
-          <Typography variant="body1" color="textSecondary" align="center">
-            Je hebt de onboarding doorlopen. Dit is het einde van de demo.
-          </Typography>
-        </View>
-
-        <View
-          style={{
-            backgroundColor: "#F2F3F5",
-            marginHorizontal: DS.spacing.xl,
-            borderRadius: DS.shape.radius.md,
-            padding: DS.spacing.md,
-          }}
-        >
-          <Typography variant="body2" color="textSecondary" align="center">
-            Je kunt dit venster nu sluiten.
-          </Typography>
-        </View>
-      </Animated.View>
-    </Animated.View>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
 // Dashboard Intake Screen
 // ─────────────────────────────────────────────────────────────────────────────
 
 export default function DashboardIntakeScreen() {
   const { push: testPush } = useTestNav();
-  const { isOnboardingMode } = useOnboardingMode();
   const insets = useSafeAreaInsets();
   const colors = useColors();
   const { data } = useOnboarding();
@@ -1087,13 +993,6 @@ export default function DashboardIntakeScreen() {
   const scrollRef = useRef<ScrollView>(null);
   const sectionOffsets = useRef<Record<number, number>>({});
   const [wizardStep, setWizardStep] = useState(-1);
-  const [showEndScreen, setShowEndScreen] = useState(false);
-
-  useEffect(() => {
-    if (isOnboardingMode && wizardStep === -1) {
-      setWizardStep(0);
-    }
-  }, [isOnboardingMode]);
 
   const topPad =
     Platform.OS === "web" ? Math.max(insets.top, 67) : insets.top;
@@ -1131,21 +1030,13 @@ export default function DashboardIntakeScreen() {
   }, [wizardStep, scrollToSection]);
 
   const handleSkip = useCallback(() => {
-    if (isOnboardingMode) {
-      setShowEndScreen(true);
-      return;
-    }
     setWizardStep(-1);
     scrollRef.current?.scrollTo({ y: 0, animated: true });
-  }, [isOnboardingMode]);
+  }, []);
 
   const handleFinish = useCallback(() => {
-    if (isOnboardingMode) {
-      setShowEndScreen(true);
-      return;
-    }
     setWizardStep(-1);
-  }, [isOnboardingMode]);
+  }, []);
 
   // ── Hamburger / drawer ────────────────────────────────────────────────────
   const [menuOpen, setMenuOpen] = useState(false);
@@ -1200,11 +1091,11 @@ export default function DashboardIntakeScreen() {
     <Animated.View style={[{ flex: 1 }, rootBgStyle]}>
       <View style={{ backgroundColor: "#8CBFBB", paddingTop: topPad }}>
         <View style={styles.header}>
-          {/* Hamburger / X toggle — hidden in onboarding mode */}
+          {/* Hamburger / X toggle */}
           <TouchableOpacity
-            onPress={isOnboardingMode ? undefined : toggleMenu}
+            onPress={toggleMenu}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-            style={[styles.hamburgerBtn, isOnboardingMode && { opacity: 0 }]}
+            style={styles.hamburgerBtn}
           >
             <Animated.View style={[StyleSheet.absoluteFill, styles.hamburgerBars, barsOpacity]}>
               <View style={styles.hamburgerBar} />
@@ -1292,9 +1183,6 @@ export default function DashboardIntakeScreen() {
 
       {/* Done overlay (step 4) */}
       <WizardDoneOverlay visible={wizardStep === 4} onFinish={handleFinish} />
-
-      {/* Onboarding end screen — replaces wizard dismiss in onboarding mode */}
-      <OnboardingEndScreen visible={showEndScreen} />
 
       {/* ── Drawer overlay ─────────────────────────────────────────────── */}
       {menuOpen && (
