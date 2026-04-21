@@ -68,13 +68,13 @@ function SettingRow({
   onChange: (v: boolean) => void;
 }) {
   return (
-    <div className="flex items-center gap-4 py-4 border-b border-gray-100 last:border-0">
+    <div className="flex items-center gap-3 py-4 border-b border-gray-100 last:border-0">
       <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: iconBg }}>
         <Icon size={17} color={iconColor} strokeWidth={2} />
       </div>
       <div className="flex-1 min-w-0">
         <div className="text-sm font-medium text-gray-800">{label}</div>
-        <div className="text-xs text-gray-500 mt-0.5">{description}</div>
+        <div className="text-xs text-gray-500 mt-0.5 leading-snug">{description}</div>
       </div>
       <Toggle value={value} onChange={onChange} />
     </div>
@@ -103,7 +103,7 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#F2F3F5" }}>
       {/* Top bar */}
-      <header className="px-6 py-3 flex items-center justify-between sticky top-0 z-20" style={{ backgroundColor: "#8CBFBB" }}>
+      <header className="px-4 sm:px-6 py-3 flex items-center justify-between sticky top-0 z-20" style={{ backgroundColor: "#8CBFBB" }}>
         <div className="flex items-center gap-2">
           <img src="/web/logo.png" alt="Careibu" className="w-7 h-7 object-contain" />
           <span className="text-lg font-bold text-white">Careibu</span>
@@ -123,7 +123,7 @@ export default function DashboardPage() {
       </header>
 
       <div className="flex flex-1 w-full">
-        {/* Sidebar */}
+        {/* Sidebar — only on md+ */}
         <aside className="hidden md:flex flex-col w-56 flex-shrink-0 gap-1 border-r border-gray-200 px-4 py-6 bg-white">
           {NAV.map(({ id, icon: Icon, label }) => (
             <button
@@ -149,34 +149,34 @@ export default function DashboardPage() {
         </aside>
 
         {/* Main content */}
-        <main className="flex-1 min-w-0 px-6 py-6 max-w-4xl">
+        <main className="flex-1 min-w-0 px-4 py-4 sm:px-6 sm:py-6 pb-20 md:pb-6 mx-auto w-full max-w-4xl">
           {activeTab === "dashboard" && (
             <div className="space-y-4">
               {/* Welcome */}
-              <div className="bg-white rounded-2xl p-5 border border-gray-200">
+              <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-200">
                 <div className="flex items-start justify-between">
                   <div>
                     <h1 className="text-lg font-bold text-gray-800">Goedemorgen, {name}!</h1>
                     <p className="text-sm text-gray-500 mt-0.5">Jij maakt vandaag het verschil.</p>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right flex-shrink-0 ml-3">
                     <div className="text-2xl font-bold text-[#A01550]">7</div>
                     <div className="text-xs text-gray-400">weken actief</div>
                   </div>
                 </div>
-                <div className="grid grid-cols-3 gap-3 mt-4">
+                <div className="grid grid-cols-3 gap-2 sm:gap-3 mt-4">
                   {[
                     { label: "Afspraken", value: "3", Icon: Calendar, bg: "#D4EBE9", ic: "#5A9E97" },
                     { label: "Uren", value: "12", Icon: BookOpen, bg: "#FAE0EC", ic: "#A01550" },
                     { label: "Match score", value: "94%", Icon: Award, bg: "#E0F2E1", ic: "#2E7D32" },
                   ].map((stat) => (
-                    <div key={stat.label} className="rounded-xl p-3 flex items-center gap-3" style={{ backgroundColor: stat.bg }}>
-                      <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-white/60">
-                        <stat.Icon size={16} color={stat.ic} strokeWidth={2} />
+                    <div key={stat.label} className="rounded-xl p-2 sm:p-3 flex items-center gap-2 sm:gap-3" style={{ backgroundColor: stat.bg }}>
+                      <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center bg-white/60 flex-shrink-0">
+                        <stat.Icon size={14} color={stat.ic} strokeWidth={2} />
                       </div>
-                      <div>
-                        <div className="text-base font-bold text-gray-800">{stat.value}</div>
-                        <div className="text-xs text-gray-500">{stat.label}</div>
+                      <div className="min-w-0">
+                        <div className="text-sm sm:text-base font-bold text-gray-800">{stat.value}</div>
+                        <div className="text-xs text-gray-500 truncate">{stat.label}</div>
                       </div>
                     </div>
                   ))}
@@ -187,25 +187,25 @@ export default function DashboardPage() {
                 {/* Left column */}
                 <div className="lg:col-span-3 space-y-4">
                   {/* Match card */}
-                  <div className="bg-white rounded-2xl p-5 border border-gray-200">
+                  <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-200">
                     <div className="flex items-center justify-between mb-3">
                       <h2 className="text-sm font-semibold text-gray-800">Jouw match</h2>
                       <button className="text-xs text-[#A01550] font-medium hover:underline">Alle matches</button>
                     </div>
-                    <div className="flex gap-4 p-4 rounded-xl border border-gray-100" style={{ backgroundColor: "#FAFAFA" }}>
+                    <div className="flex gap-3 p-3 sm:p-4 rounded-xl border border-gray-100" style={{ backgroundColor: "#FAFAFA" }}>
                       <div className="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "#FAE0EC" }}>
                         <User size={20} color="#A01550" />
                       </div>
-                      <div className="flex-1">
-                        <div className="text-sm font-semibold text-gray-800">Mevrouw Janssen, 78 jaar</div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-semibold text-gray-800 truncate">Mevrouw Janssen, 78 jaar</div>
                         <div className="text-xs text-gray-400 mb-2">Amsterdam · Wandelmaatje</div>
                         <div className="flex items-center gap-2 mb-3">
                           <div className="flex-1 h-1.5 rounded-full bg-gray-100 overflow-hidden">
                             <div className="h-full rounded-full bg-[#A01550]" style={{ width: "94%" }} />
                           </div>
-                          <span className="text-xs font-medium text-[#A01550]">94% match</span>
+                          <span className="text-xs font-medium text-[#A01550] flex-shrink-0">94%</span>
                         </div>
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 flex-wrap">
                           <button className="px-3 py-1.5 rounded-lg bg-[#A01550] text-white text-xs font-medium">Berichten</button>
                           <button className="px-3 py-1.5 rounded-lg border border-gray-200 text-gray-600 text-xs font-medium hover:bg-gray-50 transition">Profiel bekijken</button>
                         </div>
@@ -214,7 +214,7 @@ export default function DashboardPage() {
                   </div>
 
                   {/* Activity */}
-                  <div className="bg-white rounded-2xl p-5 border border-gray-200">
+                  <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-200">
                     <h2 className="text-sm font-semibold text-gray-800 mb-3">Recente activiteit</h2>
                     <div className="space-y-3">
                       {ACTIVITIES.map((a, i) => (
@@ -222,9 +222,9 @@ export default function DashboardPage() {
                           <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: a.color }}>
                             <a.Icon size={14} color={a.iconColor} strokeWidth={2} />
                           </div>
-                          <div>
-                            <div className="text-sm text-gray-700">{a.text}</div>
-                            <div className="text-xs text-gray-400">{a.time}</div>
+                          <div className="flex-1 min-w-0">
+                            <div className="text-sm text-gray-700 leading-snug">{a.text}</div>
+                            <div className="text-xs text-gray-400 mt-0.5">{a.time}</div>
                           </div>
                         </div>
                       ))}
@@ -235,7 +235,7 @@ export default function DashboardPage() {
                 {/* Right column */}
                 <div className="lg:col-span-2 space-y-4">
                   {/* Next appointment */}
-                  <div className="bg-white rounded-2xl p-5 border border-gray-200">
+                  <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-200">
                     <h2 className="text-sm font-semibold text-gray-800 mb-3">Volgende afspraak</h2>
                     <div className="rounded-xl p-4 text-center mb-3" style={{ backgroundColor: "#D4EBE9" }}>
                       <div className="text-2xl font-bold" style={{ color: "#3A7A74" }}>14</div>
@@ -249,7 +249,7 @@ export default function DashboardPage() {
                   </div>
 
                   {/* Progress */}
-                  <div className="bg-white rounded-2xl p-5 border border-gray-200">
+                  <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-200">
                     <h2 className="text-sm font-semibold text-gray-800 mb-3">Jouw voortgang</h2>
                     <div className="space-y-3">
                       {[
@@ -275,7 +275,7 @@ export default function DashboardPage() {
           )}
 
           {(activeTab === "matches" || activeTab === "agenda" || activeTab === "berichten") && (
-            <div className="bg-white rounded-2xl p-8 border border-gray-200 text-center">
+            <div className="bg-white rounded-2xl p-4 sm:p-8 border border-gray-200 text-center">
               <div className="w-12 h-12 rounded-2xl mx-auto mb-3 flex items-center justify-center" style={{ backgroundColor: "#FAE0EC" }}>
                 {activeTab === "matches" && <Users size={22} color="#A01550" />}
                 {activeTab === "agenda" && <Calendar size={22} color="#A01550" />}
@@ -289,17 +289,17 @@ export default function DashboardPage() {
           {activeTab === "instellingen" && (
             <div className="space-y-4">
               {/* Profile info */}
-              <div className="bg-white rounded-2xl p-5 border border-gray-200">
+              <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-200">
                 <h2 className="text-sm font-semibold text-gray-800 mb-4">Profiel</h2>
-                <div className="flex items-center gap-4 mb-4 p-4 rounded-xl" style={{ backgroundColor: "#F7F8FA" }}>
-                  <div className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold" style={{ backgroundColor: "#FAE0EC", color: "#A01550" }}>
+                <div className="flex items-center gap-3 mb-4 p-3 sm:p-4 rounded-xl" style={{ backgroundColor: "#F7F8FA" }}>
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold flex-shrink-0" style={{ backgroundColor: "#FAE0EC", color: "#A01550" }}>
                     {name[0]?.toUpperCase() || "V"}
                   </div>
-                  <div>
-                    <div className="text-sm font-semibold text-gray-800">{name}</div>
-                    <div className="text-xs text-gray-500">{data.email || "naam@voorbeeld.nl"}</div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-semibold text-gray-800 truncate">{name}</div>
+                    <div className="text-xs text-gray-500 truncate">{data.email || "naam@voorbeeld.nl"}</div>
                   </div>
-                  <button className="ml-auto text-xs text-[#A01550] font-medium hover:underline flex items-center gap-1">
+                  <button className="flex-shrink-0 text-xs text-[#A01550] font-medium hover:underline flex items-center gap-1">
                     Bewerken <ChevronRight size={13} />
                   </button>
                 </div>
@@ -310,14 +310,14 @@ export default function DashboardPage() {
                   ].map((item) => (
                     <div key={item.label} className="p-3 rounded-xl border border-gray-100">
                       <div className="text-xs text-gray-400">{item.label}</div>
-                      <div className="text-sm font-medium text-gray-700 mt-0.5">{item.value}</div>
+                      <div className="text-sm font-medium text-gray-700 mt-0.5 truncate">{item.value}</div>
                     </div>
                   ))}
                 </div>
               </div>
 
               {/* Notifications */}
-              <div className="bg-white rounded-2xl p-5 border border-gray-200">
+              <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-200">
                 <div className="flex items-center gap-2 mb-1">
                   <Bell size={15} color="#A01550" />
                   <h2 className="text-sm font-semibold text-gray-800">Meldingen</h2>
@@ -362,7 +362,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Privacy & beveiliging */}
-              <div className="bg-white rounded-2xl p-5 border border-gray-200">
+              <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-200">
                 <div className="flex items-center gap-2 mb-1">
                   <Shield size={15} color="#2E7D32" />
                   <h2 className="text-sm font-semibold text-gray-800">Privacy & beveiliging</h2>
@@ -389,7 +389,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Taal & regio */}
-              <div className="bg-white rounded-2xl p-5 border border-gray-200">
+              <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-200">
                 <div className="flex items-center gap-2 mb-1">
                   <Globe size={15} color="#5A9E97" />
                   <h2 className="text-sm font-semibold text-gray-800">Taal & regio</h2>
@@ -407,7 +407,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Danger zone */}
-              <div className="bg-white rounded-2xl p-5 border border-red-100">
+              <div className="bg-white rounded-2xl p-4 sm:p-5 border border-red-100">
                 <h2 className="text-sm font-semibold text-red-600 mb-3">Account verwijderen</h2>
                 <p className="text-xs text-gray-500 mb-3">
                   Wanneer je jouw account verwijdert, worden al jouw gegevens permanent gewist. Dit kan niet ongedaan worden gemaakt.
