@@ -45,6 +45,7 @@ import { DS } from "@/constants/design-system";
 import { useOnboarding } from "@/context/OnboardingContext";
 import { useOnboardingMode } from "@/context/OnboardingModeContext";
 import { useColors } from "@/hooks/useColors";
+import { useOnboardingNav } from "@/hooks/useOnboardingNav";
 import { useTestNav } from "@/hooks/useTestNav";
 
 export const DashboardModeContext = React.createContext({ allTasksDone: false });
@@ -240,7 +241,7 @@ function makeTaskItems(intakeDateLabel: string) {
 }
 
 function MatchingStatusCard({ intakeDateLabel }: { intakeDateLabel: string }) {
-  const { push } = useTestNav();
+  const { push } = useOnboardingNav();
   const { allTasksDone } = useContext(DashboardModeContext);
   const TASK_ITEMS = makeTaskItems(intakeDateLabel);
   const tasks = allTasksDone
@@ -393,7 +394,7 @@ function MatchingStatusCard({ intakeDateLabel }: { intakeDateLabel: string }) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 function MatchCard() {
-  const { push } = useTestNav();
+  const { push } = useOnboardingNav();
   const { allTasksDone } = useContext(DashboardModeContext);
   return (
     <Card elevation={2} padding="md" style={{ gap: DS.spacing.lg }}>
@@ -513,7 +514,7 @@ const INFO_MODULES = [
 ];
 
 function InfoModulesCard() {
-  const { push } = useTestNav();
+  const { push } = useOnboardingNav();
   return (
     <Card elevation={2} padding="md" style={{ gap: DS.spacing.lg }}>
       <View style={styles.cardHeader}>

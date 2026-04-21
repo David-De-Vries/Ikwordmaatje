@@ -1,8 +1,8 @@
 import { Href, useRouter } from "expo-router";
 
-import { useTestMode } from "@/context/TestModeContext";
+import { useOnboardingMode } from "@/context/OnboardingModeContext";
 
-const ALLOWED_IN_TEST_MODE = new Set([
+const ALLOWED_IN_ONBOARDING_MODE = new Set([
   "/",
   "/signup",
   "/step1",
@@ -17,19 +17,18 @@ const ALLOWED_IN_TEST_MODE = new Set([
   "/step9",
   "/step10",
   "/step11",
-  "/dashboard",
   "/dashboard-intake",
 ]);
 
-export function useTestNav() {
+export function useOnboardingNav() {
   const router = useRouter();
-  const { isTestMode } = useTestMode();
+  const { isOnboardingMode } = useOnboardingMode();
 
   const push = (path: Href) => {
     const basePath = typeof path === "string" ? path.split("?")[0] : "/";
-    if (isTestMode && !ALLOWED_IN_TEST_MODE.has(basePath)) return;
+    if (isOnboardingMode && !ALLOWED_IN_ONBOARDING_MODE.has(basePath)) return;
     router.push(path);
   };
 
-  return { push, isTestMode };
+  return { push, isOnboardingMode };
 }
