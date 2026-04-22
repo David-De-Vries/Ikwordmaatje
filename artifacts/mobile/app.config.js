@@ -22,6 +22,7 @@ module.exports = {
     web: {
       favicon: "./assets/images/icon.png",
       bundler: "metro",
+      output: "static",
     },
     plugins: [
       [
