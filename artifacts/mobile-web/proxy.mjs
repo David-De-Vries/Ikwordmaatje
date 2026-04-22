@@ -12,35 +12,113 @@ function stripBasePath(url) {
   const path = qIdx >= 0 ? url.slice(0, qIdx) : url;
   const query = qIdx >= 0 ? url.slice(qIdx) : "";
 
-  if (path === BASE_PREFIX || path === BASE_PATH) {
-    return "/" + query;
-  }
-  if (path.startsWith(BASE_PATH)) {
-    return "/" + path.slice(BASE_PATH.length) + query;
-  }
+  if (path === BASE_PREFIX || path === BASE_PATH) return "/" + query;
+  if (path.startsWith(BASE_PATH)) return "/" + path.slice(BASE_PATH.length) + query;
   return url;
 }
 
-// Rewrite root-relative URLs in HTML to include the base path
+const ROUTING_PATCH = `<script>
+(function() {
+  var BASE = ${JSON.stringify(BASE_PREFIX)};
+  function stripBase(p) {
+    if (!p || typeof p !== 'string') return p;
+    if (p === BASE || p === BASE + '/') return '/';
+    if (p.startsWith(BASE + '/')) return '/' + p.slice(BASE.length + 1);
+    return p;
+  }
+  function addBase(p) {
+    if (!p || typeof p !== 'string') return p;
+    if (p.startsWith('//') || p.startsWith('http')) return p;
+    if (p.startsWith('/') && !p.startsWith(BASE + '/') && p !== BASE) return BASE + p;
+    return p;
+  }
+
+  // Save original History methods BEFORE patching
+  var _push = History.prototype.pushState;
+  var _replace = History.prototype.replaceState;
+
+  // STEP 1: Use the ORIGINAL replaceState to strip the base from the current URL
+  // This changes window.location.pathname from "/mobile-web/" to "/"
+  // BEFORE Expo Router's deferred bundle loads and reads the pathname
+  var currentPath = window.location.pathname;
+  var strippedPath = stripBase(currentPath);
+  if (strippedPath !== currentPath) {
+    try {
+      _replace.call(window.history, window.history.state, document.title, strippedPath + window.location.search + window.location.hash);
+    } catch(e) {}
+  }
+
+  // STEP 2: Patch pushState/replaceState so future navigation adds the base back
+  History.prototype.pushState = function(s, t, url) {
+    return _push.call(this, s, t, addBase(url));
+  };
+  History.prototype.replaceState = function(s, t, url) {
+    return _replace.call(this, s, t, addBase(url));
+  };
+})();
+</script>`;
+
 function rewriteHtml(html) {
-  // Match src="..." or href="..." where value starts with / but not // or /mobile-web/
-  return html.replace(/(src|href)="(\/[^"]*?)"/g, (match, attr, url) => {
-    if (url.startsWith("//") || url.startsWith(BASE_PATH) || url.startsWith(BASE_PREFIX + "?")) {
-      return match;
-    }
-    if (url.startsWith("/")) {
-      return `${attr}="${BASE_PREFIX}${url}"`;
-    }
+  // 1. Rewrite root-relative asset src/href to include base prefix
+  let result = html.replace(/(src|href)="(\/[^"]*?)"/g, (match, attr, url) => {
+    if (url.startsWith("//") || url.startsWith(BASE_PATH) || url.startsWith(BASE_PREFIX + "?")) return match;
+    if (url.startsWith("/")) return `${attr}="${BASE_PREFIX}${url}"`;
     return match;
   }).replace(/(src|href)='(\/[^']*?)'/g, (match, attr, url) => {
-    if (url.startsWith("//") || url.startsWith(BASE_PATH) || url.startsWith(BASE_PREFIX + "?")) {
-      return match;
-    }
-    if (url.startsWith("/")) {
-      return `${attr}='${BASE_PREFIX}${url}'`;
-    }
+    if (url.startsWith("//") || url.startsWith(BASE_PATH) || url.startsWith(BASE_PREFIX + "?")) return match;
+    if (url.startsWith("/")) return `${attr}='${BASE_PREFIX}${url}'`;
     return match;
   });
+
+  // 2. Inject routing patch + fonts BEFORE the bundle script (inside </head>)
+  const fontInjection = `
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style id="careibu-fonts">
+      @font-face {
+        font-family: "Feather";
+        src: url('${BASE_PATH}fonts/Feather.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+        font-display: block;
+      }
+      @font-face {
+        font-family: "Ionicons";
+        src: url('${BASE_PATH}fonts/Ionicons.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+        font-display: block;
+      }
+      @font-face {
+        font-family: "Inter_400Regular";
+        src: url('https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfMZg.ttf') format('truetype');
+        font-weight: 400; font-style: normal;
+      }
+      @font-face {
+        font-family: "Inter_500Medium";
+        src: url('https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuI6fMZg.ttf') format('truetype');
+        font-weight: 500; font-style: normal;
+      }
+      @font-face {
+        font-family: "Inter_600SemiBold";
+        src: url('https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuGKYMZg.ttf') format('truetype');
+        font-weight: 600; font-style: normal;
+      }
+      @font-face {
+        font-family: "Inter_700Bold";
+        src: url('https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuFuYMZg.ttf') format('truetype');
+        font-weight: 700; font-style: normal;
+      }
+    </style>`;
+
+  result = result.replace("</head>", fontInjection + "\n  </head>");
+
+  // 3. Inject routing patch BEFORE the deferred bundle script (so it runs first)
+  result = result.replace(/<script\s+src="[^"]*entry\.bundle[^"]*"\s+defer><\/script>/,
+    ROUTING_PATCH + "\n  $&");
+
+  return result;
 }
 
 function waitForExpo(port, retries = 60, delayMs = 1000) {
@@ -122,6 +200,7 @@ server.on("upgrade", (req, socket, head) => {
 server.listen(PROXY_PORT, "0.0.0.0", () => {
   console.log(`[proxy] Listening on :${PROXY_PORT}`);
   console.log(`[proxy] Forwarding ${BASE_PATH}* -> :${EXPO_PORT}/*`);
+  console.log(`[proxy] HTML injection: fonts + routing patch + asset rewrite active`);
 });
 
 waitForExpo(EXPO_PORT).then((ok) => {
