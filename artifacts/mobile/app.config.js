@@ -27,7 +27,9 @@ module.exports = {
       [
         "expo-router",
         {
-          origin: "https://replit.com/",
+          origin: process.env.EXPO_PUBLIC_DOMAIN
+            ? `https://${process.env.EXPO_PUBLIC_DOMAIN}`
+            : "https://localhost:8081",
         },
       ],
       "expo-font",
