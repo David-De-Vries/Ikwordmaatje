@@ -9,8 +9,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import React, { useEffect } from "react";
+import { Platform } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { KeyboardProvider } from "react-native-keyboard-controller";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { ErrorBoundary } from "@/components/ErrorBoundary";
@@ -27,6 +27,14 @@ function RootLayoutNav() {
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
     </Stack>
   );
+}
+
+function ConditionalKeyboardProvider({ children }: { children: React.ReactNode }) {
+  if (Platform.OS === "web") {
+    return <>{children}</>;
+  }
+  const { KeyboardProvider } = require("react-native-keyboard-controller");
+  return <KeyboardProvider>{children}</KeyboardProvider>;
 }
 
 export default function RootLayout() {
@@ -50,13 +58,13 @@ export default function RootLayout() {
       <ErrorBoundary>
         <QueryClientProvider client={queryClient}>
           <GestureHandlerRootView>
-            <KeyboardProvider>
+            <ConditionalKeyboardProvider>
               <TestModeProvider>
                 <OnboardingProvider>
                   <RootLayoutNav />
                 </OnboardingProvider>
               </TestModeProvider>
-            </KeyboardProvider>
+            </ConditionalKeyboardProvider>
           </GestureHandlerRootView>
         </QueryClientProvider>
       </ErrorBoundary>

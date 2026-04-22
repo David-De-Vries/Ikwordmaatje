@@ -1,0 +1,23 @@
+kind = "web"
+previewPath = "/mobile-web/"
+title = "Careibu App (Web)"
+version = "1.0.0"
+id = "artifacts/mobile-web"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/mobile-web/" ]
+localPort = 22605
+
+[services.development]
+run = "pnpm --filter @workspace/mobile-web run dev"
+
+[services.env]
+PORT = "22605"
+BASE_PATH = "/mobile-web/"
+PUBLIC_URL = "/mobile-web/"
